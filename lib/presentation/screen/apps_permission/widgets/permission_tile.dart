@@ -1,0 +1,63 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:permissions_app/constant/app_color.dart';
+
+class PermissionSwitchTile extends StatelessWidget {
+  final String title;
+  final bool enabled;
+  final bool isDangerous;
+  final VoidCallback onTap;
+
+  const PermissionSwitchTile({
+    super.key,
+    required this.title,
+    required this.enabled,
+    required this.isDangerous,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final Color activeColor =
+    isDangerous ? Colors.red : Colors.blue;
+
+    return Container(width: 150.w,height: 40.w,
+      margin: EdgeInsets.only(bottom: 10.h),
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: AppColor.CartDark,
+        borderRadius: BorderRadius.circular(14.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.5),
+            blurRadius: 12,
+            spreadRadius: 1,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+
+          Switch(
+            value: enabled,
+            onChanged: (_) => onTap(),
+            activeColor: activeColor,
+            inactiveThumbColor: Colors.white30,
+            inactiveTrackColor: Colors.white12,
+          ),
+        ],
+      ),
+    );
+  }
+}
