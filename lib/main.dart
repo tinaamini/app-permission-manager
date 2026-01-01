@@ -13,7 +13,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
-  await Hive.openBox('session');
+  await Hive.openBox('app_preferences');
   runApp(MainApp(
 
 

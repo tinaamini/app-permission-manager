@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:permissions_app/constant/risk_level.dart';
 import 'package:permissions_app/core/models/app_permission_ui.dart';
 
@@ -8,6 +9,7 @@ import 'app_permission_state.dart';
 
 class AppPermissionCubit extends Cubit<AppPermissionState> {
   final AppPermissionPlatform _platform = AppPermissionPlatform();
+  final Box _prefBox = Hive.box('app_preferences');
 
   AppPermissionCubit() : super(AppPermissionInitial());
 
@@ -86,5 +88,54 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     ));
   }
 
+  List<String> _readKeepApps() {
+    final raw = _prefBox.get('keep_apps');
 
+    if (raw == null) return [];
+
+    if (raw is List) {
+      return raw.map((e) => e.toString()).toList();
+    }
+
+    if (raw is Set) {
+      return raw.map((e) => e.toString()).toList();
+    }
+
+    return [];
+  }
+
+  bool isAppKept(String packageName) {
+    return _readKeepApps().contains(packageName);
+  }
+
+  void keepApp(String packageName) {
+    final current = _readKeepApps();
+
+    if (current.contains(packageName)) return;
+
+    final updated = {...current}..add(packageName);
+    _prefBox.put('keep_apps', updated.toList());
+
+    if (state is AppPermissionLoaded) {
+      final loaded = state as AppPermissionLoaded;
+    emit(AppKeptSuccess(packageName));
+      emit(loaded);}
+
+    }
+
+  void unkeepApp(String packageName) {
+    final current = _readKeepApps();
+
+    if (!current.contains(packageName)) return;
+
+    final updated = {...current}..remove(packageName);
+    _prefBox.put('keep_apps', updated.toList());
+
+    if (state is AppPermissionLoaded) {
+      final loaded = state as AppPermissionLoaded;
+
+      emit(AppUnkeptSuccess(packageName));
+      emit(loaded);
+    }
+  }
 }

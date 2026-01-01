@@ -16,6 +16,12 @@ class AppTextStyle {
       fontWeight: FontWeight.w400,
       color: AppColor.white);
 
+  static TextStyle get keepbtn =>TextStyle(
+      fontFamily: 'Poppins',
+      fontSize: 8.w,
+      fontWeight: FontWeight.w400,
+      color: AppColor.white);
+
 
 
 }

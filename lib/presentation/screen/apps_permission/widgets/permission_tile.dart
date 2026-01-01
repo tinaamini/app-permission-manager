@@ -19,7 +19,7 @@ class PermissionSwitchTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color activeColor =
-    isDangerous ? Colors.red : Colors.blue;
+    isDangerous ? Colors.red : Colors.orange;
 
     return Container(width: 150.w,height: 40.w,
       margin: EdgeInsets.only(bottom: 10.h),

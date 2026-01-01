@@ -20,7 +20,8 @@ class AppPermissionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.BcGround,
-      body: SafeArea(child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
+      body: SafeArea(child:
+      BlocBuilder<AppPermissionCubit, AppPermissionState>(
           builder: (context, state) {
         if (state is! AppPermissionLoaded) {
           return const Center(
