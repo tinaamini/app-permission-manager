@@ -26,15 +26,6 @@ class AppItem extends StatelessWidget {
     required this.riskLevel,
   });
 
-  static const Set<String> _dangerousPermissions = {
-    'android.permission.CAMERA',
-    'android.permission.RECORD_AUDIO',
-    'android.permission.ACCESS_FINE_LOCATION',
-    'android.permission.ACCESS_COARSE_LOCATION',
-    'android.permission.READ_SMS',
-    'android.permission.SEND_SMS',
-    'android.permission.READ_CALL_LOG',
-  };
 
   @override
   Widget build(BuildContext context) {

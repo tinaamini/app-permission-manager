@@ -3,12 +3,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:permissions_app/routs/rout.dart';
 
 import 'logic/app_permission/app_permission_cubit.dart';
 
 Future<void> main() async {
-  runApp(MainApp());
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+  await Hive.openBox('session');
+  runApp(MainApp(
+
+
+  ));
 }
 
 class MainApp extends StatefulWidget {

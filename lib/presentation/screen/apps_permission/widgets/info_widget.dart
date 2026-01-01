@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
 
-import 'action_item.dart';
 
 class InfoWidget extends StatelessWidget {
   const InfoWidget({super.key});
@@ -22,90 +21,164 @@ class InfoWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            /// 🔴 Header Icon
+            Container(
+              width: 60.w,
+              height: 60.w,
+              decoration: BoxDecoration(
+                color: Colors.orange.withOpacity(0.15),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.security_rounded,
+                color: Colors.orange,
+                size: 34,
+              ),
+            ),
+
+            SizedBox(height: 14.h),
+
+            /// Title
+            Text(
+              'Security Overview',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 17.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            SizedBox(height: 8.h),
+
+            /// Main description
+            Text(
+              'This app’s risk level is calculated based on the permissions you have granted.\n\n'
+                  'Some permissions provide powerful access to your device. While they may be required for certain features, '
+                  'they can increase potential impact if misused.\n\n'
+                  'A higher risk does not mean the app is malicious — it means it has greater access.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 12.sp,
+                height: 1.5,
+              ),
+            ),
+
+            SizedBox(height: 20.h),
+
+            /// 🔍 Risk Levels
+            _RiskLevelItem(
+              icon: Icons.check_circle_outline,
+              title: 'Low Risk',
+              description: 'Limited permissions with minimal impact',
+              color: Colors.green,
+            ),
+            _RiskLevelItem(
+              icon: Icons.remove_circle_outline,
+              title: 'Medium Risk',
+              description: 'Sensitive permissions required for core features',
+              color: Colors.orange,
+            ),
+            _RiskLevelItem(
+              icon: Icons.warning_amber_rounded,
+              title: 'High Risk',
+              description:
+              'Permissions that are unusual or unnecessary for this type of app',
+              color: Colors.redAccent,
+            ),
+
+            SizedBox(height: 18.h),
+
+            /// 🔐 How to reduce risk
+            Container(
+              padding: EdgeInsets.all(14.w),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.25),
+                borderRadius: BorderRadius.circular(14.r),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.lock_outline,
+                    color: Colors.lightBlueAccent,
+                    size: 22,
+                  ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Text(
+                      'You can reduce risk by disabling permissions that are not actively used. '
+                          'Permissions can be changed at any time from system settings.',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12.sp,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 22.h),
+
+
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// ------------------------------
+/// Small widget for risk levels
+/// ------------------------------
+class _RiskLevelItem extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String description;
+  final Color color;
+
+  const _RiskLevelItem({
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 10.h),
+      child: Row(
         children: [
-          /// Header icon
-          Container(
-            width: 56.w,
-            height: 56.w,
-            decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.15),
-              shape: BoxShape.circle,
+          Icon(icon, color: color, size: 22),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: color,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  description,
+                  style: TextStyle(
+                    color: Colors.white60,
+                    fontSize: 11.sp,
+                  ),
+                ),
+              ],
             ),
-            child: const Icon(
-              Icons.warning_amber_rounded,
-              color: Colors.red,
-              size: 32,
-            ),
-          ),
-
-          SizedBox(height: 14.h),
-
-          Text(
-            'Security Actions',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          SizedBox(height: 6.h),
-
-          Text(
-            'Choose an action for this application',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white60,
-              fontSize: 12.sp,
-            ),
-          ),
-
-          SizedBox(height: 20.h),
-
-          ActionItem(
-            icon: Icons.settings_suggest_outlined,
-            title: 'Apply Changes',
-            subtitle: 'Open permission settings',
-            color: Colors.orange,
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: open app permission settings
-            },
-          ),
-
-          ActionItem(
-            icon: Icons.stop_circle_outlined,
-            title: 'Force Stop',
-            subtitle: 'Stop the app immediately',
-            color: Colors.red,
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: force stop via settings
-            },
-          ),
-
-          ActionItem(
-            icon: Icons.delete_outline,
-            title: 'Uninstall',
-            subtitle: 'Remove app from device',
-            color: Colors.redAccent,
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: uninstall app
-            },
-          ),
-
-          ActionItem(
-            icon: Icons.push_pin_outlined,
-            title: 'Keep App',
-            subtitle: 'Add to safe list',
-            color: Colors.green,
-            onTap: () {
-              Navigator.pop(context);
-              // TODO: save to keep list
-            },
           ),
         ],
       ),

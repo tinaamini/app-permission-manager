@@ -1,5 +1,9 @@
 package com.example.permissions_app
+import android.content.pm.PackageInfo
 
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -22,17 +26,31 @@ class MainActivity : FlutterActivity() {
             CHANNEL
         ).setMethodCallHandler { call, result ->
             when (call.method) {
+
                 "getInstalledAppsList" -> {
                     try {
                         result.success(getInstalledAppsList())
                     } catch (e: Exception) {
-                        result.error(
-                            "APP_LIST_ERROR",
-                            e.message,
-                            null
-                        )
+                        result.error("APP_LIST_ERROR", e.message, null)
                     }
                 }
+
+                "openAppSettings" -> {
+                    val packageName = call.argument<String>("packageName")
+                    if (packageName != null) {
+                        val intent =
+                            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        intent.data = Uri.parse("package:$packageName")
+                        startActivity(intent)
+                        result.success(true)
+                    } else {
+                        result.error("NO_PACKAGE", "Package name missing", null)
+                    }
+                }
+
+
+
+
                 else -> result.notImplemented()
             }
         }
@@ -40,7 +58,11 @@ class MainActivity : FlutterActivity() {
 
     /**
      * Returns ONLY user-installed apps (no system apps)
-     * with name, package and base64 icon
+     * with name, package, icon (base64) and permissions
+     */
+    /**
+     * Returns ONLY user-installed apps (no system apps)
+     * with name, package, icon (base64) and ONLY GRANTED permissions
      */
     private fun getInstalledAppsList(): List<Map<String, Any>> {
         val pm: PackageManager = applicationContext.packageManager
@@ -50,14 +72,24 @@ class MainActivity : FlutterActivity() {
         for (pkg in packages) {
             val appInfo = pkg.applicationInfo ?: continue
 
-            // ❌ skip system apps
+            // Skip system apps
             if ((appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0) continue
 
             val appName = pm.getApplicationLabel(appInfo).toString()
             val packageName = appInfo.packageName
 
-            val permissions =
-                pkg.requestedPermissions?.toList() ?: emptyList()
+            val grantedPermissions = mutableListOf<String>()
+
+            pkg.requestedPermissions?.forEachIndexed { index, permission ->
+                val flagsArray = pkg.requestedPermissionsFlags
+                if (flagsArray != null && index < flagsArray.size) {
+                    val flags = flagsArray[index]
+                    if ((flags and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
+                        grantedPermissions.add(permission)
+                    }
+                }
+            }
+
 
             try {
                 val drawable = pm.getApplicationIcon(appInfo)
@@ -88,12 +120,10 @@ class MainActivity : FlutterActivity() {
                         "name" to appName,
                         "package" to packageName,
                         "icon" to encodedIcon,
-                        "permissions" to permissions
-
+                        "permissions" to grantedPermissions
                     )
                 )
             } catch (e: Exception) {
-                // ignore broken icons
                 e.printStackTrace()
             }
         }

@@ -16,7 +16,10 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     await _platform.getInstalledApps();
 
     final calculated = apps.map((app) {
-      final risk = RiskCalculator.calculate(app.permissions);
+      final risk = RiskCalculator.calculate(
+        permissions: app.permissions,
+        packageName: app.packageName,
+        appName: app.appName,);
       return app.copyWith(riskLevel: risk);
     }).toList();
 
@@ -31,4 +34,57 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
       calculated.where((e) => e.riskLevel == RiskLevel.highRisk).toList(),
     ));
   }
+
+  Future<void> refreshApp(String packageName) async {
+    if (state is! AppPermissionLoaded) return;
+
+    final current = state as AppPermissionLoaded;
+
+    final freshApps = await _platform.getInstalledApps();
+
+    final updatedApp = freshApps.firstWhere(
+          (a) => a.packageName == packageName,
+      orElse: () => throw Exception('App not found'),
+    );
+
+    final newRisk =
+    RiskCalculator.calculate( permissions: updatedApp.permissions,
+      packageName: updatedApp.packageName,
+      appName: updatedApp.appName,);
+
+    final newApp = updatedApp.copyWith(riskLevel: newRisk);
+
+    List<AppPermissionUi> noRisk =
+    current.noRisk.where((a) => a.packageName != packageName).toList();
+    List<AppPermissionUi> lowRisk =
+    current.lowRisk.where((a) => a.packageName != packageName).toList();
+    List<AppPermissionUi> mediumRisk =
+    current.mediumRisk.where((a) => a.packageName != packageName).toList();
+    List<AppPermissionUi> highRisk =
+    current.highRisk.where((a) => a.packageName != packageName).toList();
+
+    switch (newRisk) {
+      case RiskLevel.noRisk:
+        noRisk.add(newApp);
+        break;
+      case RiskLevel.lowRisk:
+        lowRisk.add(newApp);
+        break;
+      case RiskLevel.mediumRisk:
+        mediumRisk.add(newApp);
+        break;
+      case RiskLevel.highRisk:
+        highRisk.add(newApp);
+        break;
+    }
+
+    emit(AppPermissionLoaded(
+      noRisk: noRisk,
+      lowRisk: lowRisk,
+      mediumRisk: mediumRisk,
+      highRisk: highRisk,
+    ));
+  }
+
+
 }

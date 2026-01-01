@@ -20,4 +20,18 @@ class AppPermissionPlatform {
       );
     }).toList();
   }
+
+
+  Future<void> openAppSettings(String packageName) async {
+    await _channel.invokeMethod(
+      'openAppSettings',
+      {'packageName': packageName},
+    );
+  }
+  Future<void> openAccessibilitySettings() async {
+    await _channel.invokeMethod('openAccessibilitySettings');
+  }
+
+
+
 }
