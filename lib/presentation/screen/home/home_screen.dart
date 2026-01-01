@@ -40,10 +40,12 @@ class HomeScreen extends StatelessWidget {
                 Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     BtnHomeWidget(image:'assets/main/varning.png'
-                      , text: 'Special Permissions', ontap: () {  },),
+                      , text: 'Special ', ontap: () {
+
+                      },),
 
                     BtnHomeWidget(image:'assets/main/chart.png'
-                      , text: 'Permission Dashboard', ontap: () {  },),
+                      , text: ' Dashboard', ontap: () {  },),
 
                   ],
                 ),

@@ -115,6 +115,7 @@ class RiskCalculator {
       return AppCategory.network;
     }
 
+
     return AppCategory.utility;
   }
 }

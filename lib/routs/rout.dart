@@ -9,7 +9,9 @@ import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
 import 'package:permissions_app/presentation/main_screen.dart';
 import 'package:permissions_app/presentation/screen/apps_permission/app_detail_screen.dart';
 import 'package:permissions_app/presentation/screen/apps_permission/app_permission_screen.dart';
+import 'package:permissions_app/presentation/screen/apps_permission/keep_app_screen.dart';
 import 'package:permissions_app/presentation/screen/apps_permission/risk_app_list_screen.dart';
+import 'package:permissions_app/presentation/screen/apps_permission/trusted_app_acreen.dart';
 import 'package:permissions_app/presentation/screen/home/home_screen.dart';
 import 'package:permissions_app/routs/rout_name.dart';
 
@@ -72,6 +74,29 @@ final GoRouter router = GoRouter(
             );
           },
         ),
+        GoRoute(
+          name: RouteName.keepApps,
+          path: '/keepApps',
+          pageBuilder: (context, state) {
+
+            return CupertinoPage(
+              key: state.pageKey,
+              child: KeepAppsScreen(),
+            );
+          },
+        ),
+        GoRoute(
+          name: RouteName.trustedApps,
+          path: '/trustedApps',
+          pageBuilder: (context, state) {
+
+            return CupertinoPage(
+              key: state.pageKey,
+              child: TrustedAppsScreen(),
+            );
+          },
+        ),
+
 
       ],
     ),

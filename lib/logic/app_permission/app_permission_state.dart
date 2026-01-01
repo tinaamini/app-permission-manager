@@ -39,3 +39,19 @@ class AppUnkeptSuccess extends AppPermissionState {
   AppUnkeptSuccess(this.packageName);
 }
 
+
+class AppTrustedSuccess extends AppPermissionState {
+  final String packageName;
+  AppTrustedSuccess(this.packageName);
+}
+
+class AppUntrustedSuccess extends AppPermissionState {
+  final String packageName;
+  AppUntrustedSuccess(this.packageName);
+}
+
+class AppTrusting extends AppPermissionState {
+  final String packageName;
+  AppTrusting(this.packageName);
+}
+

@@ -59,7 +59,6 @@ class AppPermissionScreen extends StatelessWidget {
             height: 15.w,
           ),
 
-          /// LOW RISK
 
           BtnPermissionWidget(
             ontap: () {
@@ -114,16 +113,20 @@ class AppPermissionScreen extends StatelessWidget {
             height: 35.w,
           ),
 
-          Padding(
-            padding:  EdgeInsets.only(left: 20.w),
-            child: Row(
-              children: [
-                BtnHomeWidget(image: 'assets/app_permission/keep.png', text: 'Keep Apps', ontap: () {  },),
-                SizedBox(width: 20.w,),
-                BtnHomeWidget(image: 'assets/app_permission/recent.png', text: 'Recent Apps', ontap: () {  },)
-              ],
-            ),
-          )
+          Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              BtnHomeWidget(image: 'assets/app_permission/keep.png', text: 'Keep Apps',
+                ontap: () {
+                  context.pushNamed(RouteName.keepApps);
+
+              },),
+              BtnHomeWidget(image: 'assets/app_permission/trust.png', text: 'Trust Apps', ontap: () {        context.pushNamed(RouteName.trustedApps);
+              },),
+            ],
+          ),
+          SizedBox(height: 25.w,),
+          BtnHomeWidget(image: 'assets/app_permission/recent.png', text: 'Recent Apps', ontap: () {  },)
+
         ]);
       })),
     );

@@ -1,34 +1,35 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
 
-class KeepAppButton extends StatelessWidget {
-  final bool isKept;
+class TrustBtn extends StatelessWidget {
+  final bool isTrusted;
+  final bool isTrusting;
   final VoidCallback onTap;
 
-  const KeepAppButton({
+  const TrustBtn({
     super.key,
-    required this.isKept,
+    required this.isTrusted,
+    required this.isTrusting,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: isTrusting ? null : onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
-        width: 150.w,
+        width: 160.w,
         padding: EdgeInsets.symmetric(vertical: 14.h),
         decoration: BoxDecoration(
-          color: isKept
-              ? Colors.green.withOpacity(0.15)
+          color: isTrusted
+              ? Colors.blueAccent.withOpacity(0.15)
               : AppColor.CartDark,
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: isKept ? Colors.green : Colors.white12,
+            color: isTrusted ? Colors.blueAccent : Colors.white12,
             width: 1.2,
           ),
           boxShadow: [
@@ -42,16 +43,34 @@ class KeepAppButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              isKept ? Icons.verified_rounded : Icons.push_pin_outlined,
-              color: isKept ? Colors.green : Colors.white70,
-              size: 22,
-            ),
+            if (isTrusting)
+              SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              )
+            else
+              Icon(
+                isTrusted
+                    ? Icons.verified_rounded
+                    : Icons.verified_outlined,
+                color:
+                isTrusted ? Colors.blueAccent : Colors.white70,
+                size: 22,
+              ),
             SizedBox(width: 10.w),
             Text(
-              isKept ? 'App is Kept' : 'Keep App',
+              isTrusting
+                  ? 'Trusting...'
+                  : isTrusted
+                  ? 'Trusted'
+                  : 'Trust App',
               style: TextStyle(
-                color: isKept ? Colors.green : Colors.white,
+                color:
+                isTrusted ? Colors.blueAccent : Colors.white,
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.2,

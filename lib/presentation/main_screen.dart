@@ -34,7 +34,7 @@ class MainScreen extends StatelessWidget {
               image: const AssetImage('assets/main/13045dfa-7f40-4f81-98ac-8d4d00b0a8da-md.jpeg'),
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.4),
+                Colors.black.withOpacity(0.8),
                 BlendMode.darken,
               ),
             ),

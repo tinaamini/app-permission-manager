@@ -40,7 +40,7 @@ class RiskAppListScreen extends StatelessWidget {
                 builder: (context, state) {
                   if (state is! AppPermissionLoaded) {
                     return const Center(
-                      child: CupertinoActivityIndicator(),
+                      child: CupertinoActivityIndicator(color: AppColor.white,),
                     );
                   }
 
@@ -66,12 +66,15 @@ class RiskAppListScreen extends StatelessWidget {
                         },
 
                         child: AppItem(
+                            packageName:app.packageName
+                          ,
                          icon:Image.memory(
                             base64Decode(app.iconBase64),
                             width: 40,
                             height: 40,
                           ),
-                        
+
+
                           appName: app.appName,
                           // packageName: app.packageName,
                           permissions: app.permissions,

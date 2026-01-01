@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
@@ -16,23 +17,24 @@ class BtnPermissionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: ontap,
-      child: Container(
-        width: 340.w,
-        height: 80.w,
+      child:  Container(width: 340.w,height: 100.h,
+        padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
-            color: AppColor.CartDark,
-            borderRadius: BorderRadius.circular(8.w),
-            border: Border.all(width: 1.w, color: AppColor.white1)),
-        child: Row(
+          color: AppColor.CartDark,
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              blurRadius: 12,
+              spreadRadius: 1,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Image.asset(image),
-            Column(
-              children: [
-                Padding(
-                  padding:  EdgeInsets.only(top: 15.w),
-                  child: Container(width: 230.w,
-                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
+
                         Text(text,style: AppTextStyle.nameApp.copyWith(color: color),),
                         Container(width: 30.w,height: 30.w,
                           decoration: BoxDecoration(
@@ -44,13 +46,6 @@ class BtnPermissionWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
-
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
