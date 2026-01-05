@@ -7,6 +7,11 @@ class RouteName {
   static const appDetail = 'appDetail';
   static const keepApps = 'keepApps';
   static const trustedApps = 'trustedApps';
+  static const recentApps = 'recentApps';
+  static const groupPermission = 'groupPermission';
+  static const permissionDetail = 'permissionDetail';
+  static const specialPermission = 'specialPermission';
+  static const specialPermissionDetail = 'specialPermissionDetail';
 
 
 }

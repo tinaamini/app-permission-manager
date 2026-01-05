@@ -4,7 +4,7 @@ import 'package:permissions_app/constant/risk_level.dart';
 import 'package:permissions_app/core/models/app_permission_ui.dart';
 
 import '../risk/risk_calculator.dart';
-import 'app_permission_platform.dart';
+import '../../core/servises/app_permission_service.dart';
 import 'app_permission_state.dart';
 
 class AppPermissionCubit extends Cubit<AppPermissionState> {
@@ -241,6 +241,9 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
   List<String> get keptApps => _readList('keep_apps');
   List<String> get trustedApps => _readList('trusted_apps');
 
+  Future<void> refreshAll() async {
+    await loadApps();
+  }
 
 
 }

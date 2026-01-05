@@ -7,5 +7,7 @@ class AppColor {
   static const white = Color.fromRGBO(255, 255, 255, 1);
   static const white1 = Color.fromRGBO(255, 255, 255, 0.37254901960784315);
   static const BlurStyle = Color.fromRGBO(55, 55, 55, 0.6);
-  static const bg = Color(0xFF161623);
+  static const summary = Color.fromRGBO(250, 95, 26, 1.0);
+  static const warning = Color.fromRGBO(250, 187, 26, 0.17647058823529413);
+  static const warningborder = Color.fromRGBO(250, 187, 26, 1.0);
 }

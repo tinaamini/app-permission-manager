@@ -11,6 +11,14 @@ class AppPermissionLoaded extends AppPermissionState {
   final List<AppPermissionUi> lowRisk;
   final List<AppPermissionUi> mediumRisk;
   final List<AppPermissionUi> highRisk;
+  List<AppPermissionUi> get allApps =>
+      [
+        ...highRisk,
+        ...mediumRisk,
+        ...lowRisk,
+        ...noRisk,
+      ];
+
 
   AppPermissionLoaded({
     required this.noRisk,

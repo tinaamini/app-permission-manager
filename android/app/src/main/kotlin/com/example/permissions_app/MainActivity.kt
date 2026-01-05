@@ -1,5 +1,6 @@
 package com.example.permissions_app
 import android.content.pm.PackageInfo
+import android.content.Context
 
 import android.content.Intent
 import android.net.Uri
@@ -17,6 +18,12 @@ import java.io.ByteArrayOutputStream
 class MainActivity : FlutterActivity() {
 
     private val CHANNEL = "permission_channel"
+    private val CHANNEL2 = "recent_apps"
+    private val INTENT_CHANNEL = "android_intent"
+    private val SPECIAL_PERMISSION_CHANNEL = "app_permission_channel"
+
+
+
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -54,16 +61,337 @@ class MainActivity : FlutterActivity() {
                 else -> result.notImplemented()
             }
         }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            CHANNEL2
+        ).setMethodCallHandler { call, result ->
+            when (call.method) {
+
+                "getTodayRecentApps" -> {
+                    try {
+                        result.success(getTodayRecentApps())
+                    } catch (e: Exception) {
+                        result.error("RECENT_APPS_ERROR", e.message, null)
+                    }
+                }
+
+                else -> result.notImplemented()
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            INTENT_CHANNEL
+        ).setMethodCallHandler { call, result ->
+            when (call.method) {
+
+                "openUsageAccess" -> {
+                    try {
+                        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.error("USAGE_ACCESS_ERROR", e.message, null)
+                    }
+                }
+
+                "checkUsageAccess" -> {
+                    try {
+                        val appOps = getSystemService(Context.APP_OPS_SERVICE) as android.app.AppOpsManager
+                        val mode = appOps.checkOpNoThrow(
+                            android.app.AppOpsManager.OPSTR_GET_USAGE_STATS,
+                            android.os.Process.myUid(),
+                            packageName
+                        )
+                        result.success(mode == android.app.AppOpsManager.MODE_ALLOWED)
+                    } catch (e: Exception) {
+                        result.success(false)
+                    }
+                }
+
+
+                else -> result.notImplemented()
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            SPECIAL_PERMISSION_CHANNEL
+        ).setMethodCallHandler { call, result ->
+            when (call.method) {
+
+                // ===== Usage Access =====
+                "openUsageAccessSettings" -> {
+                    try {
+                        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.error("USAGE_ACCESS_ERROR", e.message, null)
+                    }
+                }
+
+                "checkUsageAccess" -> {
+                    try {
+                        val appOps = getSystemService(Context.APP_OPS_SERVICE)
+                                as android.app.AppOpsManager
+                        val mode = appOps.checkOpNoThrow(
+                            android.app.AppOpsManager.OPSTR_GET_USAGE_STATS,
+                            android.os.Process.myUid(),
+                            packageName
+                        )
+                        result.success(
+                            mode == android.app.AppOpsManager.MODE_ALLOWED
+                        )
+                    } catch (e: Exception) {
+                        result.success(false)
+                    }
+                }
+
+                "getUsageAccessApps" -> {
+                    try {
+                        val usageStatsManager =
+                            getSystemService(Context.USAGE_STATS_SERVICE)
+                                    as android.app.usage.UsageStatsManager
+
+                        val endTime = System.currentTimeMillis()
+                        val startTime = endTime - (1000L * 60 * 60 * 24)
+
+                        val stats = usageStatsManager.queryUsageStats(
+                            android.app.usage.UsageStatsManager.INTERVAL_DAILY,
+                            startTime,
+                            endTime
+                        )
+
+                        val pm = packageManager
+                        val apps = mutableListOf<Map<String, Any>>()
+
+                        stats
+                            .distinctBy { it.packageName }
+                            .forEach { usage ->
+                                try {
+                                    val appInfo =
+                                        pm.getApplicationInfo(usage.packageName, 0)
+
+                                    // skip system apps
+                                    if ((appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0)
+                                        return@forEach
+
+                                    val appName =
+                                        pm.getApplicationLabel(appInfo).toString()
+
+                                    // ===== ICON =====
+                                    val drawable = pm.getApplicationIcon(appInfo)
+                                    val width =
+                                        if (drawable.intrinsicWidth > 0) drawable.intrinsicWidth else 96
+                                    val height =
+                                        if (drawable.intrinsicHeight > 0) drawable.intrinsicHeight else 96
+
+                                    val bitmap = Bitmap.createBitmap(
+                                        width,
+                                        height,
+                                        Bitmap.Config.ARGB_8888
+                                    )
+                                    val canvas = Canvas(bitmap)
+                                    drawable.setBounds(0, 0, canvas.width, canvas.height)
+                                    drawable.draw(canvas)
+
+                                    val stream = ByteArrayOutputStream()
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                                    val encodedIcon =
+                                        Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
+
+                                    apps.add(
+                                        mapOf(
+                                            "package" to usage.packageName,
+                                            "name" to appName,
+                                            "icon" to encodedIcon
+                                        )
+                                    )
+                                } catch (_: Exception) {}
+                            }
+
+                        result.success(apps)
+                    } catch (e: Exception) {
+                        result.error("USAGE_LIST_ERROR", e.message, null)
+                    }
+                }
+
+
+                // ===== Overlay =====
+                "openOverlaySettings" -> {
+                    try {
+                        val intent = Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:$packageName")
+                        )
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.error("OVERLAY_ERROR", e.message, null)
+                    }
+                }
+
+                "checkOverlayPermission" -> {
+                    try {
+                        val hasOverlay = hasAnyNonSystemOverlayPermission()
+                        result.success(hasOverlay)
+                    } catch (e: Exception) {
+                        result.success(false)
+                    }
+                }
+
+
+                // ===== Notification Access =====
+                "openNotificationAccessSettings" -> {
+                    try {
+                        val intent = Intent(
+                            Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS
+                        )
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.error("NOTIFICATION_ACCESS_ERROR", e.message, null)
+                    }
+                }
+
+                "checkNotificationAccess" -> {
+                    try {
+                        val enabled = isAnyNonSystemNotificationListenerEnabled()
+                        result.success(enabled)
+                    } catch (e: Exception) {
+                        result.success(false)
+                    }
+                }
+
+                "getNotificationAccessApps" -> {
+                    try {
+                        val enabledListeners = Settings.Secure.getString(
+                            contentResolver,
+                            "enabled_notification_listeners"
+                        ) ?: ""
+
+                        val pm = packageManager
+                        val apps = mutableListOf<Map<String, Any>>()
+
+                        enabledListeners.split(":").forEach { flat ->
+                            val cn = android.content.ComponentName.unflattenFromString(flat)
+                                ?: return@forEach
+
+                            val pkg = cn.packageName
+
+                            try {
+                                val appInfo = pm.getApplicationInfo(pkg, 0)
+
+                                // skip system apps
+                                if ((appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0)
+                                    return@forEach
+
+                                val appName = pm.getApplicationLabel(appInfo).toString()
+
+                                // ===== ICON =====
+                                val drawable = pm.getApplicationIcon(appInfo)
+                                val width =
+                                    if (drawable.intrinsicWidth > 0) drawable.intrinsicWidth else 96
+                                val height =
+                                    if (drawable.intrinsicHeight > 0) drawable.intrinsicHeight else 96
+
+                                val bitmap = Bitmap.createBitmap(
+                                    width,
+                                    height,
+                                    Bitmap.Config.ARGB_8888
+                                )
+                                val canvas = Canvas(bitmap)
+                                drawable.setBounds(0, 0, canvas.width, canvas.height)
+                                drawable.draw(canvas)
+
+                                val stream = ByteArrayOutputStream()
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                                val encodedIcon =
+                                    Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
+
+                                apps.add(
+                                    mapOf(
+                                        "package" to pkg,
+                                        "name" to appName,
+                                        "icon" to encodedIcon
+                                    )
+                                )
+                            } catch (_: Exception) {}
+                        }
+
+                        result.success(apps)
+                    } catch (e: Exception) {
+                        result.error("NOTIFICATION_LIST_ERROR", e.message, null)
+                    }
+                }
+
+
+
+                // ===== Battery Optimization =====
+                "openBatteryOptimizationSettings" -> {
+                    try {
+                        val intent = Intent(
+                            Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS
+                        )
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.error("BATTERY_OPT_ERROR", e.message, null)
+                    }
+                }
+
+                "checkBatteryOptimization" -> {
+                    try {
+                        val pm = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+                        val ignoring = pm.isIgnoringBatteryOptimizations(packageName)
+                        result.success(ignoring)
+                    } catch (e: Exception) {
+                        result.success(false)
+                    }
+                }
+
+
+                // ===== Do Not Disturb =====
+                "openDoNotDisturbSettings" -> {
+                    try {
+                        val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.error("DND_ERROR", e.message, null)
+                    }
+                }
+
+                "checkDoNotDisturb" -> {
+                    try {
+                        val nm = getSystemService(Context.NOTIFICATION_SERVICE)
+                                as android.app.NotificationManager
+
+                        val enabled =
+                            nm.currentInterruptionFilter !=
+                                    android.app.NotificationManager.INTERRUPTION_FILTER_ALL
+
+                        result.success(enabled)
+                    } catch (e: Exception) {
+                        result.success(false)
+                    }
+                }
+
+
+                else -> result.notImplemented()
+            }
+        }
+
     }
 
-    /**
-     * Returns ONLY user-installed apps (no system apps)
-     * with name, package, icon (base64) and permissions
-     */
-    /**
-     * Returns ONLY user-installed apps (no system apps)
-     * with name, package, icon (base64) and ONLY GRANTED permissions
-     */
     private fun getInstalledAppsList(): List<Map<String, Any>> {
         val pm: PackageManager = applicationContext.packageManager
         val packages = pm.getInstalledPackages(PackageManager.GET_PERMISSIONS)
@@ -130,4 +458,82 @@ class MainActivity : FlutterActivity() {
 
         return apps
     }
+
+    private fun getTodayRecentApps(): List<Map<String, Any>> {
+        val usageStatsManager =
+            getSystemService(Context.USAGE_STATS_SERVICE) as android.app.usage.UsageStatsManager
+
+        val calendar = java.util.Calendar.getInstance().apply {
+            set(java.util.Calendar.HOUR_OF_DAY, 0)
+            set(java.util.Calendar.MINUTE, 0)
+            set(java.util.Calendar.SECOND, 0)
+            set(java.util.Calendar.MILLISECOND, 0)
+        }
+
+        val startTime = calendar.timeInMillis
+        val endTime = System.currentTimeMillis()
+
+        val stats = usageStatsManager.queryUsageStats(
+            android.app.usage.UsageStatsManager.INTERVAL_DAILY,
+            startTime,
+            endTime
+        )
+
+        val result = mutableListOf<Map<String, Any>>()
+
+        stats.forEach {
+            if (it.lastTimeUsed >= startTime) {
+                result.add(
+                    mapOf(
+                        "package" to it.packageName,
+                        "lastTimeUsed" to it.lastTimeUsed,
+                        "foregroundTime" to it.totalTimeInForeground
+                    )
+                )
+            }
+        }
+
+        return result
+    }
+
+    private fun isAnyNonSystemNotificationListenerEnabled(): Boolean {
+        val enabledListeners = Settings.Secure.getString(
+            contentResolver,
+            "enabled_notification_listeners"
+        ) ?: return false
+
+        // enabled_notification_listeners format:
+        // com.pkg/.SomeService:com.other/.Service
+        val parts = enabledListeners.split(":")
+
+        val pm = applicationContext.packageManager
+
+        for (flat in parts) {
+            val cn = android.content.ComponentName.unflattenFromString(flat) ?: continue
+            val pkg = cn.packageName
+
+            try {
+                val appInfo = pm.getApplicationInfo(pkg, 0)
+                val isSystem = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+                if (!isSystem) return true
+            } catch (_: Exception) {
+                // ignore broken entries
+            }
+        }
+        return false
+    }
+    private fun hasAnyNonSystemOverlayPermission(): Boolean {
+        val pm = applicationContext.packageManager
+        val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+
+        for (app in packages) {
+            if ((app.flags and ApplicationInfo.FLAG_SYSTEM) != 0) continue
+
+            if (Settings.canDrawOverlays(this)) {
+                return true
+            }
+        }
+        return false
+    }
+
 }

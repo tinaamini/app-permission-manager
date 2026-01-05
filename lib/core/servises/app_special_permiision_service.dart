@@ -1,0 +1,119 @@
+import 'package:flutter/services.dart';
+
+class AppSpecialPermissionPlatform {
+  static const MethodChannel _channel =
+  MethodChannel('app_permission_channel');
+
+  // ===== Usage Access =====
+  Future<void> openUsageAccessSettings() async {
+    try {
+      await _channel.invokeMethod('openUsageAccessSettings');
+    } catch (_) {}
+  }
+
+  Future<bool> checkUsageAccess() async {
+    try {
+      final bool? result =
+      await _channel.invokeMethod<bool>('checkUsageAccess');
+      return result ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getUsageAccessApps() async {
+    try {
+      final List result =
+      await _channel.invokeMethod('getUsageAccessApps');
+
+      return result
+          .map((e) => Map<String, dynamic>.from(e))
+          .toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
+
+  // ===== Overlay =====
+  Future<void> openOverlaySettings() async {
+    try {
+      await _channel.invokeMethod('openOverlaySettings');
+    } catch (_) {}
+  }
+
+  Future<bool> checkOverlayPermission() async {
+    try {
+      final bool? result =
+      await _channel.invokeMethod<bool>('checkOverlayPermission');
+      return result ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  // ===== Notification Access =====
+  Future<void> openNotificationAccessSettings() async {
+    try {
+      await _channel.invokeMethod('openNotificationAccessSettings');
+    } catch (_) {}
+  }
+
+  Future<bool> checkNotificationAccess() async {
+    try {
+      final bool? result =
+      await _channel.invokeMethod<bool>('checkNotificationAccess');
+      return result ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getNotificationAccessApps() async {
+    try {
+      final List result =
+      await _channel.invokeMethod('getNotificationAccessApps');
+
+      return result
+          .map((e) => Map<String, dynamic>.from(e))
+          .toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
+
+  // ===== Battery Optimization =====
+  Future<void> openBatteryOptimizationSettings() async {
+    try {
+      await _channel.invokeMethod('openBatteryOptimizationSettings');
+    } catch (_) {}
+  }
+
+  Future<bool> isIgnoringBatteryOptimizations() async {
+    try {
+      final bool? result =
+      await _channel.invokeMethod<bool>('checkBatteryOptimization');
+      return result ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  // ===== Do Not Disturb =====
+  Future<void> openDoNotDisturbSettings() async {
+    try {
+      await _channel.invokeMethod('openDoNotDisturbSettings');
+    } catch (_) {}
+  }
+
+  Future<bool> isDoNotDisturbEnabled() async {
+    try {
+      final bool? result =
+      await _channel.invokeMethod<bool>('checkDoNotDisturb');
+      return result ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+}

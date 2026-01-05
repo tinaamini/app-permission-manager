@@ -5,9 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:permissions_app/presentation/special_permissions/screen/special_permission_screen.dart';
 import 'package:permissions_app/routs/rout.dart';
 
+import 'core/servises/app_special_permiision_service.dart';
 import 'logic/app_permission/app_permission_cubit.dart';
+import 'logic/special_permission/special_permission_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +40,13 @@ class _MainAppState extends State<MainApp> {
           BlocProvider<AppPermissionCubit>(
             create: (_) => AppPermissionCubit()..loadApps(),
           ),
+          BlocProvider(
+          create: (_) =>
+    SpecialPermissionCubit(
+    AppSpecialPermissionPlatform(),
+    )..loadStatus(),
+    child: const SpecialPermissionScreen(),
+    )
         ],
         child:  ScreenUtilInit(
             designSize: const Size(364, 917),

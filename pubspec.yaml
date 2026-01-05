@@ -37,6 +37,8 @@ flutter:
     - assets/main/
     - assets/fonts/
     - assets/app_permission/
+    - assets/group_permission/
+    - assets/special_permission/
 
 
   fonts:

@@ -1,18 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permissions_app/constant/permission_group_type.dart';
 
 import 'package:permissions_app/constant/risk_level.dart';
+import 'package:permissions_app/constant/specialPermissionType.dart';
 import 'package:permissions_app/core/models/app_permission_ui.dart';
-import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
-import 'package:permissions_app/presentation/main_screen.dart';
-import 'package:permissions_app/presentation/screen/apps_permission/app_detail_screen.dart';
-import 'package:permissions_app/presentation/screen/apps_permission/app_permission_screen.dart';
-import 'package:permissions_app/presentation/screen/apps_permission/keep_app_screen.dart';
-import 'package:permissions_app/presentation/screen/apps_permission/risk_app_list_screen.dart';
-import 'package:permissions_app/presentation/screen/apps_permission/trusted_app_acreen.dart';
-import 'package:permissions_app/presentation/screen/home/home_screen.dart';
+import 'package:permissions_app/presentation/apps_permission/recently_apps/screen/recent_apps.dart';
+import 'package:permissions_app/presentation/apps_permission/screens/app_detail_screen.dart';
+import 'package:permissions_app/presentation/apps_permission/screens/app_permission_screen.dart';
+import 'package:permissions_app/presentation/apps_permission/screens/keep_app_screen.dart';
+import 'package:permissions_app/presentation/apps_permission/screens/risk_app_list_screen.dart';
+import 'package:permissions_app/presentation/apps_permission/screens/trusted_app_acreen.dart';
+import 'package:permissions_app/presentation/group_permission/screen/group_permissions_screen.dart';
+import 'package:permissions_app/presentation/group_permission/screen/permmision_detail_screen.dart';
+import 'package:permissions_app/presentation/home/screens/home_screen.dart';
+import 'package:permissions_app/presentation/special_permissions/screen/special_permission_detail_screen.dart';
+import 'package:permissions_app/presentation/special_permissions/screen/special_permission_screen.dart';
+import 'package:permissions_app/presentation/utils/main_screen.dart';
 import 'package:permissions_app/routs/rout_name.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -96,7 +101,70 @@ final GoRouter router = GoRouter(
             );
           },
         ),
+        GoRoute(
+          name: RouteName.groupPermission,
+          path: '/groupPermission',
+          pageBuilder: (context, state) {
 
+            return CupertinoPage(
+              key: state.pageKey,
+              child: GroupPermissionsScreen(),
+            );
+          },
+        ),
+
+        GoRoute(
+          name: RouteName.recentApps,
+          path: '/recentApps',
+          pageBuilder: (context, state) {
+
+            return CupertinoPage(
+              key: state.pageKey,
+              child: RecentAppsScreen(),
+            );
+          },
+        ),
+        GoRoute(
+          name: RouteName.permissionDetail,
+          path: '/permissionDetail',
+          pageBuilder: (context, state) {
+            final permissionGroup = state.extra as PermissionGroupType;
+
+            return CupertinoPage(
+              key: state.pageKey,
+              child: PermissionDetailScreen(
+                groupType: permissionGroup,
+
+              ),
+            );
+          },
+        ),
+        GoRoute(
+          name: RouteName.specialPermission,
+          path: '/specialPermission',
+          pageBuilder: (context, state) {
+
+            return CupertinoPage(
+              key: state.pageKey,
+              child: SpecialPermissionScreen(),
+            );
+          },
+        ),
+        GoRoute(
+          name: RouteName.specialPermissionDetail,
+          path: '/specialPermissionDetail',
+          pageBuilder: (context, state) {
+            final type = state.extra as SpecialPermissionType;
+
+            return CupertinoPage(
+              key: state.pageKey,
+
+              child: SpecialPermissionDetailScreen(
+                type:type
+              ),
+            );
+          },
+        ),
 
       ],
     ),
