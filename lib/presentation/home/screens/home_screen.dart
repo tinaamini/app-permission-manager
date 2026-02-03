@@ -58,18 +58,17 @@ class HomeScreen extends StatelessWidget {
                   BtnHomeWidget(
                     image: 'assets/main/chart.png',
                     text: ' Dashboard',
-                    ontap: () {},
+                    ontap: () {
+                      context.pushNamed(RouteName.dashboardPermission);
+
+                    },
                   ),
                 ],
               ),
               SizedBox(
                 height: 20.w,
               ),
-              BtnHomeWidget(
-                image: 'assets/main/clock.png',
-                text: 'Permission History',
-                ontap: () {},
-              ),
+
             ],
           ),
         ),

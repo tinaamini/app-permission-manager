@@ -23,6 +23,7 @@ dependencies:
 
 
 
+
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
@@ -39,6 +40,8 @@ flutter:
     - assets/app_permission/
     - assets/group_permission/
     - assets/special_permission/
+    - assets/logo/logo.png
+
 
 
   fonts:

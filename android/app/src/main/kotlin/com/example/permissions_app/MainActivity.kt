@@ -21,6 +21,8 @@ class MainActivity : FlutterActivity() {
     private val CHANNEL2 = "recent_apps"
     private val INTENT_CHANNEL = "android_intent"
     private val SPECIAL_PERMISSION_CHANNEL = "app_permission_channel"
+    private val DASHBOARD_CHANNEL = "permissions/safe_dashboard"
+    private val SYSTEM_SETTINGS_CHANNEL = "system_settings"
 
 
 
@@ -389,6 +391,100 @@ class MainActivity : FlutterActivity() {
                 else -> result.notImplemented()
             }
         }
+
+
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, DASHBOARD_CHANNEL)
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+
+                    "isAccessibilityEnabled" -> {
+                        val enabled =
+                            AccessibilityUtils.isAnyAccessibilityServiceEnabled(this)
+                        result.success(enabled)
+                    }
+
+                    "openAccessibilitySettings" -> {
+                        SettingsNavigator.openAccessibilitySettings(this)
+                        result.success(null)
+                    }
+
+                    "getLocationState" -> {
+                        val pkg = call.argument<String>("packageName")
+                        if (pkg.isNullOrBlank()) {
+                            result.error("NO_PACKAGE", "packageName missing", null)
+                        } else {
+                            val data = LocationUtils.getLocationStateForPackage(this, pkg)
+                            result.success(data)
+                        }
+                    }
+
+                    "openAppLocationSettings" -> {
+                        val pkg = call.argument<String>("packageName")
+                        if (pkg.isNullOrBlank()) {
+                            result.error("NO_PACKAGE", "packageName missing", null)
+                        } else {
+                            AppSettingsNavigator.openAppLocationSettings(this, pkg)
+                            result.success(true)
+                        }
+                    }
+
+
+                    else -> result.notImplemented()
+                }
+            }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SYSTEM_SETTINGS_CHANNEL)
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+
+                    "openPrivacySettings" -> {
+                        try {
+                            // ✅ very stable: "android.settings.PRIVACY_SETTINGS"
+                            val intent = Intent(Settings.ACTION_PRIVACY_SETTINGS).apply {
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            }
+                            startActivity(intent)
+                            result.success(true)
+                        } catch (e: Exception) {
+                            // fallback
+                            try {
+                                val fallback = Intent(Settings.ACTION_SETTINGS).apply {
+                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                }
+                                startActivity(fallback)
+                                result.success(true)
+                            } catch (e2: Exception) {
+                                result.error("OPEN_PRIVACY_FAILED", e2.message, null)
+                            }
+                        }
+                    }
+
+                    "openPermissionManager" -> {
+                        try {
+                            // not guaranteed on all OEMs, so keep fallback
+                            val intent = Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS).apply {
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            }
+                            startActivity(intent)
+                            result.success(true)
+                        } catch (e: Exception) {
+                            try {
+                                val fallback = Intent(Settings.ACTION_SETTINGS).apply {
+                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                }
+                                startActivity(fallback)
+                                result.success(true)
+                            } catch (e2: Exception) {
+                                result.error("OPEN_PERMISSION_MANAGER_FAILED", e2.message, null)
+                            }
+                        }
+                    }
+
+                    else -> result.notImplemented()
+                }
+            }
+
 
     }
 

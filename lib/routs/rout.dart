@@ -12,6 +12,7 @@ import 'package:permissions_app/presentation/apps_permission/screens/app_permiss
 import 'package:permissions_app/presentation/apps_permission/screens/keep_app_screen.dart';
 import 'package:permissions_app/presentation/apps_permission/screens/risk_app_list_screen.dart';
 import 'package:permissions_app/presentation/apps_permission/screens/trusted_app_acreen.dart';
+import 'package:permissions_app/presentation/dashboard/screen/dashboard_screen.dart';
 import 'package:permissions_app/presentation/group_permission/screen/group_permissions_screen.dart';
 import 'package:permissions_app/presentation/group_permission/screen/permmision_detail_screen.dart';
 import 'package:permissions_app/presentation/home/screens/home_screen.dart';
@@ -162,6 +163,18 @@ final GoRouter router = GoRouter(
               child: SpecialPermissionDetailScreen(
                 type:type
               ),
+            );
+          },
+        ),
+        GoRoute(
+          name: RouteName.dashboardPermission,
+          path: '/dashboardPermission',
+          pageBuilder: (context, state) {
+
+            return CupertinoPage(
+              key: state.pageKey,
+
+              child: DashboardPermissionScreen(),
             );
           },
         ),
