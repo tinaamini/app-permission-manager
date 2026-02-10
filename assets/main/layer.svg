@@ -1,0 +1,9 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<foreignObject x="-4" y="-4" width="56" height="56"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(2px);clip-path:url(#bgblur_0_45_219_clip_path);height:100%;width:100%"></div></foreignObject><rect data-figma-bg-blur-radius="4" width="48" height="48" rx="16" fill="#B787F5" fill-opacity="0.24"/>
+<path d="M25.0095 14.9198L30.9095 17.5398C32.6095 18.2898 32.6095 19.5298 30.9095 20.2798L25.0095 22.8998C24.3395 23.1998 23.2395 23.1998 22.5695 22.8998L16.6695 20.2798C14.9695 19.5298 14.9695 18.2898 16.6695 17.5398L22.5695 14.9198C23.2395 14.6198 24.3395 14.6198 25.0095 14.9198Z" stroke="#B787F5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M15 23C15 23.84 15.63 24.81 16.4 25.15L23.19 28.17C23.71 28.4 24.3 28.4 24.81 28.17L31.6 25.15C32.37 24.81 33 23.84 33 23" stroke="#B787F5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M15 28C15 28.93 15.55 29.77 16.4 30.15L23.19 33.17C23.71 33.4 24.3 33.4 24.81 33.17L31.6 30.15C32.45 29.77 33 28.93 33 28" stroke="#B787F5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<defs>
+<clipPath id="bgblur_0_45_219_clip_path" transform="translate(4 4)"><rect width="48" height="48" rx="16"/>
+</clipPath></defs>
+</svg>
