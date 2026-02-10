@@ -54,10 +54,7 @@ class _AppDetailScreenState extends State<AppDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.BcGround,
-      body: SafeArea(
-        child: BlocConsumer<AppPermissionCubit, AppPermissionState>(
+    return  BlocConsumer<AppPermissionCubit, AppPermissionState>(
             listenWhen: (_, current) =>
                 current is AppTrustedSuccess ||
                 current is AppUntrustedSuccess ||
@@ -328,9 +325,7 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                   ),
                 ],
               );
-            }),
-      ),
-    );
+            });
   }
 
   Color _riskColor(RiskLevel level) {

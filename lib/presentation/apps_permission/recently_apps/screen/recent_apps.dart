@@ -21,10 +21,7 @@ class RecentAppsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.BcGround,
-      body: SafeArea(
-        child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
+    return  BlocBuilder<AppPermissionCubit, AppPermissionState>(
           builder: (context, state) {
             if (state is! AppPermissionLoaded) {
               return const Center(
@@ -110,8 +107,7 @@ class RecentAppsScreen extends StatelessWidget {
               },
             );
           },
-        ),
-      ),
+
     );
   }
 

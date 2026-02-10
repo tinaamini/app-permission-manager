@@ -48,8 +48,9 @@ class AppItem extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
+        border: Border.all(width: 1.w,color: AppColor.CartDarkBorder),
         color: AppColor.CartDark,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.5),
@@ -61,8 +62,10 @@ class AppItem extends StatelessWidget {
       ),
       child: Row(
         children: [
+          SizedBox(width: 5.w),
+
           SizedBox(width: 44.w, height: 44.w, child: icon),
-          SizedBox(width: 12.w),
+          SizedBox(width: 20.w),
 
           Expanded(
             child: Row(

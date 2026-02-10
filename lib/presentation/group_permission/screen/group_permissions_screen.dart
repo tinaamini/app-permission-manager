@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permissions_app/constant/app_color.dart';
+
 import 'package:permissions_app/constant/permission_group_type.dart';
 import 'package:permissions_app/presentation/group_permission/widget/btn_group_widget.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
@@ -13,129 +12,67 @@ class GroupPermissionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: AppColor.BcGround,
-      body: SafeArea(
-        child: Column(
-        children: [
-          AppBarWidget(text: "GROUP PERMISSION", ontap: (){
-            context.pop();
-          }, width: 60),
-          Padding(
-            padding:  EdgeInsets.only(top: 20.w),
-            child: Container(width: 400.w,height: 800.h,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 16.h,
-                  crossAxisSpacing:16.w,
-                  childAspectRatio: 0.7,
-                  children: [
-                    BtnGroupWidget(
-                      image: 'assets/group_permission/location.png',
-                      text: 'Location',
-                      ontap: () {
-                        context.pushNamed(
-                          RouteName.permissionDetail,
-                          extra: PermissionGroupType.location,
-                        );                      },
-                    ),
-                    BtnGroupWidget(
-                      image: 'assets/group_permission/camera.png',
-                      text: 'Camera',
-                      ontap: () {
-                        context.pushNamed(
-                          RouteName.permissionDetail,
-                          extra: PermissionGroupType.camera,
-                        );
-                      },
-                    ),
-                    BtnGroupWidget(
-                      image: 'assets/group_permission/microphone.png',
-                      text: 'Microphone',
-                      ontap: () {
-                        context.pushNamed(
-                          RouteName.permissionDetail,
-                          extra: PermissionGroupType.microphone,
-                        );
-                      },
-                    ),
-                    BtnGroupWidget(
-                      image: 'assets/group_permission/contacts.png',
-                      text: 'Contacts',
-                      ontap: () {
-                        context.pushNamed(
-                          RouteName.permissionDetail,
-                          extra: PermissionGroupType.contacts,
-                        );
-                      },
-                    ),
-                    BtnGroupWidget(
-                      image: 'assets/group_permission/sms.png',
-                      text: 'SMS',
-                      ontap: () {
-                        context.pushNamed(
-                          RouteName.permissionDetail,
-                          extra: PermissionGroupType.sms,
-                        );
-                      },
-                    ),
-                    BtnGroupWidget(
-                      image: 'assets/group_permission/call.png',
-                      text: 'call',
-                      ontap: () {
-                        context.pushNamed(
-                          RouteName.permissionDetail,
-                          extra: PermissionGroupType.call,
-                        );
-                      },
-                    ),
-                    BtnGroupWidget(
-                      image: 'assets/group_permission/files.png',
-                      text: 'Storage',
-                      ontap: () {
-                        context.pushNamed(
-                          RouteName.permissionDetail,
-                          extra: PermissionGroupType.storage,
-                        );
-                      },
-                    ),
-                    BtnGroupWidget(
-                      image: 'assets/group_permission/calendar.png',
-                      text: 'Calendar',
-                      ontap: () {
-                        context.pushNamed(
-                          RouteName.permissionDetail,
-                          extra: PermissionGroupType.calendar,
-                        );
-                      },
-                    ),
-                    BtnGroupWidget(
-                      image: 'assets/group_permission/notification.png',
-                      text: 'Notifications',
-                      ontap: () {
-                        context.pushNamed(
-                          RouteName.permissionDetail,
-                          extra: PermissionGroupType.notification,
-                        );
-                      },
-                    ),
-                    BtnGroupWidget(
-                      image: 'assets/group_permission/activity.png',
-                      text: 'Activity',
-                      ontap: () {  context.pushNamed(
-                        RouteName.permissionDetail,
-                        extra: PermissionGroupType.activity,
-                      );},
-                    ),
-                  ],
-                ),
+    final items = <_GroupItem>[
+      _GroupItem('assets/group_permission/location.png', 'Location', PermissionGroupType.location),
+      _GroupItem('assets/group_permission/camera.png', 'Camera', PermissionGroupType.camera),
+      _GroupItem('assets/group_permission/microphone.png', 'Microphone', PermissionGroupType.microphone),
+      _GroupItem('assets/group_permission/contacts.png', 'Contacts', PermissionGroupType.contacts),
+      _GroupItem('assets/group_permission/sms.png', 'SMS', PermissionGroupType.sms),
+      _GroupItem('assets/group_permission/call.png', 'Call', PermissionGroupType.call),
+      _GroupItem('assets/group_permission/files.png', 'Storage', PermissionGroupType.storage),
+      _GroupItem('assets/group_permission/calendar.png', 'Calendar', PermissionGroupType.calendar),
+      _GroupItem('assets/group_permission/notification.png', 'Notifications', PermissionGroupType.notification),
+      _GroupItem('assets/group_permission/activity.png', 'Activity', PermissionGroupType.activity),
+    ];
+
+    return Column(
+      children: [
+        AppBarWidget(
+          text: "GROUP PERMISSION",
+          ontap: () => context.pop(),
+          width: 60,
+        ),
+
+        SizedBox(height: 12.h),
+
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(top: 20.h),
+            child: GridView.builder(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              itemCount: items.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16.w,
+                mainAxisSpacing: 16.h,
+
+                mainAxisExtent: 101.h,
               ),
+              itemBuilder: (context, index) {
+                final item = items[index];
+                return BtnGroupWidget(
+                  image: item.image,
+                  text: item.title,
+                  ontap: () {
+                    context.pushNamed(
+                      RouteName.permissionDetail,
+                      extra: item.type,
+                    );
+                  },
+                );
+              },
             ),
           ),
-        ],
-      ),
-      ),
+        ),
+      ],
     );
   }
+}
+
+class _GroupItem {
+  final String image;
+  final String title;
+  final PermissionGroupType type;
+
+  const _GroupItem(this.image, this.title, this.type);
 }

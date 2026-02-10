@@ -23,15 +23,12 @@ class RiskAppListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.BcGround,
-      body: SafeArea(
-        child: Column(
+    return  Column(
           children: [
             AppBarWidget(
               text: _title(),
               ontap: () => context.pop(),
-              width: 80,
+              width: 85,
             ),
             SizedBox(height: 12.h),
 
@@ -50,35 +47,37 @@ class RiskAppListScreen extends StatelessWidget {
                     return _emptyState();
                   }
 
-                  return ListView.separated(
+                  return ListView.builder(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     itemCount: apps.length,
-                    separatorBuilder: (_, __) =>
-                        Divider(color: Colors.white12, height: 16.h),
+
                     itemBuilder: (context, index) {
                       final app = apps[index];
-                      return GestureDetector(
-                        onTap: () {
-                          context.pushNamed(
-                            RouteName.appDetail,
-                            extra: app,
-                          );
-                        },
+                      return Padding(
+                        padding:  EdgeInsets.symmetric(vertical: 10.h),
+                        child: GestureDetector(
+                          onTap: () {
+                            context.pushNamed(
+                              RouteName.appDetail,
+                              extra: app,
+                            );
+                          },
 
-                        child: AppItem(
-                            packageName:app.packageName
-                          ,
-                         icon:Image.memory(
-                            base64Decode(app.iconBase64),
-                            width: 40,
-                            height: 40,
+                          child: AppItem(
+                              packageName:app.packageName
+                            ,
+                           icon:Image.memory(
+                              base64Decode(app.iconBase64),
+                              width: 40,
+                              height: 40,
+                            ),
+
+
+                            appName: app.appName,
+                            // packageName: app.packageName,
+                            permissions: app.permissions,
+                            riskLevel: app.riskLevel,
                           ),
-
-
-                          appName: app.appName,
-                          // packageName: app.packageName,
-                          permissions: app.permissions,
-                          riskLevel: app.riskLevel,
                         ),
                       );
                     },
@@ -87,8 +86,7 @@ class RiskAppListScreen extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ),
+
     );
   }
 

@@ -16,7 +16,7 @@ class BtnGroupWidget extends StatelessWidget {
     Widget build(BuildContext context) {
       return GestureDetector(
         onTap: ontap,
-        child: Container(width: 100.w,height: 280.h,
+        child: Container(width: 176.w,height: 101.h,
           padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
             color: AppColor.CartDark,
@@ -32,9 +32,9 @@ class BtnGroupWidget extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              Positioned(top: -30.w,left:-53.w,
-                  child: Container(child: Image.asset(image,width: 180.w,height: 180.w,))),
-              Positioned(top: 100.w,
+              Positioned(top: -23.w,left:25.w,
+                  child: Container(child: Image.asset(image,width: 100.w,height: 100.w,))),
+              Positioned(top: 60.w,left: 35.w,
                   child: Container(width: 80.w,height: 80.w,
                     child: Text(text,style: AppTextStyle.groupPermission ,  textAlign: TextAlign.center,
                     ),

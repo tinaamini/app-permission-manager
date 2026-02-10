@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
@@ -43,10 +44,7 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>with W
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.BcGround,
-      body: SafeArea(
-        child: BlocBuilder<SpecialPermissionCubit, SpecialPermissionState>(
+    return  BlocBuilder<SpecialPermissionCubit, SpecialPermissionState>(
             builder: (context, state) {
               if (state.loading) {
                 return const SizedBox.shrink();
@@ -60,20 +58,18 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>with W
                   AppBarWidget(
                     text: "SPECIAL PERMISSIONS",
                     ontap: () => context.pop(),
-                    width: 60,
+                    width: 70,
                   ),
 
                   SizedBox(height: 23.h),
 
-                  /// ✅ Grid
                   Container(
                     width: 350.w,
-                    height: 800.h,
+                    height: 700.h,
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: Column(
                         children: [
-                          /// Usage Data Access
                           Text(
                               "High-level system permissions that can affect your privacy.",
                               style: AppTextStyle.summaryValue),
@@ -105,7 +101,6 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>with W
                             height: 20.h,
                           ),
 
-                          /// Notification Access
                           FutureBuilder<bool>(
                             future: AppSpecialPermissionPlatform().checkNotificationAccess(),
                             builder: (context, snapshot) {
@@ -225,9 +220,9 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>with W
                                         width: 1.w, color: AppColor.warningborder)),
                                 child: Stack(
                                   children: [
-                                    Positioned(left:-70,top: -10,
-                                        child: Container(width: 200.w,height: 100.h,
-                                            child: Image.asset('assets/main/varning.png'))),
+                                    Positioned(left:7.w,top: 10.h,
+                                        child: Container(width: 50.w,height: 50.h,
+                                            child: SvgPicture.asset('assets/main/danger.svg'))),
                                     Positioned(left:50,top: 10,
                                       child:
                                       Text("This permission allows deep access to system data.",style: AppTextStyle.warning,),
@@ -250,8 +245,7 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>with W
                 ],
               );
             }
-        ),
-      ),
+
     );
   }
 }

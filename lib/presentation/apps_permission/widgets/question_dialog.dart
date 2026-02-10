@@ -42,31 +42,13 @@ class QuestionDialog extends StatelessWidget {
 
           SizedBox(height: 12.h),
 
-          // /// Automatic
-          // Text(
-          //   "Guided Mode",
-          //   style: TextStyle(
-          //     color: Colors.green,
-          //     fontSize: 14.sp,
-          //     fontWeight: FontWeight.w600,
-          //   ),
-          // ),
-          // SizedBox(height: 6.h),
-          // Text("Automatically guides you to the correct permission settings so you can review and disable risky permissions quickly.",
-          //   textAlign: TextAlign.center,
-          //   style: TextStyle(
-          //     color: Colors.white70,
-          //     fontSize: 12.sp,
-          //   ),
-          // ),
-          //
-          // SizedBox(height: 16.h),
+
 
           /// Manual
           Text(
             "Manual",
             style: TextStyle(
-              color: Colors.blue,
+              color: AppColor.green1,
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
             ),
@@ -76,7 +58,7 @@ class QuestionDialog extends StatelessWidget {
             "You will manually navigate through the system settings to manage app permissions.",
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.white70,
+              color: AppColor.green2,
               fontSize: 12.sp,
             ),
           ),
@@ -85,26 +67,6 @@ class QuestionDialog extends StatelessWidget {
 
           Row(
             children: [
-              // Expanded(
-              //   child: GestureDetector(
-              //     onTap: ontapGuided,
-              //     child: Container(
-              //       padding: EdgeInsets.symmetric(vertical: 14.h),
-              //       decoration: BoxDecoration(
-              //         color: Colors.green,
-              //         borderRadius: BorderRadius.circular(20.r),
-              //       ),
-              //       child: const Center(
-              //         child: Text(
-              //           "Guided Mode",
-              //           style: TextStyle(color: Colors.white),
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              //
-              // SizedBox(width: 12.w),
 
               Expanded(
                 child: GestureDetector(
@@ -112,13 +74,14 @@ class QuestionDialog extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     decoration: BoxDecoration(
-                      color: Colors.blue,
+                      color: AppColor.CartDark,
                       borderRadius: BorderRadius.circular(20.r),
+                      border: Border.all(width: 1.w,color: AppColor.green1)
                     ),
                     child: const Center(
                       child: Text(
                         "Continue",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppColor.green1),
                       ),
                     ),
                   ),

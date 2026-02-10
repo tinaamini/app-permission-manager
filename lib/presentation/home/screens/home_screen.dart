@@ -1,121 +1,126 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permissions_app/constant/app_style.dart';
-import 'package:permissions_app/routs/rout.dart';
+
+import 'package:permissions_app/core/servises/installed_apps_service.dart';
+import 'package:permissions_app/logic/risk/device_risk_resolver.dart';
+import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
+import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
+import 'package:permissions_app/presentation/home/widgets/device_status_card.dart';
+import 'package:permissions_app/presentation/home/widgets/btn_home_widget.dart';
 import 'package:permissions_app/routs/rout_name.dart';
 
-import '../widgets/btn_home_widget.dart';
-
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+
+  final InstalledAppsService _appsService = InstalledAppsService();
+  final DeviceRiskResolver _riskResolver = const DeviceRiskResolver();
+
+  late final Future<int> _appsCountFuture = _appsService.fetchInstalledAppsCount();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildAppBar(context),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 310.h,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  BtnHomeWidget(
-                    image: 'assets/main/grid.png',
-                    text: 'App Permissions',
-                    ontap: () {
-                      context.pushNamed(RouteName.appsPermission);
-                    },
-                  ),
-                  BtnHomeWidget(
-                    image: 'assets/main/layer.png',
-                    text: 'Group Permissions',
-                    ontap: () {
-                      context.pushNamed(RouteName.groupPermission);
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20.w,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  BtnHomeWidget(
-                    image: 'assets/main/varning.png',
-                    text: 'Special ',
-                    ontap: () {
-                      context.pushNamed(RouteName.specialPermission);
-                    },
-                  ),
-                  BtnHomeWidget(
-                    image: 'assets/main/chart.png',
-                    text: ' Dashboard',
-                    ontap: () {
-                      context.pushNamed(RouteName.dashboardPermission);
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        child: Column(
+          children: [
+            SizedBox(height: 156.h),
 
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20.w,
-              ),
+            BlocBuilder<AppPermissionCubit, AppPermissionState>(
+              builder: (context, state) {
+                if (state is! AppPermissionLoaded) {
+                  return Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(16.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16.r),
+                      border: Border.all(
+                        color: const Color.fromRGBO(76, 76, 76, 0.2),
+                      ),
+                    ),
+                    child: const Center(child: CupertinoActivityIndicator()),
+                  );
+                }
 
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+                final status = _riskResolver.resolve(
+                  high: state.highRisk.length,
+                  medium: state.mediumRisk.length,
+                  low: state.lowRisk.length,
+                );
 
-  PreferredSize _buildAppBar(context) {
-    return PreferredSize(
-      preferredSize: Size.fromHeight(170.h),
-      child: AppBar(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-        ),
-        backgroundColor: Color.fromRGBO(38, 38, 38, 1),
-        centerTitle: true,
-        leading: Container(
-            width: 48.w,
-            height: 40.w,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(8.w))),
-            child: GestureDetector(
-              // onTap:  (){_scaffoldKey.currentState?.openDrawer();},
-              child: Image.asset(
-                "assets/main/taj.png",
-                width: 16.w,
-                height: 16.w,
-              ),
-            )),
-        title: Center(
-          child: Padding(
-            padding: EdgeInsets.only(right: 1.w),
-            child: GestureDetector(
-              child: Text(
-                "Permission Inspector",
-                style: AppTextStyle.nameApp,
-              ),
+                return DeviceStatusCard(
+                  status: status,
+                );
+              },
             ),
-          ),
+
+
+            FutureBuilder<int>(
+              future: _appsCountFuture,
+              builder: (context, snapshot) {
+                final countText = snapshot.hasData ? '${snapshot.data}' : '...';
+
+                return Column(
+                  children: [
+
+                    SizedBox(height: 110.h),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        BtnHomeWidget(
+                          image: 'assets/main/grid.svg',
+                          text: 'App Permissions',
+                          textCount: '$countText Apps Checked',
+                          ontap: () {
+                            context.pushNamed(RouteName.appsPermission);
+                          },
+                        ),
+                        BtnHomeWidget(
+                          image: 'assets/main/layer.svg',
+                          text: 'Group Permissions',
+                          textCount: '10 Categories',
+                          ontap: () {
+                            context.pushNamed(RouteName.groupPermission);
+                          },
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 20.w),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        BtnHomeWidget(
+                          image: 'assets/main/varning.svg',
+                          text: 'Special',
+                          textCount: '5 Sensitive Access',
+                          ontap: () {
+                            context.pushNamed(RouteName.specialPermission);
+                          },
+                        ),
+                        BtnHomeWidget(
+                          image: 'assets/main/chart.svg',
+                          text: 'Dashboard',
+                          textCount: 'View States',
+                          ontap: () {
+                            context.pushNamed(RouteName.dashboardPermission);
+                          },
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 20.w),
+                  ],
+                );
+              },
+            ),
+          ],
         ),
-        actions: [
-          Image.asset(
-            "assets/main/setting.png",
-            width: 74.w,
-            height: 74.w,
-          ),
-        ],
       ),
     );
   }

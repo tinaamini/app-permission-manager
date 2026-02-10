@@ -44,6 +44,15 @@ class MainActivity : FlutterActivity() {
                     }
                 }
 
+                "getInstalledAppsCount" -> {
+                    try {
+                        result.success(getInstalledAppsCount())
+                    } catch (e: Exception) {
+                        result.error("APP_COUNT_ERROR", e.message, null)
+                    }
+                }
+
+
                 "openAppSettings" -> {
                     val packageName = call.argument<String>("packageName")
                     if (packageName != null) {
@@ -486,6 +495,19 @@ class MainActivity : FlutterActivity() {
             }
 
 
+    }
+    private fun getInstalledAppsCount(): Int {
+        val pm = applicationContext.packageManager
+        val packages = pm.getInstalledPackages(0)
+        var count = 0
+
+        for (pkg in packages) {
+            val appInfo = pkg.applicationInfo ?: continue
+            // Skip system apps
+            if ((appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0) continue
+            count++
+        }
+        return count
     }
 
     private fun getInstalledAppsList(): List<Map<String, Any>> {

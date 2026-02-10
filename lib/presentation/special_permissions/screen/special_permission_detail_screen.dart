@@ -21,10 +21,7 @@ class SpecialPermissionDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.BcGround,
-      body: SafeArea(
-        child: Column(
+    return Column(
           children: [
             AppBarWidget(
               text: _title(),
@@ -36,8 +33,7 @@ class SpecialPermissionDetailScreen extends StatelessWidget {
               child: _buildContent(context),
             ),
           ],
-        ),
-      ),
+
     );
   }
 

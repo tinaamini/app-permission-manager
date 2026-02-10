@@ -49,7 +49,7 @@ class _MainAppState extends State<MainApp> {
     )
         ],
         child:  ScreenUtilInit(
-            designSize: const Size(364, 917),
+            designSize: const Size(412, 917),
             minTextAdapt: true,
             builder: (context, child) {
               return MaterialApp.router(

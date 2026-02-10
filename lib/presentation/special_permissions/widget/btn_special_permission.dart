@@ -33,7 +33,8 @@ class BtnSpecialPermission extends StatelessWidget {
         padding: EdgeInsets.all(10.w),
         decoration: BoxDecoration(
           color: AppColor.CartDark,
-          borderRadius: BorderRadius.circular(10.r),
+          borderRadius: BorderRadius.circular(12.r),
+border: Border.all(width: 1.w,color: AppColor.CartDarkBorder),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.35),
@@ -45,7 +46,6 @@ class BtnSpecialPermission extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            /// ===== Icon =====
             Image.asset(
               image,
               width: 56.w,
@@ -55,7 +55,6 @@ class BtnSpecialPermission extends StatelessWidget {
 
             SizedBox(width: 12.w),
 
-            /// ===== Title + Description =====
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +78,6 @@ class BtnSpecialPermission extends StatelessWidget {
 
             SizedBox(width: 12.w),
 
-            /// ===== Risk + Status =====
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

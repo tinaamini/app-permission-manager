@@ -5,18 +5,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 
-class BtnHomeWidget extends StatelessWidget {
+class BtnCard extends StatelessWidget {
   final String image;
   final String text;
-  final String textCount;
   final VoidCallback ontap;
-  const BtnHomeWidget({super.key, required this.image, required this.text, required this.ontap, required this.textCount});
+  const BtnCard({super.key, required this.image, required this.text, required this.ontap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: ontap,
-      child: Container(width: 176.w,height: 130.h,
+      child: Container(width: 364.w,height: 80.h,
         padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 16.h),
         decoration: BoxDecoration(
           color: AppColor.CartDark,
@@ -26,16 +25,13 @@ class BtnHomeWidget extends StatelessWidget {
         ),
         child: Padding(
           padding:  EdgeInsets.only(top: 5.w),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.center,
+          child: Row(crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SvgPicture.asset(image,width: 48.w,height: 48.h,),
-              SizedBox(height: 4.h,),
-              Column(
-                children: [
+              SizedBox(width: 7.w,),
+
                   Center(child: Text(text,style: AppTextStyle.btnHome,)),
-                  Center(child: Text(textCount,style: AppTextStyle.CartDarkCount,)),
-                ],
-              )
+
             ],
           ),
         ),

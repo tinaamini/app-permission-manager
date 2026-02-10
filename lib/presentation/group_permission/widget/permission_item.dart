@@ -43,7 +43,8 @@ class PermissionItem extends StatelessWidget {
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: AppColor.CartDark,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(24.r),
+        border: Border.all(width: 1.w,color: AppColor.CartDarkBorder),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.5),
@@ -55,6 +56,7 @@ class PermissionItem extends StatelessWidget {
       ),
       child: Row(
         children: [
+          SizedBox(width: 12.w),
           SizedBox(width: 44.w, height: 44.w, child: icon),
           SizedBox(width: 12.w),
 

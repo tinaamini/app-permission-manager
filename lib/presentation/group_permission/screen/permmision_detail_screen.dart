@@ -7,9 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:permissions_app/constant/app_color.dart';
-import 'package:permissions_app/constant/permissionConst.dart';
 import 'package:permissions_app/constant/permission_group_type.dart';
-import 'package:permissions_app/core/models/app_permission_ui.dart';
 import 'package:permissions_app/core/servises/app_permission_service.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
@@ -53,10 +51,7 @@ class _PermissionDetailScreenState extends State<PermissionDetailScreen>   with 
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.BcGround,
-      body: SafeArea(
-        child: Column(
+    return  Column(
           children: [
             AppBarWidget(
               text: _title(),
@@ -81,50 +76,52 @@ class _PermissionDetailScreenState extends State<PermissionDetailScreen>   with 
                     return _emptyState();
                   }
 
-                  return ListView.separated(
+                  return ListView.builder(
                     padding: EdgeInsets.symmetric(
                       horizontal: 16.w,
                       vertical: 12.h,
                     ),
                     itemCount: apps.length,
-                    separatorBuilder: (_, __) =>
-                        Divider(color: Colors.white12, height: 16.h),
+
                     itemBuilder: (context, index) {
                       final app = apps[index];
 
-                      return PermissionItem(
-                        icon: Image.memory(
-                          base64Decode(app.iconBase64),
-                          width: 40,
-                          height: 40,
+                      return Padding(
+                        padding:  EdgeInsets.symmetric(vertical: 10.w),
+                        child: PermissionItem(
+                          icon: Image.memory(
+                            base64Decode(app.iconBase64),
+                            width: 40,
+                            height: 40,
+                          ),
+                          appName: app.appName,
+                          packageName: app.packageName,
+                          permissions: app.permissions,
+                          enabled: true,
+                          isDangerous: true,
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (dialogContext) => Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: QuestionDialog(
+                                  ontapManual: () async {
+                                    if (dialogContext.canPop()) {
+                                      Navigator.pop(dialogContext);
+                                    }
+                                    await Future.delayed(
+                                      const Duration(milliseconds: 50),
+                                    );
+                                    await AppPermissionPlatform()
+                                        .openAppSettings(app.packageName);
+                                  },
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                        appName: app.appName,
-                        packageName: app.packageName,
-                        permissions: app.permissions,
-                        enabled: true,
-                        isDangerous: true,
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (dialogContext) => Dialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: QuestionDialog(
-                                ontapManual: () async {
-                                  if (dialogContext.canPop()) {
-                                    Navigator.pop(dialogContext);
-                                  }
-                                  await Future.delayed(
-                                    const Duration(milliseconds: 50),
-                                  );
-                                  await AppPermissionPlatform()
-                                      .openAppSettings(app.packageName);
-                                },
-                              ),
-                            ),
-                          );
-                        },
                       );
                     },
                   );
@@ -132,8 +129,7 @@ class _PermissionDetailScreenState extends State<PermissionDetailScreen>   with 
               ),
             ),
           ],
-        ),
-      ),
+
     );
 
   }

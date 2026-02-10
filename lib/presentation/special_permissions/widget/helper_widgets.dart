@@ -2,15 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
+import 'package:permissions_app/constant/app_style.dart';
 
 Widget sectionTitle(String text) {
   return Text(
     text,
-    style: TextStyle(
-      fontSize: 18.sp,
-      fontWeight: FontWeight.bold,
-      color: Colors.white,
-    ),
+    style: AppTextStyle.trustTitle
   );
 }
 
@@ -19,11 +16,7 @@ Widget paragraph(String text) {
     padding: EdgeInsets.only(top: 8.h),
     child: Text(
       text,
-      style: TextStyle(
-        fontSize: 14.sp,
-        color: Colors.white70,
-        height: 1.5,
-      ),
+      style:AppTextStyle.trustDescription.copyWith(color: AppColor.green2)
     ),
   );
 }

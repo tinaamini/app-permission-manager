@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:permissions_app/constant/app_color.dart';
+import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/core/models/scan_model.dart';
 
 enum ScanTab { newApps, changedPerms }
@@ -46,25 +49,21 @@ class SinceLastScanWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12.r),
+        color:AppColor.CartDark,
+        borderRadius: BorderRadius.circular(16.r),
+        
         border: Border.all(color: Colors.white.withOpacity(0.08)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: [
-              Icon(Icons.history, color: Colors.white70, size: 18.sp),
+            children: [SvgPicture.asset("assets/dashboard/clock.svg"),
               SizedBox(width: 8.w),
               Expanded(
                 child: Text(
                   'Since last scan',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 14.sp,
-                  ),
+                  style: AppTextStyle.dashboardTitle
                 ),
               ),
               InkWell(
@@ -104,7 +103,7 @@ class SinceLastScanWidget extends StatelessWidget {
             ],
           ),
           SizedBox(height: 8.h),
-          Text(lastText, style: TextStyle(color: Colors.white38, fontSize: 11.sp)),
+          Text(lastText, style: TextStyle(color: AppColor.blue2, fontSize: 11.sp)),
           SizedBox(height: 12.h),
 
           Row(
