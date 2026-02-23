@@ -14,9 +14,11 @@ class BtnGroupWidget extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
-      return GestureDetector(
+      return InkWell(
         onTap: ontap,
-        child: Container(width: 176.w,height: 101.h,
+        borderRadius: BorderRadius.circular(12.r),
+
+        child: Container(
           padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
             color: AppColor.CartDark,

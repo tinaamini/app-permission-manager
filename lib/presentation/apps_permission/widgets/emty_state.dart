@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 Widget empty(String text) => Center(
   child: Text(
     text,
-    style: TextStyle(color: Colors.white54),
-  ),
+    style: TextStyle(color: Colors.white54,),
+      textAlign: TextAlign.start,
+      softWrap: true,),
+
 );

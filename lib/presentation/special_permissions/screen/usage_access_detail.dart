@@ -18,7 +18,6 @@ class UsageAccessDetail extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// ===== Explanation =====
           sectionTitle('What is Usage Data Access?'),
           paragraph(
             'Allows apps to view how often and how long other apps are used. '
@@ -30,23 +29,11 @@ class UsageAccessDetail extends StatelessWidget {
           riskBadge(high: true),
 
           SizedBox(height: 24.h),
-          //
-          // /// ===== Action =====
-          // actionButton(
-          //   text: 'Open Usage Access Settings',
-          //   onTap: () {
-          //     AppPermissionPlatform().openUsageAccessSettings();
-          //   },
-          // ),
-          //
-          // SizedBox(height: 32.h),
 
-          /// ===== List Title =====
           sectionTitle('Apps with Usage Access'),
 
           SizedBox(height: 12.h),
 
-          /// ===== Apps List =====
           Expanded(
             child: FutureBuilder<List<Map<String, dynamic>>>(
               future: AppSpecialPermissionPlatform().getUsageAccessApps(),
@@ -68,6 +55,9 @@ class UsageAccessDetail extends StatelessWidget {
                         color: Colors.white54,
                         fontSize: 14.sp,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
                     ),
                   );
                 }

@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
-import 'package:permissions_app/core/servises/app_permission_service.dart';
 import 'package:permissions_app/core/servises/app_special_permiision_service.dart';
 import 'package:permissions_app/presentation/special_permissions/widget/helper_widgets.dart';
 
@@ -31,13 +30,16 @@ class DisplayOverAppsDetail extends StatelessWidget {
           GestureDetector(
             child:
             Container(
-              width: 364.w,height: 48.h,
+              width:double.infinity,height: 48.h,
                 decoration: BoxDecoration(
                   color: AppColor.CartDark,
                   border: Border.all(width: 1.w,color: AppColor.green1),
                   borderRadius: BorderRadius.circular(16.r)
                 ),
-                child: Center(child: Text( 'Open Display Over Apps Settings',style: AppTextStyle.greenFont,))),
+                child: Center(child: Text( 'Open Display Over Apps Settings',   maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyle.greenFont,
+                  textAlign: TextAlign.center,))),
             onTap: () {
               AppSpecialPermissionPlatform().openOverlaySettings();
             },
@@ -45,9 +47,11 @@ class DisplayOverAppsDetail extends StatelessWidget {
 
           SizedBox(height: 32.h),
 
-          Text(
-            'Android does not allow apps to list overlay permissions directly. '
-                'To manage apps with this access, use the system settings.',style: AppTextStyle.trustDescription.copyWith(color: AppColor.green2),
+          Expanded(
+            child: Text(
+              'Android does not allow apps to list overlay permissions directly. '
+                  'To manage apps with this access, use the system settings.',style: AppTextStyle.trustDescription.copyWith(color: AppColor.green2),
+            ),
           ),
         ],
       ),

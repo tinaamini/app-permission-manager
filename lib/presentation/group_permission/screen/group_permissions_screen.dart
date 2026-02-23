@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:permissions_app/constant/permission_group_type.dart';
 import 'package:permissions_app/presentation/group_permission/widget/btn_group_widget.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
+import 'package:permissions_app/presentation/utils/base_screen.dart';
 import 'package:permissions_app/routs/rout_name.dart';
 
 class GroupPermissionsScreen extends StatelessWidget {
@@ -25,46 +26,47 @@ class GroupPermissionsScreen extends StatelessWidget {
       _GroupItem('assets/group_permission/activity.png', 'Activity', PermissionGroupType.activity),
     ];
 
-    return Column(
-      children: [
-        AppBarWidget(
-          text: "GROUP PERMISSION",
-          ontap: () => context.pop(),
-          width: 60,
-        ),
+    return BaseScreen(
+      child: Column(
+        children: [
+          AppBarWidget(
+            text: "GROUP PERMISSION",
+            ontap: () => context.pop(),
+          ),
 
-        SizedBox(height: 12.h),
+          SizedBox(height: 12.h),
 
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(top: 20.h),
-            child: GridView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              itemCount: items.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16.w,
-                mainAxisSpacing: 16.h,
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(top: 20.h),
+              child: GridView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                itemCount: items.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16.w,
+                  mainAxisSpacing: 16.h,
 
-                mainAxisExtent: 101.h,
+                  mainAxisExtent: 101.h,
+                ),
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  return BtnGroupWidget(
+                    image: item.image,
+                    text: item.title,
+                    ontap: () {
+                      context.pushNamed(
+                        RouteName.permissionDetail,
+                        extra: item.type,
+                      );
+                    },
+                  );
+                },
               ),
-              itemBuilder: (context, index) {
-                final item = items[index];
-                return BtnGroupWidget(
-                  image: item.image,
-                  text: item.title,
-                  ontap: () {
-                    context.pushNamed(
-                      RouteName.permissionDetail,
-                      extra: item.type,
-                    );
-                  },
-                );
-              },
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

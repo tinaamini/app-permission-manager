@@ -2,10 +2,62 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:permissions_app/constant/risk_level.dart';
 import 'package:permissions_app/core/models/app_permission_ui.dart';
+import 'package:flutter/foundation.dart';
 
 import '../risk/risk_calculator.dart';
 import '../../core/servises/app_permission_service.dart';
 import 'app_permission_state.dart';
+Map<String, List<AppPermissionUi>> processAppsInIsolate(
+    Map<String, dynamic> input,
+    ) {
+  final List<AppPermissionUi> apps =
+  input['apps'] as List<AppPermissionUi>;
+  final Set<String> trusted =
+  (input['trusted'] as List<String>).toSet();
+
+  final List<AppPermissionUi> noRisk = [];
+  final List<AppPermissionUi> lowRisk = [];
+  final List<AppPermissionUi> mediumRisk = [];
+  final List<AppPermissionUi> highRisk = [];
+
+  for (final app in apps) {
+    final risk = RiskCalculator.calculate(
+      permissions: app.permissions,
+      packageName: app.packageName,
+      appName: app.appName,
+    );
+
+    final finalRisk =
+    trusted.contains(app.packageName)
+        ? RiskLevel.noRisk
+        : risk;
+
+    final updated = app.copyWith(riskLevel: finalRisk);
+
+    switch (finalRisk) {
+      case RiskLevel.noRisk:
+        noRisk.add(updated);
+        break;
+      case RiskLevel.lowRisk:
+        lowRisk.add(updated);
+        break;
+      case RiskLevel.mediumRisk:
+        mediumRisk.add(updated);
+        break;
+      case RiskLevel.highRisk:
+        highRisk.add(updated);
+        break;
+    }
+  }
+
+  return {
+    'noRisk': noRisk,
+    'lowRisk': lowRisk,
+    'mediumRisk': mediumRisk,
+    'highRisk': highRisk,
+  };
+}
+
 
 class AppPermissionCubit extends Cubit<AppPermissionState> {
   final AppPermissionPlatform _platform = AppPermissionPlatform();
@@ -13,72 +65,29 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
 
   AppPermissionCubit() : super(AppPermissionInitial());
 
+
   Future<void> loadApps() async {
-    // final List<AppPermissionUi> apps =
-    // await _platform.getInstalledApps();
-    //
-    // final calculated = apps.map((app) {
-    //   final risk = RiskCalculator.calculate(
-    //     permissions: app.permissions,
-    //     packageName: app.packageName,
-    //     appName: app.appName,);
-    //   return app.copyWith(riskLevel: risk);
-    // }).toList();
-    //
-    // emit(AppPermissionLoaded(
-    //   noRisk:
-    //   calculated.where((e) => e.riskLevel == RiskLevel.noRisk).toList(),
-    //   lowRisk:
-    //   calculated.where((e) => e.riskLevel == RiskLevel.lowRisk).toList(),
-    //   mediumRisk:
-    //   calculated.where((e) => e.riskLevel == RiskLevel.mediumRisk).toList(),
-    //   highRisk:
-    //   calculated.where((e) => e.riskLevel == RiskLevel.highRisk).toList(),
-    // ));
+    if (state is AppPermissionLoading) return;
 
-    final List<AppPermissionUi> noRisk = [];
-    final List<AppPermissionUi> lowRisk = [];
-    final List<AppPermissionUi> mediumRisk = [];
-    final List<AppPermissionUi> highRisk = [];
+    emit(AppPermissionLoading());
 
-    final List<AppPermissionUi> apps =
-    await _platform.getInstalledApps();
-    final calculated = apps.map((app) {
-      final risk = RiskCalculator.calculate(
-        permissions: app.permissions,
-        packageName: app.packageName,
-        appName: app.appName,);
-      return app.copyWith(riskLevel: risk);
-    }).toList();
+    final trusted = trustedApps;
 
-    for (final app in calculated) {
-      // 🔥 Trusted همیشه No Risk
-      if (isAppTrusted(app.packageName)) {
-        noRisk.add(app.copyWith(riskLevel: RiskLevel.noRisk));
-        continue;
-      }
+    final apps = await _platform.getInstalledApps();
 
-      switch (app.riskLevel) {
-        case RiskLevel.noRisk:
-          noRisk.add(app);
-          break;
-        case RiskLevel.lowRisk:
-          lowRisk.add(app);
-          break;
-        case RiskLevel.mediumRisk:
-          mediumRisk.add(app);
-          break;
-        case RiskLevel.highRisk:
-          highRisk.add(app);
-          break;
-      }
-    }
+    final result = await compute(
+      processAppsInIsolate,
+      {
+        'apps': apps,
+        'trusted': trusted,
+      },
+    );
 
     emit(AppPermissionLoaded(
-      noRisk: noRisk,
-      lowRisk: lowRisk,
-      mediumRisk: mediumRisk,
-      highRisk: highRisk,
+      noRisk: result['noRisk']!,
+      lowRisk: result['lowRisk']!,
+      mediumRisk: result['mediumRisk']!,
+      highRisk: result['highRisk']!,
     ));
   }
 
@@ -203,7 +212,11 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
   void trustApp(String packageName) {
     final trusted = _readList('trusted_apps');
     if (trusted.contains(packageName)) return;
-    emit(AppTrusting(packageName));
+
+    final prev = state is AppPermissionLoaded ? state as AppPermissionLoaded : null;
+    if (prev != null) {
+      emit(AppTrusting(packageName: packageName, previous: prev));
+    }
 
     final updatedTrusted = {...trusted}..add(packageName);
     _prefBox.put('trusted_apps', updatedTrusted.toList());
@@ -214,30 +227,34 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
       _prefBox.put('keep_apps', updatedKept.toList());
     }
 
-    if (state is AppPermissionLoaded) {
-      final loaded = state as AppPermissionLoaded;
-      emit(AppTrustedSuccess(packageName));
-      emit(loaded);
+    emit(AppTrustedSuccess(packageName));
+
+    if (prev != null) {
+      emit(prev);
     }
+
     loadApps();
   }
-
   void untrustApp(String packageName) {
     final trusted = _readList('trusted_apps');
     if (!trusted.contains(packageName)) return;
 
+    final prev = state is AppPermissionLoaded ? state as AppPermissionLoaded : null;
+    if (prev != null) {
+      emit(AppTrusting(packageName: packageName, previous: prev));
+    }
+
     final updatedTrusted = {...trusted}..remove(packageName);
     _prefBox.put('trusted_apps', updatedTrusted.toList());
 
-    if (state is AppPermissionLoaded) {
-      final loaded = state as AppPermissionLoaded;
-      emit(AppUntrustedSuccess(packageName));
-      emit(loaded);
+    emit(AppUntrustedSuccess(packageName));
+
+    if (prev != null) {
+      emit(prev);
     }
+
     loadApps();
-
   }
-
   List<String> get keptApps => _readList('keep_apps');
   List<String> get trustedApps => _readList('trusted_apps');
 

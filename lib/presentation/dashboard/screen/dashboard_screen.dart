@@ -1,10 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:permissions_app/core/models/app_permission_item.dart';
 import 'package:permissions_app/core/models/scan_model.dart';
-import 'package:permissions_app/core/servises/dashboard.dart'; // SafeDashboardPlatform
+import 'package:permissions_app/core/servises/dashboard.dart';
 import 'package:permissions_app/core/servises/dashboard_permission_service.dart';
 import 'package:permissions_app/core/servises/scan_service.dart';
 import 'package:permissions_app/core/servises/scan_storage_hive.dart';
@@ -14,6 +15,7 @@ import 'package:permissions_app/presentation/dashboard/widget/alert_section_widg
 import 'package:permissions_app/presentation/dashboard/widget/since_last_scan_widget.dart';
 import 'package:permissions_app/presentation/dashboard/widget/system_privacy_dashboard_card.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
+import 'package:permissions_app/presentation/utils/base_screen.dart';
 
 class DashboardPermissionScreen extends StatefulWidget {
   const DashboardPermissionScreen({super.key});
@@ -112,62 +114,61 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
+    return  BaseScreen(
+      child: Column(
+            children: [
+              AppBarWidget(
+                text: "DASHBOARD PERMISSION",
+                ontap: () => context.pop(),
+              ),
+              SizedBox(height: 20.h),
+      Padding(
+        padding:  EdgeInsets.symmetric(horizontal: 20.w),),
+       Expanded(
+         child: Padding(
+      padding:  EdgeInsets.symmetric(horizontal: 20.w),
+       child: Column(
           children: [
-            AppBarWidget(
-              text: "DASHBOARD PERMISSION",
-              ontap: () => context.pop(),
-              width: 60,
-            ),
-            SizedBox(height: 20.h),
-Padding(
-  padding:  EdgeInsets.symmetric(horizontal: 20.w),),
- Expanded(
-   child: Padding(
-    padding:  EdgeInsets.symmetric(horizontal: 20.w),
-     child: Column(
-        children: [
-          SystemPrivacyDashboardCard(),
-          SizedBox(height: 16.h),
+            SystemPrivacyDashboardCard(),
+            SizedBox(height: 16.h),
 
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // ---- Alerts (Accessibility + Location) ----
-                  _loadingAlerts
-                      ? const Center(child: CircularProgressIndicator())
-                      : SafeAlertSectionWidget(
-                    accessibilityOn: _accessibilityOn,
-                    apps: _appsForAlerts,
-                  ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _loadingAlerts
+                        ? const Center(child: CupertinoActivityIndicator())
+                        : SafeAlertSectionWidget(
+                      accessibilityOn: _accessibilityOn,
+                      apps: _appsForAlerts,
+                    ),
 
-                  SizedBox(height: 18.h),
+                    SizedBox(height: 18.h),
 
-                  // ---- Since last scan ----
-                  SinceLastScanWidget(
-                    diff: _scanDiff,
-                    lastScanTime: _lastScanTime,
-                    scanning: _scanning,
-                    onRunScan: _runScan,
-                    selectedTab: _scanTab,
-                    onTabChange: (t) => setState(() => _scanTab = t),
-                  ),
+                    SinceLastScanWidget(
+                      diff: _scanDiff,
+                      lastScanTime: _lastScanTime,
+                      scanning: _scanning,
+                      onRunScan: _runScan,
+                      selectedTab: _scanTab,
+                      onTabChange: (t) => setState(() => _scanTab = t),
+                    ),
 
-                  SizedBox(height: 24.h),
-                ],
+                    SizedBox(height: 24.h),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-   ),
- ),
-
-
           ],
+        ),
+         ),
+       ),
 
+
+            ],
+
+      ),
     );
   }
 }

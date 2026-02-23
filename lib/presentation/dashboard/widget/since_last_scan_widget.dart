@@ -44,7 +44,7 @@ class SinceLastScanWidget extends StatelessWidget {
 
     final lastText = (lastScanTime == null)
         ? 'No previous scan yet'
-        : 'Last scan: ${lastScanTime!.toLocal().toString().substring(0, 16)}';
+        : 'Last Scan: ${lastScanTime!.toLocal().toString().substring(0, 16)}';
 
     return Container(
       padding: EdgeInsets.all(14.r),
@@ -62,7 +62,7 @@ class SinceLastScanWidget extends StatelessWidget {
               SizedBox(width: 8.w),
               Expanded(
                 child: Text(
-                  'Since last scan',
+                  'Since last Scan',
                   style: AppTextStyle.dashboardTitle
                 ),
               ),
@@ -72,7 +72,11 @@ class SinceLastScanWidget extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(scanning ? 0.04 : 0.08),
+                    border: Border.all(
+                      width: 1.w,
+                      color: AppColor.blue1
+                    ),
+                    color: AppColor.CartDark,
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Row(
@@ -81,20 +85,16 @@ class SinceLastScanWidget extends StatelessWidget {
                         SizedBox(
                           width: 14.r,
                           height: 14.r,
-                          child: const CircularProgressIndicator(strokeWidth: 2),
+                          child: const CircularProgressIndicator(strokeWidth: 2,color: AppColor.blue2,),
                         ),
                         SizedBox(width: 8.w),
                       ] else ...[
-                        Icon(Icons.refresh, color: Colors.white70, size: 16.sp),
+                        Icon(Icons.refresh, color: AppColor.blue1, size: 16.sp),
                         SizedBox(width: 6.w),
                       ],
                       Text(
                         scanning ? 'Scanning' : 'Run scan',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 12.sp,
-                        ),
+                        style: AppTextStyle.trustDescription.copyWith(color: AppColor.blue1)
                       ),
                     ],
                   ),
@@ -120,6 +120,7 @@ class SinceLastScanWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: _tabBtn(
+                  // coloring: true,
                   text: 'New apps',
                   selected: selectedTab == ScanTab.newApps,
                   onTap: () => onTabChange(ScanTab.newApps),
@@ -128,6 +129,7 @@ class SinceLastScanWidget extends StatelessWidget {
               SizedBox(width: 10.w),
               Expanded(
                 child: _tabBtn(
+                  // coloring: false,
                   text: 'Changed',
                   selected: selectedTab == ScanTab.changedPerms,
                   onTap: () => onTabChange(ScanTab.changedPerms),
@@ -141,12 +143,12 @@ class SinceLastScanWidget extends StatelessWidget {
           if (diff == null)
             Text(
               'Run a scan to compare changes.',
-              style: TextStyle(color: Colors.white70, fontSize: 12.sp),
+              style:AppTextStyle.SpecialPermission.copyWith(color: AppColor.blue2),
             )
           else if (diff!.isEmpty)
             Text(
               'No changes since the last scan.',
-              style: TextStyle(color: Colors.white70, fontSize: 12.sp),
+              style:AppTextStyle.SpecialPermission.copyWith(color: AppColor.blue2),
             )
           else
             _buildList(selectedTab, diff!, _decodeIcon),
@@ -159,16 +161,12 @@ class SinceLastScanWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.06),
+        color: AppColor.blue1.withOpacity(0.2),
         borderRadius: BorderRadius.circular(999.r),
       ),
       child: Text(
         '$label: $count',
-        style: TextStyle(
-          color: Colors.white70,
-          fontSize: 11.sp,
-          fontWeight: FontWeight.w700,
-        ),
+        style: AppTextStyle.trustDescription.copyWith(fontSize: 12.sp)
       ),
     );
   }
@@ -177,27 +175,24 @@ class SinceLastScanWidget extends StatelessWidget {
     required String text,
     required bool selected,
     required VoidCallback onTap,
+    // required bool coloring
   }) {
     return InkWell(
       borderRadius: BorderRadius.circular(10.r),
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 10.h),
+        padding: EdgeInsets.symmetric(vertical: 12.h),
         decoration: BoxDecoration(
-          color: selected ? Colors.white.withOpacity(0.12) : Colors.white.withOpacity(0.06),
+          color:AppColor.CartDark,
           borderRadius: BorderRadius.circular(10.r),
           border: Border.all(
-            color: selected ? Colors.white.withOpacity(0.20) : Colors.transparent,
+            color: selected ? AppColor.blue1 : Colors.transparent,
           ),
         ),
         child: Center(
           child: Text(
             text,
-            style: TextStyle(
-              color: selected ? Colors.white : Colors.white70,
-              fontWeight: FontWeight.w800,
-              fontSize: 12.sp,
-            ),
+            style: AppTextStyle.System.copyWith(color: selected ? AppColor.blue1 :AppColor.BorderCard)
           ),
         ),
       ),

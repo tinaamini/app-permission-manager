@@ -21,12 +21,9 @@ class TrustBtn extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
-        width: 160.w,
-        padding: EdgeInsets.symmetric(vertical: 14.h),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
         decoration: BoxDecoration(
-          color: isTrusted
-              ? Colors.blueAccent.withOpacity(0.15)
-              : AppColor.CartDark,
+          color: isTrusted ? Colors.blueAccent.withOpacity(0.15) : AppColor.CartDark,
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
             color: isTrusted ? Colors.blueAccent : Colors.white12,
@@ -42,38 +39,43 @@ class TrustBtn extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
           children: [
             if (isTrusting)
               SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(
+                width: 16.w,
+                height: 16.w,
+                child: const CircularProgressIndicator(
                   strokeWidth: 2,
                   color: Colors.white,
                 ),
               )
             else
               Icon(
-                isTrusted
-                    ? Icons.verified_rounded
-                    : Icons.verified_outlined,
-                color:
-                isTrusted ? Colors.blueAccent : Colors.white70,
-                size: 22,
+                isTrusted ? Icons.verified_rounded : Icons.verified_outlined,
+                color: isTrusted ? Colors.blueAccent : Colors.white70,
+                size: 22.sp,
               ),
-            SizedBox(width: 10.w),
-            Text(
-              isTrusting
-                  ? 'Trusting...'
-                  : isTrusted
-                  ? 'Trusted'
-                  : 'Trust App',
-              style: TextStyle(
-                color:
-                isTrusted ? Colors.blueAccent : Colors.white,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.2,
+
+            SizedBox(width: 8.w),
+
+            Flexible(
+              child: Text(
+                isTrusting
+                    ? 'Trusting...'
+                    : isTrusted
+                    ? 'Trusted'
+                    : 'Trust App',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: isTrusting
+                      ? Colors.white
+                      : (isTrusted ? Colors.blueAccent : Colors.white),
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.2,
+                ),
               ),
             ),
           ],

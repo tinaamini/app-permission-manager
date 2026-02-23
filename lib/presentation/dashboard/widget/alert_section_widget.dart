@@ -49,7 +49,6 @@ class SafeAlertSectionWidget extends StatelessWidget {
       );
     }
 
-    // ✅ Location Always alert (top 1)
     final alwaysApps = apps.where((a) => a.locationState == 'always').toList();
     if (alwaysApps.isNotEmpty) {
       final top = alwaysApps.first;

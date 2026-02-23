@@ -22,7 +22,7 @@ class DeviceRiskResolver {
     if (medium > 0) {
       return const DeviceRiskStatus(
         level: DeviceRiskLevel.warning,
-        title: 'Device needs attention',
+        title: 'Device alert',
         subtitle: 'System Warning',
         svgAsset: 'assets/main/warning_alert.svg',
         color: Color(0xFFF2B24A),
@@ -32,7 +32,7 @@ class DeviceRiskResolver {
     if (low > 0) {
       return const DeviceRiskStatus(
         level: DeviceRiskLevel.low,
-        title: 'Device is mostly safe',
+        title: 'Mostly secure',
         subtitle: 'System Risky',
         svgAsset: 'assets/main/low.svg',
         color: Color(0xFF4AF296),

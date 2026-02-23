@@ -20,7 +20,6 @@ class KeepAppButton extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
-        width: 150.w,
         padding: EdgeInsets.symmetric(vertical: 14.h),
         decoration: BoxDecoration(
           color: isKept
@@ -48,13 +47,15 @@ class KeepAppButton extends StatelessWidget {
               size: 22,
             ),
             SizedBox(width: 10.w),
-            Text(
-              isKept ? 'App is Kept' : 'Keep App',
-              style: TextStyle(
-                color: isKept ? Colors.green : Colors.white,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.2,
+            Flexible(
+              child: Text(
+                isKept ? 'App is Kept' : 'Keep App',
+                style: TextStyle(
+                  color: isKept ? Colors.green : Colors.white,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.2,
+                ),
               ),
             ),
           ],

@@ -18,12 +18,11 @@ class PermissionSwitchTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color activeColor =
-    isDangerous ? Colors.red : Colors.orange;
+    final Color activeColor = isDangerous ? Colors.red : Colors.orange;
 
-    return Container(width: 150.w,height: 40.w,
+    return Container(
       margin: EdgeInsets.only(bottom: 10.h),
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
       decoration: BoxDecoration(
         color: AppColor.CartDark,
         borderRadius: BorderRadius.circular(14.r),
@@ -41,6 +40,8 @@ class PermissionSwitchTile extends StatelessWidget {
           Expanded(
             child: Text(
               title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 14.sp,
@@ -49,12 +50,15 @@ class PermissionSwitchTile extends StatelessWidget {
             ),
           ),
 
-          Switch(
-            value: enabled,
-            onChanged: (_) => onTap(),
-            activeColor: activeColor,
-            inactiveThumbColor: Colors.white30,
-            inactiveTrackColor: Colors.white12,
+          Transform.scale(
+            scale: 0.9,
+            child: Switch(
+              value: enabled,
+              onChanged: (_) => onTap(),
+              activeColor: activeColor,
+              inactiveThumbColor: Colors.white30,
+              inactiveTrackColor: Colors.white12,
+            ),
           ),
         ],
       ),

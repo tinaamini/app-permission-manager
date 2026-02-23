@@ -10,6 +10,31 @@ class AppTextStyle {
       fontWeight: FontWeight.w400,
       color: AppColor.white);
 
+  static TextStyle get onboardingTitle => TextStyle(
+      fontFamily: 'Inter',
+      fontSize: 40.sp,
+      fontWeight: FontWeight.w700,
+      color: AppColor.white);
+  static TextStyle get onboardingDescription => TextStyle(
+      fontFamily: 'Inter',
+      fontSize: 16.sp,
+      fontWeight: FontWeight.w400,
+      color: AppColor.white
+      );
+
+  static TextStyle get onboardingSkip => TextStyle(
+      fontFamily: 'Inter',
+      fontSize: 16.sp,
+      fontWeight: FontWeight.w600,
+      color: AppColor.blue1
+      );
+
+  static TextStyle get EmptyPage => TextStyle(
+      fontFamily: 'Inter',
+      fontSize: 18.sp,
+      fontWeight: FontWeight.w600,
+      color: AppColor.green2);
+
   static TextStyle get btnHome =>TextStyle(
       fontFamily: 'Inter',
       fontSize: 14.sp,

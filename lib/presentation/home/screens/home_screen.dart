@@ -10,6 +10,7 @@ import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
 import 'package:permissions_app/presentation/home/widgets/device_status_card.dart';
 import 'package:permissions_app/presentation/home/widgets/btn_home_widget.dart';
+import 'package:permissions_app/presentation/utils/base_screen.dart';
 import 'package:permissions_app/routs/rout_name.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -21,13 +22,21 @@ class HomeScreen extends StatelessWidget {
   late final Future<int> _appsCountFuture = _appsService.fetchInstalledAppsCount();
 
   @override
+  @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
+
+    final h = MediaQuery.of(context).size.height;
+
+    final topSpace = (156.h).clamp(24.0, h * 0.18);
+    final midSpace = (110.h).clamp(12.0, h * 0.14);
+
+    return BaseScreen(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 25.w),
         child: Column(
           children: [
-            SizedBox(height: 156.h),
+            SizedBox(height: topSpace),
+
 
             BlocBuilder<AppPermissionCubit, AppPermissionState>(
               builder: (context, state) {
@@ -51,77 +60,71 @@ class HomeScreen extends StatelessWidget {
                   low: state.lowRisk.length,
                 );
 
-                return DeviceStatusCard(
-                  status: status,
-                );
+                return DeviceStatusCard(status: status);
               },
             ),
+            SizedBox(height: midSpace),
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: FutureBuilder<int>(
+                  future: _appsCountFuture,
+                  builder: (context, snapshot) {
+                    final countText = snapshot.hasData ? '${snapshot.data}' : '...';
 
-
-            FutureBuilder<int>(
-              future: _appsCountFuture,
-              builder: (context, snapshot) {
-                final countText = snapshot.hasData ? '${snapshot.data}' : '...';
-
-                return Column(
-                  children: [
-
-                    SizedBox(height: 110.h),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    return Column(
                       children: [
-                        BtnHomeWidget(
-                          image: 'assets/main/grid.svg',
-                          text: 'App Permissions',
-                          textCount: '$countText Apps Checked',
-                          ontap: () {
-                            context.pushNamed(RouteName.appsPermission);
-                          },
+                        Row(
+                          children: [
+                            Expanded(
+                              child: BtnHomeWidget(
+                                image: 'assets/main/grid.svg',
+                                text: 'App Permissions',
+                                textCount: '$countText Apps Checked',
+                                ontap: () => context.pushNamed(RouteName.appsPermission),
+                              ),
+                            ),
+                            SizedBox(width: 16.w),
+                            Expanded(
+                              child: BtnHomeWidget(
+                                image: 'assets/main/layer.svg',
+                                text: 'Group Permissions',
+                                textCount: '10 Categories',
+                                ontap: () => context.pushNamed(RouteName.groupPermission),
+                              ),
+                            ),
+                          ],
                         ),
-                        BtnHomeWidget(
-                          image: 'assets/main/layer.svg',
-                          text: 'Group Permissions',
-                          textCount: '10 Categories',
-                          ontap: () {
-                            context.pushNamed(RouteName.groupPermission);
-                          },
+                        SizedBox(height: 20.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: BtnHomeWidget(
+                                image: 'assets/main/varning.svg',
+                                text: 'Special',
+                                textCount: '5 Sensitive Access',
+                                ontap: () => context.pushNamed(RouteName.specialPermission),
+                              ),
+                            ),
+                            SizedBox(width: 16.w),
+                            Expanded(
+                              child: BtnHomeWidget(
+                                image: 'assets/main/chart.svg',
+                                text: 'Dashboard',
+                                textCount: 'View States',
+                                ontap: () => context.pushNamed(RouteName.dashboardPermission),
+                              ),
+                            ),
+                          ],
                         ),
+                        SizedBox(height: 24.h),
                       ],
-                    ),
-
-                    SizedBox(height: 20.w),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        BtnHomeWidget(
-                          image: 'assets/main/varning.svg',
-                          text: 'Special',
-                          textCount: '5 Sensitive Access',
-                          ontap: () {
-                            context.pushNamed(RouteName.specialPermission);
-                          },
-                        ),
-                        BtnHomeWidget(
-                          image: 'assets/main/chart.svg',
-                          text: 'Dashboard',
-                          textCount: 'View States',
-                          ontap: () {
-                            context.pushNamed(RouteName.dashboardPermission);
-                          },
-                        ),
-                      ],
-                    ),
-
-                    SizedBox(height: 20.w),
-                  ],
-                );
-              },
+                    );
+                  },
+                ),
+              ),
             ),
           ],
         ),
       ),
-    );
-  }
-}
+    );  }}

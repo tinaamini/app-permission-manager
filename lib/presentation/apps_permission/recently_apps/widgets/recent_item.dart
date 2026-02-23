@@ -64,7 +64,7 @@ class RecentItem extends StatelessWidget {
           // ===== Top Row =====
           Row(
             children: [
-              SizedBox(width: 44.w, height: 44.w, child: icon),
+              SizedBox(width: 44.w, height: 44.h, child: icon),
               SizedBox(width: 12.w),
 
               Expanded(
@@ -78,8 +78,8 @@ class RecentItem extends StatelessWidget {
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
                         ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,                      ),
                     ),
                     if (isTrusted)
                       const TrustedBadge()

@@ -15,104 +15,122 @@ import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
 import 'package:permissions_app/presentation/apps_permission/recently_apps/widgets/recent_item.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
+import 'package:permissions_app/presentation/utils/base_screen.dart';
+import 'package:permissions_app/presentation/utils/empty_page_widget.dart';
 
-class RecentAppsScreen extends StatelessWidget {
+class RecentAppsScreen extends StatefulWidget {
   const RecentAppsScreen({super.key});
 
   @override
+  State<RecentAppsScreen> createState() => _RecentAppsScreenState();
+}
+
+class _RecentAppsScreenState extends State<RecentAppsScreen> {
+  late final Future<List<dynamic>> _future = RecentAppsService.getTodayRecentApps();
+
+  @override
   Widget build(BuildContext context) {
-    return  BlocBuilder<AppPermissionCubit, AppPermissionState>(
-          builder: (context, state) {
-            if (state is! AppPermissionLoaded) {
-              return const Center(
-                child: CupertinoActivityIndicator(color: AppColor.white),
-              );
-            }
-
-            return FutureBuilder<List<dynamic>>(
-              future: RecentAppsService.getTodayRecentApps(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CupertinoActivityIndicator(color: AppColor.white),
-                  );
-                }
-
-                if (snapshot.hasError) {
-                  return _errorState(snapshot.error);
-                }
-
-                final recentRaw = snapshot.data ?? [];
-
-                final items = recentRaw
-                    .map((recent) {
-                  final pkg = recent['package'] as String?;
-                  if (pkg == null) return null;
-
-                  final app = state.allApps.firstWhereOrNull(
-                        (a) => a.packageName == pkg,
-                  );
-                  if (app == null) return null;
-
-                  return _RecentItem(
-                    app: app,
-                    lastUsed: recent['lastTimeUsed'] ?? 0,
-                    foregroundTime: recent['foregroundTime'] ?? 0,
-                  );
-                })
-                    .whereType<_RecentItem>()
-                    .toList();
-
-                if (items.isEmpty) {
-                  return _emptyState();
-                }
-
-                items.sort(
-                      (a, b) => b.lastUsed.compareTo(a.lastUsed),
+    return  BaseScreen(
+      child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
+            builder: (context, state) {
+              if (state is! AppPermissionLoaded) {
+                return const Center(
+                  child: CupertinoActivityIndicator(color: AppColor.white),
                 );
+              }
 
-                return
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppBarWidget(text: "RECENT APPS", ontap:(){
-                        context.pop();
-                      }, width: 100),
-                      SizedBox(height: 12.h),
-                      Padding(  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                          child: _summaryCard(items)),
-                      SizedBox(height: 26.h),
-                      Padding(
-                        padding:  EdgeInsets.only(left: 16.w),
-                        child: Text("Recent apps",style: AppTextStyle.summary,),
-                      ),
-                      SizedBox(height: 26.h),
-                      Expanded(
-                        child: ListView.separated(
-                          itemCount: items.length,
-                          separatorBuilder: (_, __) =>
-                              Padding(
-                                padding:  EdgeInsets.symmetric(horizontal: 16.w),
-                                child: Divider(color: Colors.orange, height: 40.h),
-                              ),
-                          itemBuilder: (context, index) {
-                            final item = items[index];
-                            return _recentItem(item);
-                          },
+              return FutureBuilder<List<dynamic>>(
+                future: _future,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CupertinoActivityIndicator(color: AppColor.white),
+                    );
+                  }
+
+                  if (snapshot.hasError) {
+                    return _errorState(snapshot.error);
+                  }
+
+                  final recentRaw = snapshot.data ?? [];
+
+                  final items = recentRaw
+                      .map((recent) {
+                    final pkg = recent['package'] as String?;
+                    if (pkg == null) return null;
+
+                    final app = state.allApps.firstWhereOrNull(
+                          (a) => a.packageName == pkg,
+                    );
+                    if (app == null) return null;
+
+                    return _RecentItem(
+                      app: app,
+                      lastUsed: recent['lastTimeUsed'] ?? 0,
+                      foregroundTime: recent['foregroundTime'] ?? 0,
+                    );
+                  })
+                      .whereType<_RecentItem>()
+                      .toList();
+
+                  if (items.isEmpty) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppBarWidget(text: "RECENT APPS", ontap:(){
+                          context.pop();
+                        }, ),
+                        Flexible(child: EmptyPageWidget(text: 'No apps used today', )),
+                      ],
+                    );
+                  }
+
+                  items.sort(
+                        (a, b) => b.lastUsed.compareTo(a.lastUsed),
+                  );
+
+                  return
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppBarWidget(text: "RECENT APPS", ontap:(){
+                          context.pop();
+                        }, ),
+                        SizedBox(height: 12.h),
+                        Padding(  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            child: _summaryCard(items)),
+                        SizedBox(height: 26.h),
+                        Padding(
+                          padding:  EdgeInsets.only(left: 16.w),
+                          child: Text("Recent apps",style: AppTextStyle.summary,),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 26.h),
+                        Expanded(
+                          child: ListView.separated(
+                            itemCount: items.length,
+                            separatorBuilder: (_, __) =>
+                                Padding(
+                                  padding:  EdgeInsets.symmetric(horizontal: 16.w),
+                                  child: Divider(color: Colors.orange, height: 40.h),
+                                ),
+                            itemBuilder: (context, index) {
+                              final item = items[index];
+                              return _recentItem(item);
+                            },
+                          ),
+                        ),
+                      ],
 
-                );
-              },
-            );
-          },
+                  );
+                },
+              );
+            },
 
+      ),
     );
   }
 
   // ================= UI PARTS =================
-
   Widget _summaryCard(List<_RecentItem> items) {
     final totalApps = items.length;
     final highRiskCount = items
@@ -125,10 +143,10 @@ class RecentAppsScreen extends StatelessWidget {
     );
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding:  EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColor.CartDark,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(14.r),
         border: Border.all(color: Colors.white12),
       ),
       child: Column(
@@ -153,8 +171,11 @@ class RecentAppsScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: TextStyle(color: Colors.white54, fontSize: 12.sp)),
+          Expanded(
+            child: Text(label,  maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: Colors.white54, fontSize: 12.sp)),
+          ),
           Text(value,
            style:AppTextStyle.summaryValue),
         ],
@@ -187,17 +208,6 @@ class RecentAppsScreen extends StatelessWidget {
           // ),
           SizedBox(height: 6.h),
         ],
-      ),
-    );
-  }
-
-
-
-  Widget _emptyState() {
-    return const Center(
-      child: Text(
-        'No apps used today',
-        style: TextStyle(color: Colors.white54),
       ),
     );
   }

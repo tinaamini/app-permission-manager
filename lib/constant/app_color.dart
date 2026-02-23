@@ -8,6 +8,7 @@ class AppColor {
   static const blue1 = Color.fromRGBO(99, 130, 207, 1);
   static const green2 = Color.fromRGBO(220, 252, 231, 1);
   static const blue2 = Color.fromRGBO(176, 186, 213, 1);
+  static const red = Color.fromRGBO(234,73,75, 1);
 
   static const BcGround = Color.fromRGBO(55, 55, 55, 1);
   static const BorderCard = Color.fromRGBO(205, 205, 205, 1.0);

@@ -15,7 +15,9 @@ class BtnCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: ontap,
-      child: Container(width: 364.w,height: 80.h,
+      child: Container(
+        constraints: BoxConstraints(minHeight: 80.h),
+
         padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 16.h),
         decoration: BoxDecoration(
           color: AppColor.CartDark,
@@ -28,9 +30,9 @@ class BtnCard extends StatelessWidget {
           child: Row(crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SvgPicture.asset(image,width: 48.w,height: 48.h,),
-              SizedBox(width: 7.w,),
+              SizedBox(width: 10.w,),
 
-                  Center(child: Text(text,style: AppTextStyle.btnHome,)),
+                  Expanded(child: Text(text,style: AppTextStyle.btnHome,)),
 
             ],
           ),

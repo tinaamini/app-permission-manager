@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/core/servises/app_permission_service.dart';
 import 'package:permissions_app/core/servises/app_special_permiision_service.dart';
 import 'package:permissions_app/presentation/special_permissions/widget/helper_widgets.dart';
+import 'package:permissions_app/presentation/utils/empty_page_widget.dart';
 
 class NotificationAccessDetail extends StatelessWidget {
   const NotificationAccessDetail({super.key});
@@ -58,13 +59,8 @@ class NotificationAccessDetail extends StatelessWidget {
 
                 if (apps.isEmpty) {
                   return Center(
-                    child: Text(
-                      'No apps with notification access found',
-                      style: TextStyle(
-                        color: Colors.white54,
-                        fontSize: 14.sp,
-                      ),
-                    ),
+                    child: EmptyPageWidget(text:'No apps with notification access found', )
+
                   );
                 }
 

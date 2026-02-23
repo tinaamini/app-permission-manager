@@ -7,9 +7,9 @@ class KeptBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.only(right: 40.w),
+      padding:  EdgeInsets.only(right: 25.w),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 3.h),
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
         decoration: BoxDecoration(
           color: Colors.green.withOpacity(0.15),
           borderRadius: BorderRadius.circular(12.r),
@@ -18,14 +18,16 @@ class KeptBadge extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.push_pin,
-              size: 12,
+              size: 12.sp,
               color: Colors.green,
             ),
             SizedBox(width: 4.w),
             Text(
               'Kept',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: Colors.green,
                 fontSize: 10.sp,

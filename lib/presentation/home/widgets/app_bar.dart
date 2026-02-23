@@ -7,26 +7,49 @@ import 'package:permissions_app/constant/app_style.dart';
 
 class AppBarWidget extends StatelessWidget {
   final String text;
-  final int width;
   final VoidCallback ontap;
-  const AppBarWidget({super.key, required this.text, required this.ontap, required this.width});
+
+  const AppBarWidget({
+    super.key,
+    required this.text,
+    required this.ontap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(height: 80.w,color: AppColor.CartDark,
-      child: Padding(
-        padding:  EdgeInsets.symmetric(horizontal: 10.w),
-        child: Row(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            GestureDetector(onTap: ontap,
-              child: Padding(
-                padding:  EdgeInsets.only(left: 10.w),
-                child: SvgPicture.asset("assets/main/back_icon.svg",width: 28.w,height: 28.w,)
+    return Container(
+      height: 80.h, // ✅ h
+      color: AppColor.CartDark,
+      padding: EdgeInsets.symmetric(horizontal: 10.w),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: ontap,
+            child: Padding(
+              padding: EdgeInsets.only(left: 10.w),
+              child: SvgPicture.asset(
+                "assets/main/back_icon.svg",
+                width: 28.w,
+                height: 28.w,
               ),
-            )  ,
-          SizedBox(width: width.w,),
-          Text(text,style: AppTextStyle.nameApp,)],
-        ),
+            ),
+          ),
+
+          // ✅ این باعث میشه عنوان وسط واقعی بشه
+          Expanded(
+            child: Center(
+              child: Text(
+                text,
+                style: AppTextStyle.nameApp,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+
+          // ✅ این برای بالانس سمت راست تا title دقیقاً وسط بمونه
+          SizedBox(width: 28.w + 10.w),
+        ],
       ),
     );
   }

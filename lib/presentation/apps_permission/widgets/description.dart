@@ -10,5 +10,7 @@ Widget description(String text) => Padding(
       color: Colors.white60,
       fontSize: 12.sp,
     ),
+    textAlign: TextAlign.start,
+    softWrap: true,
   ),
 );

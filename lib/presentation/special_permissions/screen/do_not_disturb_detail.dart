@@ -30,14 +30,17 @@ class DoNotDisturbDetail extends StatelessWidget {
           GestureDetector(
             child:
             Container(
-                width: 364.w,height: 48.h,
+                width: double.infinity,height: 48.h,
                 decoration: BoxDecoration(
                     color: AppColor.CartDark,
                     border: Border.all(width: 1.w,color: AppColor.green1),
                     borderRadius: BorderRadius.circular(16.r)
                 ),
                 child: Center(child:
-                Text( 'Open Do Not Disturb Settings',style: AppTextStyle.greenFont,))),
+                Text( 'Open Do Not Disturb Settings',maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyle.greenFont,
+                  textAlign: TextAlign.center,))),
             onTap: () {
               AppSpecialPermissionPlatform().openDoNotDisturbSettings();
             },

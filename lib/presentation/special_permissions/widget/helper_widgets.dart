@@ -60,7 +60,11 @@ Widget actionButton({
           fontSize: 14.sp,
           fontWeight: FontWeight.w600,
           color: Colors.white,
+
         ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
       ),
     ),
   );

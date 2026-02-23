@@ -13,7 +13,7 @@ Widget appTile(
       required String actionText,
       required VoidCallback onTap,
     }) {
-  return Container(width: 364.w,height: 80.h,
+  return Container(
     margin: EdgeInsets.only(bottom: 12.h),
     padding: EdgeInsets.all(12.w),
     decoration: BoxDecoration(

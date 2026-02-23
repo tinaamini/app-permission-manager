@@ -1,16 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
-import 'package:permissions_app/constant/risk_level.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:convert';
 
 import 'package:permissions_app/constant/app_color.dart';
+import 'package:permissions_app/constant/risk_level.dart';
+import 'package:permissions_app/core/models/app_permission_ui.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
 import 'package:permissions_app/presentation/apps_permission/widgets/app_item_widget.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
+import 'package:permissions_app/presentation/utils/base_screen.dart';
+import 'package:permissions_app/presentation/utils/empty_page_widget.dart';
 import 'package:permissions_app/routs/rout_name.dart';
 
 class RiskAppListScreen extends StatelessWidget {
@@ -23,74 +27,67 @@ class RiskAppListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Column(
-          children: [
-            AppBarWidget(
-              text: _title(),
-              ontap: () => context.pop(),
-              width: 85,
-            ),
-            SizedBox(height: 12.h),
+    return BaseScreen(
+      child: Column(
+        children: [
+          AppBarWidget(
+            text: _title(),
+            ontap: () => context.pop(),
+          ),
+          SizedBox(height: 12.h),
 
-            Expanded(
-              child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
-                builder: (context, state) {
-                  if (state is! AppPermissionLoaded) {
-                    return const Center(
-                      child: CupertinoActivityIndicator(color: AppColor.white,),
-                    );
-                  }
-
-                  final apps = _getAppsByRisk(state);
-
-                  if (apps.isEmpty) {
-                    return _emptyState();
-                  }
-
-                  return ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    itemCount: apps.length,
-
-                    itemBuilder: (context, index) {
-                      final app = apps[index];
-                      return Padding(
-                        padding:  EdgeInsets.symmetric(vertical: 10.h),
-                        child: GestureDetector(
-                          onTap: () {
-                            context.pushNamed(
-                              RouteName.appDetail,
-                              extra: app,
-                            );
-                          },
-
-                          child: AppItem(
-                              packageName:app.packageName
-                            ,
-                           icon:Image.memory(
-                              base64Decode(app.iconBase64),
-                              width: 40,
-                              height: 40,
-                            ),
-
-
-                            appName: app.appName,
-                            // packageName: app.packageName,
-                            permissions: app.permissions,
-                            riskLevel: app.riskLevel,
-                          ),
-                        ),
-                      );
-                    },
+          Expanded(
+            child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
+              builder: (context, state) {
+                if (state is! AppPermissionLoaded) {
+                  return const Center(
+                    child: CupertinoActivityIndicator(color: AppColor.white),
                   );
-                },
-              ),
-            ),
-          ],
+                }
 
+                final apps = _getAppsByRisk(state);
+
+                if (apps.isEmpty) {
+                  return const EmptyPageWidget(text: 'No applications found');
+                }
+
+                return ListView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  itemCount: apps.length,
+                  itemBuilder: (context, index) {
+                    final app = apps[index];
+
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      child: GestureDetector(
+                        onTap: () {
+                          context.pushNamed(
+                            RouteName.appDetail,
+                            extra: app,
+                          );
+                        },
+                        child: AppItem(
+                          packageName: app.packageName,
+                          icon: Image.memory(
+                            base64Decode(app.iconBase64),
+                            width: 40.w,
+                            height: 40.h,
+                          ),
+                          appName: app.appName,
+                          permissions: app.permissions,
+                          riskLevel: app.riskLevel,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
-
-  // ---------- Helpers ----------
 
   String _title() {
     switch (riskLevel) {
@@ -105,7 +102,7 @@ class RiskAppListScreen extends StatelessWidget {
     }
   }
 
-  List _getAppsByRisk(AppPermissionLoaded state) {
+  List<AppPermissionUi> _getAppsByRisk(AppPermissionLoaded state) {
     switch (riskLevel) {
       case RiskLevel.noRisk:
         return state.noRisk;
@@ -117,17 +114,4 @@ class RiskAppListScreen extends StatelessWidget {
         return state.highRisk;
     }
   }
-
-  Widget _emptyState() {
-    return Center(
-      child: Text(
-        'No applications found',
-        style: TextStyle(
-          color: Colors.white54,
-          fontSize: 14.sp,
-        ),
-      ),
-    );
-  }
 }
-

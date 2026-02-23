@@ -16,6 +16,7 @@ import 'package:permissions_app/presentation/dashboard/screen/dashboard_screen.d
 import 'package:permissions_app/presentation/group_permission/screen/group_permissions_screen.dart';
 import 'package:permissions_app/presentation/group_permission/screen/permmision_detail_screen.dart';
 import 'package:permissions_app/presentation/home/screens/home_screen.dart';
+import 'package:permissions_app/presentation/onboarding/screen/onboarding_screen.dart';
 import 'package:permissions_app/presentation/special_permissions/screen/special_permission_detail_screen.dart';
 import 'package:permissions_app/presentation/special_permissions/screen/special_permission_screen.dart';
 import 'package:permissions_app/presentation/utils/main_screen.dart';
@@ -28,9 +29,15 @@ final shellNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter router = GoRouter(
   navigatorKey: rootNavigatorKey,
-  initialLocation: '/home',
+  initialLocation: '/onboarding',
   routes: [
-
+    GoRoute(
+      name: RouteName.onboarding,
+      path: '/onboarding',
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: OnboardingScreen(),
+      ),
+    ),
     /// ----------- SHELL -----------
     ShellRoute(
       navigatorKey: shellNavigatorKey,

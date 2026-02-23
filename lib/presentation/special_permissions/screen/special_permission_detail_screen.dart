@@ -5,6 +5,7 @@ import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/specialPermissionType.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
 import 'package:permissions_app/presentation/special_permissions/screen/usage_access_detail.dart';
+import 'package:permissions_app/presentation/utils/base_screen.dart';
 
 import 'buttry_optimization_detail.dart';
 import 'display_over_apps_detail.dart';
@@ -21,19 +22,20 @@ class SpecialPermissionDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-          children: [
-            AppBarWidget(
-              text: _title(),
-              ontap: () => context.pop(),
-              width: 60,
-            ),
+    return BaseScreen(
+      child: Column(
+            children: [
+              AppBarWidget(
+                text: _title(),
+                ontap: () => context.pop(),
+              ),
 
-            Expanded(
-              child: _buildContent(context),
-            ),
-          ],
+              Expanded(
+                child: _buildContent(context),
+              ),
+            ],
 
+      ),
     );
   }
 

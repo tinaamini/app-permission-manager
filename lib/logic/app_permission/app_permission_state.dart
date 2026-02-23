@@ -6,6 +6,16 @@ class AppPermissionInitial extends AppPermissionState {}
 
 class AppPermissionLoading extends AppPermissionState {}
 
+
+class AppTrusting extends AppPermissionState {
+  final String packageName;
+  final AppPermissionLoaded previous;
+
+  AppTrusting({
+    required this.packageName,
+    required this.previous,
+  });
+}
 class AppPermissionLoaded extends AppPermissionState {
   final List<AppPermissionUi> noRisk;
   final List<AppPermissionUi> lowRisk;
@@ -58,8 +68,5 @@ class AppUntrustedSuccess extends AppPermissionState {
   AppUntrustedSuccess(this.packageName);
 }
 
-class AppTrusting extends AppPermissionState {
-  final String packageName;
-  AppTrusting(this.packageName);
-}
+
 
