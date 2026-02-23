@@ -78,13 +78,15 @@ border: Border.all(width: 1.w,color: AppColor.CartDarkBorder),
 
             SizedBox(width: 12.w),
 
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _riskBadge(),
-                SizedBox(height: 10.h),
-                _statusText(),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _riskBadge(),
+                  SizedBox(height: 10.h),
+                  _statusText(),
+                ],
+              ),
             ),
           ],
         ),
