@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/routs/rout_name.dart';
 import 'next_button.dart';
@@ -20,64 +18,106 @@ class OnboardPage extends StatelessWidget {
     required this.data,
     required this.currentPage,
     required this.totalPages,
-    required this.onNext,});
+    required this.onNext,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black,
-      child: Stack(
-        children: [
+    final isLast = currentPage == totalPages - 1;
 
-          Positioned(
-            top: 100.h,left: 120.w,
-            child:  Container(width:180.w,height: 180.h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(75.w),
-                  boxShadow: [
-                    BoxShadow(
-                      color: data.color.withOpacity(0.4),
-                      blurRadius: 88,
-                      spreadRadius: 10,
-                      offset: const Offset(0, 0),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          child: Column(
+            children: [
+              SizedBox(height: 30.h),
+
+              // ===== Top visual area =====
+              Expanded(
+                flex: 55,
+                child: Center(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    clipBehavior: Clip.none,
+                    children: [
+                      // Glow
+                      Container(
+                        width: 180.w,
+                        height: 180.w,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: data.color.withOpacity(0.40),
+                              blurRadius: 88,
+                              spreadRadius: 10,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Illustration
+                      SizedBox(
+                        width: currentPage == 0 ? 200.w :360.w,
+                        height: currentPage == 0 ? 200.h :360.h,
+                        child: SvgPicture.asset(
+                          data.svg,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // ===== Text area =====
+              Expanded(
+                flex: 65,
+                child: Column(
+                  children: [
+
+                    Text(
+                      data.title,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyle.onboardingTitle,
+                    ),
+
+                    SizedBox(height: 5.h),
+
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2.w),
+                      child: Text(
+                        data.description,
+                        textAlign: TextAlign.center,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyle.onboardingDescription
+                            .copyWith(color: data.color),
+                      ),
                     ),
                   ],
                 ),
-            ),),
+              ),
 
-      Positioned(   top: currentPage == totalPages - 3  ? 100.h:70.h,left: currentPage == totalPages - 3  ? 120.h: 80.w,
-          child: Container(width:  currentPage == totalPages - 3  ?180.w:270.w,height:  currentPage == totalPages - 3  ?180.w:270.w,
-          child: SvgPicture.asset(data.svg,fit: BoxFit.cover,))),
+              // ===== Button area =====
+              Padding(
+                padding: EdgeInsets.only(bottom: 33.h),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: NextButton(
+                    OnTap: onNext,
 
-          Positioned(top:320.h,left:  currentPage == totalPages - 3  ? 65.w : currentPage == totalPages - 2  ?100.w:130.w,
-            child: Text(
-              data.title,
-              textAlign: TextAlign.center,
-              style:  AppTextStyle.onboardingTitle
-            ),
+                    text: isLast ? "Get Started" : "Next",
+                  ),
+                ),
+              ),
+            ],
           ),
-
-          Positioned(top:450.h,left:  currentPage == totalPages - 3  ? 20.w :50.w,
-            child: Text(
-              data.description,
-              textAlign: TextAlign.center,
-              style:AppTextStyle.onboardingDescription.copyWith(color: data.color)
-            ),
-          ),
-
-          
-
-          Positioned(
-            bottom:37.h,
-            left: 50.w,
-            child:  NextButton(
-              OnTap: currentPage == totalPages - 1  ? () {
-          context.goNamed(RouteName.home);
-          }
-            : onNext,
-            text: currentPage == totalPages - 1 ? "Get Started " : "Next",
-          ),)
-        ],
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permissions_app/constant/app_color.dart';
 
 import 'package:permissions_app/core/servises/installed_apps_service.dart';
 import 'package:permissions_app/logic/risk/device_risk_resolver.dart';
@@ -11,6 +12,7 @@ import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
 import 'package:permissions_app/presentation/home/widgets/device_status_card.dart';
 import 'package:permissions_app/presentation/home/widgets/btn_home_widget.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
+import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
 import 'package:permissions_app/routs/rout_name.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -44,13 +46,15 @@ class HomeScreen extends StatelessWidget {
                   return Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(16.w),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16.r),
-                      border: Border.all(
-                        color: const Color.fromRGBO(76, 76, 76, 0.2),
-                      ),
-                    ),
-                    child: const Center(child: CupertinoActivityIndicator()),
+
+                    child: const  Center(
+                  child: CustomDotsLoader(
+                      svgPath1:
+                      'assets/utils/Property 1=1 (1).svg',
+                      svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                      svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                      svgPath4:
+                      'assets/utils/Property 1=4 (1).svg'))
                   );
                 }
 

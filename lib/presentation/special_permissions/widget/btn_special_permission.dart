@@ -46,11 +46,13 @@ border: Border.all(width: 1.w,color: AppColor.CartDarkBorder),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              image,
-              width: 56.w,
-              height: 56.w,
-              fit: BoxFit.contain,
+            Container(
+              child: Image.asset(
+                image,
+                width: 70.w,
+                height: 70.h,
+                fit: BoxFit.cover,
+              ),
             ),
 
             SizedBox(width: 12.w),
@@ -58,6 +60,8 @@ border: Border.all(width: 1.w,color: AppColor.CartDarkBorder),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+
                 children: [
                   Text(
                     title,
@@ -80,7 +84,8 @@ border: Border.all(width: 1.w,color: AppColor.CartDarkBorder),
 
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center
+                ,
                 children: [
                   _riskBadge(),
                   SizedBox(height: 10.h),
@@ -112,8 +117,9 @@ border: Border.all(width: 1.w,color: AppColor.CartDarkBorder),
         label = 'LOW RISK';
         break;
       case RiskLevel.noRisk:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        color = Colors.lightBlueAccent;
+        label = 'ALL GOOD';
+        break;
     }
 
     return Container(
@@ -158,4 +164,6 @@ border: Border.all(width: 1.w,color: AppColor.CartDarkBorder),
       ],
     );
   }
+
+
 }

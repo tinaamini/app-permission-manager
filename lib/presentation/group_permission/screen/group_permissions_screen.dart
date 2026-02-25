@@ -26,6 +26,10 @@ class GroupPermissionsScreen extends StatelessWidget {
       _GroupItem('assets/group_permission/activity.png', 'Activity', PermissionGroupType.activity),
     ];
 
+    final w = MediaQuery.of(context).size.width;
+
+    final crossAxisCount = w >= 900 ? 4 : (w >= 600 ? 3 : 2);
+
     return BaseScreen(
       child: Column(
         children: [
@@ -37,32 +41,29 @@ class GroupPermissionsScreen extends StatelessWidget {
           SizedBox(height: 12.h),
 
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(top: 20.h),
-              child: GridView.builder(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                itemCount: items.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16.w,
-                  mainAxisSpacing: 16.h,
-
-                  mainAxisExtent: 101.h,
-                ),
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  return BtnGroupWidget(
-                    image: item.image,
-                    text: item.title,
-                    ontap: () {
-                      context.pushNamed(
-                        RouteName.permissionDetail,
-                        extra: item.type,
-                      );
-                    },
-                  );
-                },
+            child: GridView.builder(
+              padding: EdgeInsets.fromLTRB(16.w, 20.h, 16.w, 16.h),
+              itemCount: items.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 16.w,
+                mainAxisSpacing: 16.h,
+                mainAxisExtent: 115.h,
+                childAspectRatio: 1.75,
               ),
+              itemBuilder: (context, index) {
+                final item = items[index];
+                return BtnGroupWidget(
+                  image: item.image,
+                  text: item.title,
+                  ontap: () {
+                    context.pushNamed(
+                      RouteName.permissionDetail,
+                      extra: item.type,
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],

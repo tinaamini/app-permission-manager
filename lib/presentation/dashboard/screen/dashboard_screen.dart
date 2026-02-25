@@ -16,6 +16,7 @@ import 'package:permissions_app/presentation/dashboard/widget/since_last_scan_wi
 import 'package:permissions_app/presentation/dashboard/widget/system_privacy_dashboard_card.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
+import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
 
 class DashboardPermissionScreen extends StatefulWidget {
   const DashboardPermissionScreen({super.key});
@@ -138,7 +139,15 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _loadingAlerts
-                        ? const Center(child: CupertinoActivityIndicator())
+                        ? const  Center(
+                child: CustomDotsLoader(
+                    svgPath1:
+                    'assets/utils/Property 1=1 (1).svg',
+                    svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                    svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                    svgPath4:
+                    'assets/utils/Property 1=4 (1).svg'))
+
                         : SafeAlertSectionWidget(
                       accessibilityOn: _accessibilityOn,
                       apps: _appsForAlerts,

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/logic/onboarding/onboarding_cubit.dart';
+import 'package:permissions_app/logic/onboarding/show_onboarding/show_onboarding_cubit.dart';
 import 'package:permissions_app/presentation/onboarding/widgets/onboarding_data.dart';
 import 'package:permissions_app/presentation/onboarding/widgets/onboarding_page.dart';
 import 'package:permissions_app/presentation/onboarding/widgets/page_indicator.dart';
@@ -32,14 +33,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
-  void _nextPage(BuildContext context, int currentPage) {
+  void _nextPage(BuildContext context, int currentPage)async {
     if (currentPage < onboardingPages.length - 1) {
       _controller.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.ease,
       );
     } else {
-      context.replaceNamed(RouteName.home);
+      // context.replaceNamed(RouteName.home);
+       await context.read<OnboardingShowCubit>().complete();
     }
   }
 
@@ -76,7 +78,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         padding:  EdgeInsets.only(top: 18.h, left: 300.w),
                         child: TextButton(
                           onPressed: () {
-                            context.goNamed(RouteName.home);
+                            // context.goNamed(RouteName.home);
+                            context.read<OnboardingShowCubit>().complete();
                           },
                           child: Text(
                             "skip",

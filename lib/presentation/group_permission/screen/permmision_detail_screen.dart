@@ -15,6 +15,7 @@ import 'package:permissions_app/presentation/apps_permission/widgets/question_di
 import 'package:permissions_app/presentation/group_permission/widget/permission_item.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
+import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
 import 'package:permissions_app/presentation/utils/empty_page_widget.dart';
 
 class PermissionDetailScreen extends StatefulWidget {
@@ -65,11 +66,14 @@ class _PermissionDetailScreenState extends State<PermissionDetailScreen>   with 
                 child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
                   builder: (context, state) {
                     if (state is! AppPermissionLoaded) {
-                      return const Center(
-                        child: CupertinoActivityIndicator(
-                          color: AppColor.white,
-                        ),
-                      );
+                      return const  Center(
+                          child: CustomDotsLoader(
+                              svgPath1: 'assets/utils/Property 1=1 (1).svg',
+                              svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                              svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                              svgPath4: 'assets/utils/Property 1=4 (1).svg'));
+
+
                     }
 
                     final apps = _filterApps(state);

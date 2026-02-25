@@ -12,6 +12,7 @@ import 'package:permissions_app/presentation/apps_permission/recently_apps/widge
 import 'package:permissions_app/presentation/apps_permission/widgets/btn_card.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
+import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
 import 'package:permissions_app/routs/rout_name.dart';
 import '../widgets/btn_permission_widget.dart';
 
@@ -23,7 +24,14 @@ class AppPermissionScreen extends StatelessWidget {
     return BlocBuilder<AppPermissionCubit, AppPermissionState>(
       builder: (context, state) {
         if (state is! AppPermissionLoaded) {
-          return const Center(child: CupertinoActivityIndicator());
+          return const  Center(
+              child: CustomDotsLoader(
+                  svgPath1:
+                  'assets/utils/Property 1=1 (1).svg',
+                  svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                  svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                  svgPath4:
+                  'assets/utils/Property 1=4 (1).svg'));
         }
 
         return BaseScreen(

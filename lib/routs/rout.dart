@@ -6,6 +6,7 @@ import 'package:permissions_app/constant/permission_group_type.dart';
 import 'package:permissions_app/constant/risk_level.dart';
 import 'package:permissions_app/constant/specialPermissionType.dart';
 import 'package:permissions_app/core/models/app_permission_ui.dart';
+import 'package:permissions_app/logic/onboarding/show_onboarding/show_onboarding_cubit.dart';
 import 'package:permissions_app/presentation/apps_permission/recently_apps/screen/recent_apps.dart';
 import 'package:permissions_app/presentation/apps_permission/screens/app_detail_screen.dart';
 import 'package:permissions_app/presentation/apps_permission/screens/app_permission_screen.dart';
@@ -20,16 +21,36 @@ import 'package:permissions_app/presentation/onboarding/screen/onboarding_screen
 import 'package:permissions_app/presentation/special_permissions/screen/special_permission_detail_screen.dart';
 import 'package:permissions_app/presentation/special_permissions/screen/special_permission_screen.dart';
 import 'package:permissions_app/presentation/utils/main_screen.dart';
+import 'package:permissions_app/routs/refreshListenable.dart';
 import 'package:permissions_app/routs/rout_name.dart';
+import 'package:permissions_app/logic/onboarding/onboarding_cubit.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 final shellNavigatorKey = GlobalKey<NavigatorState>();
 
 
+GoRouter createRouter(OnboardingShowCubit onboardingShowCubit) {
+  return GoRouter(
+    navigatorKey: rootNavigatorKey,
+    initialLocation: '/home',
+    refreshListenable: GoRouterRefreshStream(onboardingShowCubit.stream),
+    redirect: (context, state) {
+      final status = onboardingShowCubit.state;
 
-final GoRouter router = GoRouter(
-  navigatorKey: rootNavigatorKey,
-  initialLocation: '/onboarding',
+      final goingToOnboarding = state.matchedLocation == '/onboarding';
+
+      if (status == OnboardingStatus.unknown) return null;
+
+      if (status == OnboardingStatus.show) {
+        return goingToOnboarding ? null : '/onboarding';
+      }
+
+      if (status == OnboardingStatus.done) {
+        return goingToOnboarding ? '/home' : null;
+      }
+
+      return null;
+    },
   routes: [
     GoRoute(
       name: RouteName.onboarding,
@@ -189,5 +210,5 @@ final GoRouter router = GoRouter(
       ],
     ),
   ],
-);
+);}
 

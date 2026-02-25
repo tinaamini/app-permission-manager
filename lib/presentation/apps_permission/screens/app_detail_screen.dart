@@ -20,6 +20,7 @@ import 'package:permissions_app/presentation/apps_permission/widgets/info_widget
 import 'package:permissions_app/presentation/apps_permission/widgets/question_dialog.dart';
 import 'package:permissions_app/presentation/apps_permission/widgets/risk_badge.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
+import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
 import 'package:permissions_app/presentation/utils/permission_ui_helper.dart';
 
 class AppDetailScreen extends StatefulWidget {
@@ -102,7 +103,14 @@ class _AppDetailScreenState extends State<AppDetailScreen>
         current is AppPermissionLoaded || current is AppTrusting,
         builder: (context, state) {
           if (state is! AppPermissionLoaded && state is! AppTrusting) {
-            return const Center(child: CupertinoActivityIndicator());
+            return const  Center(
+                child: CustomDotsLoader(
+                    svgPath1:
+                    'assets/utils/Property 1=1 (1).svg',
+                    svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                    svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                    svgPath4:
+                    'assets/utils/Property 1=4 (1).svg'));
           }
 
           final AppPermissionLoaded loaded =

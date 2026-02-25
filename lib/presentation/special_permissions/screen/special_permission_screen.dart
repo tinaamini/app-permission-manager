@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
+import 'package:permissions_app/constant/risk_level.dart';
 import 'package:permissions_app/constant/specialPermissionType.dart';
 import 'package:permissions_app/core/servises/app_special_permiision_service.dart';
 import 'package:permissions_app/logic/special_permission/pecial_permission_state.dart';
@@ -13,9 +14,10 @@ import 'package:permissions_app/logic/special_permission/special_permission_cubi
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
 import 'package:permissions_app/presentation/special_permissions/widget/btn_special_permission.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
+import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
 import 'package:permissions_app/presentation/utils/risk_color.dart';
 import 'package:permissions_app/routs/rout_name.dart';
-
+import 'package:permissions_app/core/utils/special_permission_risk_resolver.dart';
 class SpecialPermissionScreen extends StatefulWidget {
   const SpecialPermissionScreen({super.key});
 
@@ -49,12 +51,17 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>with W
       child: BlocBuilder<SpecialPermissionCubit, SpecialPermissionState>(
               builder: (context, state) {
                 if (state.loading) {
-                  return const SizedBox.shrink();
+                  return  const  Center(
+                      child: CustomDotsLoader(
+                          svgPath1:
+                          'assets/utils/Property 1=1 (1).svg',
+                          svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                          svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                          svgPath4:
+                          'assets/utils/Property 1=4 (1).svg'));
                 }
 
-                final percent = state.riskPercent;
-                final riskLevel =
-                riskLevelFromPercent(state.riskPercent);
+                final riskLevel = riskLevelFromPercent(state.riskPercent);
                 return Column(
                   children: [
                     AppBarWidget(
@@ -79,17 +86,24 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>with W
                             SizedBox(
                               height: 20.h,
                             ),
-                            FutureBuilder<bool>(
-                              future: AppSpecialPermissionPlatform().checkUsageAccess(),
+                            FutureBuilder<List<Map<String, dynamic>>>(
+                              future: AppSpecialPermissionPlatform().getUsageAccessApps(),
                               builder: (context, snapshot) {
-                                // final enabled = snapshot.data ?? false;
+                                final apps = snapshot.data ?? [];
+
+                                final level = SpecialPermissionRiskResolver.fromCount(
+                                  type: SpecialPermissionType.usageAccess,
+                                  count: apps.length,
+                                );
+
+                                final enabled = apps.isNotEmpty;
 
                                 return BtnSpecialPermission(
                                   image: 'assets/special_permission/usage.png',
                                   title: "Usage Data Access",
                                   text: "View app usage statistics",
-                                  riskLevel: riskLevel,
-                                  enabled: state.usageAccess,
+                                  riskLevel: level,
+                                  enabled: enabled,
                                   ontap: () {
                                     context.pushNamed(
                                       RouteName.specialPermissionDetail,
@@ -98,22 +112,27 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>with W
                                   },
                                 );
                               },
-                            ),
-
-                            SizedBox(
+                            ),                            SizedBox(
                               height: 20.h,
                             ),
 
-                            FutureBuilder<bool>(
-                              future: AppSpecialPermissionPlatform().checkNotificationAccess(),
+                            FutureBuilder<List<Map<String, dynamic>>>(
+                              future: AppSpecialPermissionPlatform().getNotificationAccessApps(),
                               builder: (context, snapshot) {
-                                final enabled = snapshot.data ?? false;
+                                final apps = snapshot.data ?? [];
+
+                                final level = SpecialPermissionRiskResolver.fromCount(
+                                  type: SpecialPermissionType.notificationAccess,
+                                  count: apps.length,
+                                );
+
+                                final enabled = apps.isNotEmpty;
 
                                 return BtnSpecialPermission(
                                   image: 'assets/special_permission/notification.png',
                                   title: "Notification Access",
                                   text: "Read and monitor notifications",
-                                  riskLevel: riskLevel,
+                                  riskLevel: level,
                                   enabled: enabled,
                                   ontap: () {
                                     context.pushNamed(
@@ -139,7 +158,10 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>with W
                                   image: 'assets/special_permission/display.png',
                                   title: "Display over other apps",
                                   text: "Appear on top of other apps",
-                                  riskLevel: riskLevel,
+                                  riskLevel: SpecialPermissionRiskResolver.fromEnabled(
+                                    type: SpecialPermissionType.displayOverApps,
+                                    enabled: enabled,
+                                  ),
                                   enabled: enabled,
                                   ontap: () {
                                     context.pushNamed(
@@ -150,7 +172,6 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>with W
                                 );
                               },
                             ),
-
                             SizedBox(
                               height: 20.h,
                             ),
@@ -163,9 +184,12 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>with W
 
                                 return BtnSpecialPermission(
                                   image: 'assets/special_permission/Battery.png',
-                                  title: "Battery Optimization",
-                                  text: "Ignore battery optimizations",
-                                  riskLevel: riskLevel,
+                                  title: "Unrestricted Battery",
+                                  text: "Allowed Apps To Run In Background",
+                                  riskLevel: SpecialPermissionRiskResolver.fromEnabled(
+                                    type: SpecialPermissionType.batteryOptimization,
+                                    enabled: enabled,
+                                  ),
                                   enabled: enabled,
                                   ontap: () {
                                     context.pushNamed(
@@ -191,7 +215,10 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>with W
                                   image: 'assets/special_permission/Disturb.png',
                                   title: "Do Not Disturb",
                                   text: "Control notification interruptions",
-                                  riskLevel: riskLevel,
+                                  riskLevel: SpecialPermissionRiskResolver.fromEnabled(
+                                    type: SpecialPermissionType.doNotDisturb,
+                                    enabled: enabled,
+                                  ),
                                   enabled: enabled,
                                   ontap: () {
                                     context.pushNamed(
@@ -202,7 +229,6 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>with W
                                 );
                               },
                             ),
-
 
                             SizedBox(
                               height: 20.h,
@@ -251,5 +277,24 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>with W
 
       ),
     );
+  }
+  RiskLevel _levelFromSpecialPermission({
+    required SpecialPermissionType type,
+    required bool enabled,
+  }) {
+    if (!enabled) return RiskLevel.noRisk;
+
+    switch (type) {
+      case SpecialPermissionType.notificationAccess:
+      case SpecialPermissionType.usageAccess:
+        return RiskLevel.highRisk;
+
+      case SpecialPermissionType.displayOverApps:
+      case SpecialPermissionType.batteryOptimization:
+        return RiskLevel.mediumRisk;
+
+      case SpecialPermissionType.doNotDisturb:
+        return RiskLevel.lowRisk;
+    }
   }
 }

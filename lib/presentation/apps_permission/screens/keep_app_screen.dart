@@ -12,6 +12,7 @@ import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
 import 'package:permissions_app/presentation/apps_permission/widgets/app_tile.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
+import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
 import 'package:permissions_app/presentation/utils/empty_page_widget.dart';
 
 class KeepAppsScreen extends StatelessWidget {
@@ -31,7 +32,14 @@ class KeepAppsScreen extends StatelessWidget {
             child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
               builder: (context, state) {
                 if (state is! AppPermissionLoaded) {
-                  return const Center(child: CupertinoActivityIndicator());
+                  return const  Center(
+                      child: CustomDotsLoader(
+                          svgPath1:
+                          'assets/utils/Property 1=1 (1).svg',
+                          svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                          svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                          svgPath4:
+                          'assets/utils/Property 1=4 (1).svg'));
                 }
 
                 final cubit = context.read<AppPermissionCubit>();
