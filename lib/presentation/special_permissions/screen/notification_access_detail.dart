@@ -1,10 +1,14 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:permissions_app/constant/risk_level.dart';
+import 'package:permissions_app/constant/specialPermissionType.dart';
 import 'package:permissions_app/core/servises/app_permission_service.dart';
 import 'package:permissions_app/core/servises/app_special_permiision_service.dart';
+import 'package:permissions_app/core/utils/special_permission_risk_resolver.dart';
 import 'package:permissions_app/presentation/special_permissions/widget/helper_widgets.dart';
+import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
 import 'package:permissions_app/presentation/utils/empty_page_widget.dart';
 
 class NotificationAccessDetail extends StatelessWidget {
@@ -14,63 +18,65 @@ class NotificationAccessDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          sectionTitle('What is Notification Access?'),
-          paragraph(
-            'Allows apps to read notifications, including messages and alerts. '
-                'This may expose sensitive information.',
-          ),
+      child: FutureBuilder<List<Map<String, dynamic>>>(
+        future: AppSpecialPermissionPlatform().getNotificationAccessApps(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CustomDotsLoader(
+                svgPath1: 'assets/utils/Property 1=1 (1).svg',
+                svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                svgPath4: 'assets/utils/Property 1=4 (1).svg',
+              ),
+            );
+          }
 
-          SizedBox(height: 16.h),
+          final apps = snapshot.data ?? [];
 
-          riskBadge(high: true),
+          final RiskLevel level = SpecialPermissionRiskResolver.fromCount(
+            type: SpecialPermissionType.notificationAccess,
+            count: apps.length,
+          );
 
-          SizedBox(height: 24.h),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              sectionTitle('What is Notification Access?'),
+              paragraph(
+                'Allows apps to read notifications, including messages and alerts. '
+                    'This may expose sensitive information.',
+              ),
+              SizedBox(height: 16.h),
 
-          actionButton(
-            text: 'Open Notification Access Settings',
-            onTap: () {
-              AppSpecialPermissionPlatform()
-                  .openNotificationAccessSettings();
-            },
-          ),
+              riskBadge(level: level),
 
-          SizedBox(height: 32.h),
+              SizedBox(height: 24.h),
+              actionButton(
+                text: 'Open Notification Access Settings',
+                onTap: () {
+                  AppSpecialPermissionPlatform()
+                      .openNotificationAccessSettings();
+                },
+              ),
 
-          sectionTitle('Apps with Notification Access'),
+              SizedBox(height: 32.h),
+              sectionTitle('Apps with Notification Access'),
+              SizedBox(height: 12.h),
 
-          SizedBox(height: 12.h),
-
-          Expanded(
-            child: FutureBuilder<List<Map<String, dynamic>>>(
-              future: AppSpecialPermissionPlatform()
-                  .getNotificationAccessApps(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return const Center(
-                    child: CupertinoActivityIndicator(),
-                  );
-                }
-
-                final apps = snapshot.data ?? [];
-
-                if (apps.isEmpty) {
-                  return Center(
-                    child: EmptyPageWidget(text:'No apps with notification access found', )
-
-                  );
-                }
-
-                return ListView.separated(
+              Expanded(
+                child: apps.isEmpty
+                    ? Center(
+                  child: EmptyPageWidget(
+                    text: 'No apps with notification access found',
+                  ),
+                )
+                    : ListView.separated(
                   itemCount: apps.length,
                   separatorBuilder: (_, __) =>
                       Divider(color: Colors.white12),
                   itemBuilder: (context, index) {
                     final app = apps[index];
-
                     return ListTile(
                       contentPadding: EdgeInsets.zero,
                       leading: app['icon'] != null
@@ -108,11 +114,11 @@ class NotificationAccessDetail extends StatelessWidget {
                       },
                     );
                   },
-                );
-              },
-            ),
-          ),
-        ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
