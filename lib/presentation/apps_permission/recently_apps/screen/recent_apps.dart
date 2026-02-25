@@ -104,7 +104,7 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        AppBarWidget(text: "RECENT APPS", ontap:(){
+                        AppBarWidget(text: "USAGE TIME ", ontap:(){
                           context.pop();
                         }, ),
                         SizedBox(height: 12.h),

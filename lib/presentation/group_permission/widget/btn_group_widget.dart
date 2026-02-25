@@ -6,13 +6,14 @@ import 'package:permissions_app/constant/app_style.dart';
 class BtnGroupWidget extends StatelessWidget {
   final String image;
   final String text;
+  final int count;
   final VoidCallback ontap;
 
   const BtnGroupWidget({
     super.key,
     required this.image,
     required this.text,
-    required this.ontap,
+    required this.ontap, required this.count,
   });
 
   @override
@@ -50,6 +51,16 @@ class BtnGroupWidget extends StatelessWidget {
                 ),
               ),
             ),
+            Positioned(right: 10.w,
+                child:    Container(width: 30.w,height: 30.h,
+              decoration: BoxDecoration(
+                color: AppColor.CartDark,
+                borderRadius: BorderRadius.circular(8.r),
+
+
+              ),
+              child: Center(child: Text("$count",style: AppTextStyle.EmptyPage,)),
+            )),
 
             Align(
               alignment: Alignment.bottomCenter,
@@ -59,7 +70,7 @@ class BtnGroupWidget extends StatelessWidget {
                   text,
                   style: AppTextStyle.groupPermission,
                   textAlign: TextAlign.center,
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

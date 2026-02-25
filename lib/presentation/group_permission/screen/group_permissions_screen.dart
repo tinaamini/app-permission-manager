@@ -1,65 +1,99 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:permissions_app/constant/permission_group_type.dart';
+import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
+import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
 import 'package:permissions_app/presentation/group_permission/widget/btn_group_widget.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
 import 'package:permissions_app/routs/rout_name.dart';
 
-class GroupPermissionsScreen extends StatelessWidget {
+class GroupPermissionsScreen extends StatefulWidget {
   const GroupPermissionsScreen({super.key});
+
+  @override
+  State<GroupPermissionsScreen> createState() => _GroupPermissionsScreenState();
+}
+
+class _GroupPermissionsScreenState extends State<GroupPermissionsScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    // SAFE: اگر هنوز لود نشده، یکبار لود کن
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final cubit = context.read<AppPermissionCubit>();
+      if (cubit.state is! AppPermissionLoaded) {
+        cubit.loadApps();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final items = <_GroupItem>[
-      _GroupItem('assets/group_permission/location.png', 'Location', PermissionGroupType.location),
-      _GroupItem('assets/group_permission/camera.png', 'Camera', PermissionGroupType.camera),
-      _GroupItem('assets/group_permission/microphone.png', 'Microphone', PermissionGroupType.microphone),
-      _GroupItem('assets/group_permission/contacts.png', 'Contacts', PermissionGroupType.contacts),
-      _GroupItem('assets/group_permission/sms.png', 'SMS', PermissionGroupType.sms),
-      _GroupItem('assets/group_permission/call.png', 'Call', PermissionGroupType.call),
-      _GroupItem('assets/group_permission/files.png', 'Storage', PermissionGroupType.storage),
-      _GroupItem('assets/group_permission/calendar.png', 'Calendar', PermissionGroupType.calendar),
-      _GroupItem('assets/group_permission/notification.png', 'Notifications', PermissionGroupType.notification),
-      _GroupItem('assets/group_permission/activity.png', 'Activity', PermissionGroupType.activity),
+      _GroupItem('assets/group_permission/location.png', 'Apps Using Location', PermissionGroupType.location),
+      _GroupItem('assets/group_permission/camera.png', 'Apps Using Camera', PermissionGroupType.camera),
+      _GroupItem('assets/group_permission/microphone.png', 'Apps Using Microphone', PermissionGroupType.microphone),
+      _GroupItem('assets/group_permission/contacts.png', 'Apps Using Contacts', PermissionGroupType.contacts),
+      _GroupItem('assets/group_permission/sms.png', 'Apps Using SMS', PermissionGroupType.sms),
+      _GroupItem('assets/group_permission/call.png', 'Apps Using Call', PermissionGroupType.call),
+      _GroupItem('assets/group_permission/files.png', 'Apps Using Storage', PermissionGroupType.storage),
+      _GroupItem('assets/group_permission/calendar.png', 'Apps Using Calendar', PermissionGroupType.calendar),
+      _GroupItem('assets/group_permission/notification.png', 'Apps Using Notifications', PermissionGroupType.notification),
+      _GroupItem('assets/group_permission/activity.png', 'Apps Using Activity', PermissionGroupType.activity),
     ];
 
     final w = MediaQuery.of(context).size.width;
-
     final crossAxisCount = w >= 900 ? 4 : (w >= 600 ? 3 : 2);
 
     return BaseScreen(
       child: Column(
         children: [
           AppBarWidget(
-            text: "GROUP PERMISSION",
+            text: "GROUP PERMISSIONS",
             ontap: () => context.pop(),
           ),
-
           SizedBox(height: 12.h),
 
           Expanded(
-            child: GridView.builder(
-              padding: EdgeInsets.fromLTRB(16.w, 20.h, 16.w, 16.h),
-              itemCount: items.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                crossAxisSpacing: 16.w,
-                mainAxisSpacing: 16.h,
-                mainAxisExtent: 115.h,
-                childAspectRatio: 1.75,
-              ),
-              itemBuilder: (context, index) {
-                final item = items[index];
-                return BtnGroupWidget(
-                  image: item.image,
-                  text: item.title,
-                  ontap: () {
-                    context.pushNamed(
-                      RouteName.permissionDetail,
-                      extra: item.type,
+            child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
+              builder: (context, state) {
+                final allApps = _extractAllApps(state);
+
+                return GridView.builder(
+                  padding: EdgeInsets.fromLTRB(16.w, 20.h, 16.w, 16.h),
+                  itemCount: items.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: 16.w,
+                    mainAxisSpacing: 16.h,
+                    mainAxisExtent: 115.h,
+                    childAspectRatio: 1.75,
+                  ),
+                  itemBuilder: (context, index) {
+                    final item = items[index];
+
+                    final count = allApps == null
+                        ? 0
+                        : _countAppsForGroup(
+                      allApps: allApps,
+                      groupType: item.type,
+                    );
+
+                    return BtnGroupWidget(
+                      image: item.image,
+                      text: item.title,
+                      count: count,
+                      ontap: () {
+                        context.pushNamed(
+                          RouteName.permissionDetail,
+                          extra: item.type,
+                        );
+                      },
                     );
                   },
                 );
@@ -69,6 +103,80 @@ class GroupPermissionsScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  List<dynamic>? _extractAllApps(AppPermissionState state) {
+    if (state is! AppPermissionLoaded) return null;
+
+    return [
+      ...state.noRisk,
+      ...state.lowRisk,
+      ...state.mediumRisk,
+      ...state.highRisk,
+    ];
+  }
+
+  int _countAppsForGroup({
+    required List<dynamic> allApps,
+    required PermissionGroupType groupType,
+  }) {
+    final groupPermissions = _permissionsByGroup(groupType).toSet();
+
+    return allApps.where((app) {
+      final List perms = app.permissions;
+      return perms.any((p) => groupPermissions.contains(p));
+    }).length;
+  }
+
+  List<String> _permissionsByGroup(PermissionGroupType type) {
+    switch (type) {
+      case PermissionGroupType.location:
+        return [
+          'android.permission.ACCESS_FINE_LOCATION',
+          'android.permission.ACCESS_COARSE_LOCATION',
+          'android.permission.ACCESS_BACKGROUND_LOCATION',
+        ];
+      case PermissionGroupType.camera:
+        return ['android.permission.CAMERA'];
+      case PermissionGroupType.microphone:
+        return ['android.permission.RECORD_AUDIO'];
+      case PermissionGroupType.contacts:
+        return [
+          'android.permission.READ_CONTACTS',
+          'android.permission.WRITE_CONTACTS',
+        ];
+      case PermissionGroupType.sms:
+        return [
+          'android.permission.READ_SMS',
+          'android.permission.SEND_SMS',
+          'android.permission.RECEIVE_SMS',
+        ];
+      case PermissionGroupType.call:
+        return [
+          'android.permission.READ_PHONE_STATE',
+          'android.permission.CALL_PHONE',
+          'android.permission.READ_CALL_LOG',
+        ];
+      case PermissionGroupType.storage:
+        return [
+          'android.permission.READ_EXTERNAL_STORAGE',
+          'android.permission.WRITE_EXTERNAL_STORAGE',
+          'android.permission.READ_MEDIA_IMAGES',
+          'android.permission.READ_MEDIA_VIDEO',
+        ];
+      case PermissionGroupType.calendar:
+        return [
+          'android.permission.READ_CALENDAR',
+          'android.permission.WRITE_CALENDAR',
+        ];
+      case PermissionGroupType.notification:
+        return ['android.permission.POST_NOTIFICATIONS'];
+      case PermissionGroupType.activity:
+        return [
+          'android.permission.ACTIVITY_RECOGNITION',
+          'android.permission.BODY_SENSORS',
+        ];
+    }
   }
 }
 

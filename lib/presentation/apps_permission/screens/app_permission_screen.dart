@@ -143,7 +143,7 @@ class AppPermissionScreen extends StatelessWidget {
 
                         BtnCard(
                           image: 'assets/app_permission/recent.svg',
-                          text: 'Recent Apps',
+                          text: "Usage Time",
                           ontap: () async {
                             final granted =
                             await UsageAccessService.isUsageAccessGranted();
