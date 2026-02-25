@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
+import 'package:permissions_app/constant/risk_level.dart';
 
 Widget sectionTitle(String text) {
   return Text(
@@ -21,17 +22,42 @@ Widget paragraph(String text) {
   );
 }
 
-Widget riskBadge({required bool high}) {
+Widget riskBadge({required RiskLevel level}) {
+  late Color color;
+  late String label;
+
+  switch (level) {
+    case RiskLevel.highRisk:
+      color = Colors.red;
+      label = 'ACTION NEEDED';
+      break;
+
+    case RiskLevel.mediumRisk:
+      color = Colors.orange;
+      label = 'REVIEW';
+      break;
+
+    case RiskLevel.lowRisk:
+      color = Colors.green;
+      label = 'LOW';
+      break;
+
+    case RiskLevel.noRisk:
+      color = Colors.blue;
+      label = 'SECURE';
+      break;
+  }
+
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
     decoration: BoxDecoration(
-      color: high ? Colors.red.withOpacity(0.15) : Colors.orange.withOpacity(0.15),
+      color: color.withOpacity(0.15),
       borderRadius: BorderRadius.circular(20),
     ),
     child: Text(
-      high ? 'HIGH RISK' : 'LOW RISK',
+      label,
       style: TextStyle(
-        color: high ? Colors.red : Colors.orange,
+        color: color,
         fontWeight: FontWeight.bold,
         fontSize: 12.sp,
       ),

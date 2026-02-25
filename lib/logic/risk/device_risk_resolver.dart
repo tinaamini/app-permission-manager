@@ -12,8 +12,8 @@ class DeviceRiskResolver {
     if (high > 0) {
       return const DeviceRiskStatus(
         level: DeviceRiskLevel.danger,
-        title: 'Device is not safe ',
-        subtitle: 'System Critical',
+        title: 'Privacy Risks Found',
+        subtitle: 'High Risk ',
         svgAsset: 'assets/main/danger_alert.svg',
         color: Color(0xFFF24A4D),
       );
@@ -22,8 +22,8 @@ class DeviceRiskResolver {
     if (medium > 0) {
       return const DeviceRiskStatus(
         level: DeviceRiskLevel.warning,
-        title: 'Device alert',
-        subtitle: 'System Warning',
+        title: 'Attention Needed',
+        subtitle: 'Needs Attention',
         svgAsset: 'assets/main/warning_alert.svg',
         color: Color(0xFFF2B24A),
       );
@@ -32,8 +32,8 @@ class DeviceRiskResolver {
     if (low > 0) {
       return const DeviceRiskStatus(
         level: DeviceRiskLevel.low,
-        title: 'Mostly secure',
-        subtitle: 'System Risky',
+        title: 'Mostly Protected',
+        subtitle: 'Low Risk',
         svgAsset: 'assets/main/low.svg',
         color: Color(0xFF4AF296),
       );
@@ -41,8 +41,8 @@ class DeviceRiskResolver {
 
     return const DeviceRiskStatus(
       level: DeviceRiskLevel.safe,
-      title: 'Device is safe',
-      subtitle: 'System Secure',
+      title: 'All Good',
+      subtitle: 'Your Privacy Looks Strong',
       svgAsset: 'assets/main/safe_alert.svg',
       color: Color(0xFF4A82F2),
     );

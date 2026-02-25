@@ -17,6 +17,8 @@ import 'package:permissions_app/presentation/utils/base_screen.dart';
 import 'package:permissions_app/presentation/utils/empty_page_widget.dart';
 import 'package:permissions_app/routs/rout_name.dart';
 
+import '../../utils/custome_dotsloader.dart';
+
 class RiskAppListScreen extends StatelessWidget {
   final RiskLevel riskLevel;
 
@@ -40,9 +42,14 @@ class RiskAppListScreen extends StatelessWidget {
             child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
               builder: (context, state) {
                 if (state is! AppPermissionLoaded) {
-                  return const Center(
-                    child: CupertinoActivityIndicator(color: AppColor.white),
-                  );
+                  return const  Center(
+                      child: CustomDotsLoader(
+                          svgPath1:
+                          'assets/utils/Property 1=1 (1).svg',
+                          svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                          svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                          svgPath4:
+                          'assets/utils/Property 1=4 (1).svg'));
                 }
 
                 final apps = _getAppsByRisk(state);

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:permissions_app/constant/risk_level.dart';
 
 Color riskColor(int percent) {
-  if (percent >= 70) {
+  if (percent == 0) {
+    return const Color(0xFF2196F3); // Blue (No risk - fully secure)
+  } else if (percent >= 70) {
     return const Color(0xFFE53935); // Red (High risk)
   } else if (percent >= 40) {
     return const Color(0xFFFF9800); // Orange (Medium risk)
@@ -11,7 +13,9 @@ Color riskColor(int percent) {
   }
 }
 RiskLevel riskLevelFromPercent(int percent) {
-  if (percent >= 70) {
+  if (percent == 0) {
+    return RiskLevel.noRisk;
+  } else if (percent >= 70) {
     return RiskLevel.highRisk;
   } else if (percent >= 40) {
     return RiskLevel.mediumRisk;

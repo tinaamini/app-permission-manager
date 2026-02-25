@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:permissions_app/core/servises/app_permission_service.dart';
 import 'package:permissions_app/core/servises/app_special_permiision_service.dart';
 import 'package:permissions_app/logic/special_permission/pecial_permission_state.dart';
 import 'package:permissions_app/logic/special_permission/special_risk_calculator.dart';
@@ -49,7 +48,6 @@ class SpecialPermissionCubit
     );
   }
 
-  /// برای وقتی که از Settings برمی‌گردیم
   Future<void> refresh() async {
     await loadStatus();
   }

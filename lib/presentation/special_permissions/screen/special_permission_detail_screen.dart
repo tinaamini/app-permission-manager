@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/specialPermissionType.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
 import 'package:permissions_app/presentation/special_permissions/screen/usage_access_detail.dart';
