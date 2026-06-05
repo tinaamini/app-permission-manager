@@ -20,6 +20,9 @@ class TrustedAppsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return BaseScreen(
       child: Column(
         children: [
@@ -63,21 +66,28 @@ class TrustedAppsScreen extends StatelessWidget {
                     Row(
                       children: [
                         SvgPicture.asset("assets/app_permission/shield-tick.svg"),
-                        SizedBox(width: 8.w),
+                        SizedBox(
+                          width: screenWidth * 0.02,
+                        ),
                         Text("WHITE LIST", style: AppTextStyle.blueFont),
                       ],
                     ),
-                    SizedBox(height: 6.h),
+                    SizedBox(
+                      height: screenHeight * 0.007,
+                    ),
                     Text("Apps you fully trust", style: AppTextStyle.trustTitle),
-                    SizedBox(height: 6.h),
+                    SizedBox(
+                      height: screenHeight * 0.007,
+                    ),
                     Text(
                       "These applications are excluded from all risk\n"
                           "alerts and security scans. Only trust apps you are\n"
                           "certain are safe",
                       style: AppTextStyle.trustDescription,
                     ),
-                    SizedBox(height: 16.h),
-
+                    SizedBox(
+                      height: screenHeight * 0.02,
+                    ),
                     ...trustedApps.map(
                           (app) => appTile(
                         context,

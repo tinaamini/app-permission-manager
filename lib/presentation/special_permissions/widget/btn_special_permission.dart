@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/constant/risk_level.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class BtnSpecialPermission extends StatelessWidget {
   final String image;
@@ -24,20 +24,18 @@ class BtnSpecialPermission extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     return InkWell(
       onTap: ontap,
-      borderRadius: BorderRadius.circular(10.r),
+      borderRadius: BorderRadius.circular(AppSize.width * 0.025),
       child: Container(
-        padding: EdgeInsets.all(10.w),
+        padding: EdgeInsets.all(AppSize.width * 0.025),
         decoration: BoxDecoration(
           color: AppColor.CartDark,
-          borderRadius: BorderRadius.circular(12.r),
-border: Border.all(width: 1.w,color: AppColor.CartDarkBorder),
+          borderRadius: BorderRadius.circular(AppSize.width * 0.03),
+          border: Border.all(width: 1, color: AppColor.CartDarkBorder),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.35),
+              color: Colors.black.withAlpha(89),
               blurRadius: 10,
               offset: const Offset(0, 6),
             ),
@@ -46,49 +44,45 @@ border: Border.all(width: 1.w,color: AppColor.CartDarkBorder),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              child: Image.asset(
-                image,
-                width: 70.w,
-                height: 70.h,
-                fit: BoxFit.cover,
-              ),
+            Image.asset(
+              image,
+              width: AppSize.width * 0.175,
+              height: AppSize.width * 0.175,
+              fit: BoxFit.cover,
             ),
 
-            SizedBox(width: 12.w),
+            SizedBox(width: AppSize.width * 0.03),
 
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-
                 children: [
                   Text(
                     title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyle.SpecialPermission,
+                    style: AppTextStyle.specialPermission,
                   ),
-                  SizedBox(height: 4.h),
+                  SizedBox(height: AppSize.height * 0.005),
                   Text(
                     text,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyle.SpecialPermissiontitle,
+                    style: AppTextStyle.specialPermissiontitle,
                   ),
                 ],
               ),
             ),
 
-            SizedBox(width: 12.w),
+            SizedBox(width: AppSize.width * 0.03),
 
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center
-                ,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _riskBadge(),
-                  SizedBox(height: 10.h),
+                  SizedBox(height: AppSize.height * 0.012),
                   _statusText(),
                 ],
               ),
@@ -123,17 +117,20 @@ border: Border.all(width: 1.w,color: AppColor.CartDarkBorder),
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSize.width * 0.025,
+        vertical: AppSize.height * 0.005,
+      ),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(6.r),
+        color: color.withAlpha(38),
+        borderRadius: BorderRadius.circular(AppSize.width * 0.015),
         border: Border.all(color: color, width: 0.8),
       ),
       child: Text(
         label,
-        style: AppTextStyle.SpecialPermission.copyWith(
+        style: AppTextStyle.specialPermission.copyWith(
           color: color,
-          fontSize: 11.sp,
+          fontSize: AppSize.width * 0.028,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -145,25 +142,22 @@ border: Border.all(width: 1.w,color: AppColor.CartDarkBorder),
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 6.w,
-          height: 6.w,
+          width: AppSize.width * 0.015,
+          height: AppSize.width * 0.015,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: enabled ? Colors.greenAccent : Colors.grey,
           ),
         ),
-        SizedBox(width: 6.w),
+        SizedBox(width: AppSize.width * 0.015),
         Text(
           enabled ? 'Enabled' : 'Disabled',
-          style: AppTextStyle.SpecialPermissiontitle.copyWith(
-            color:
-            enabled ? AppColor.summary : AppColor.white1,
-            fontSize: 12.sp,
+          style: AppTextStyle.specialPermissiontitle.copyWith(
+            color: enabled ? AppColor.summary : AppColor.white1,
+            fontSize: AppSize.width * 0.03,
           ),
         ),
       ],
     );
   }
-
-
 }

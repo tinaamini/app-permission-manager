@@ -29,6 +29,9 @@ class RiskAppListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return BaseScreen(
       child: Column(
         children: [
@@ -59,13 +62,13 @@ class RiskAppListScreen extends StatelessWidget {
                 }
 
                 return ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  padding: EdgeInsets.symmetric(horizontal: screenWidth * (16 / 812),),
                   itemCount: apps.length,
                   itemBuilder: (context, index) {
                     final app = apps[index];
 
                     return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      padding: EdgeInsets.symmetric(vertical: screenHeight * (10/812)),
                       child: GestureDetector(
                         onTap: () {
                           context.pushNamed(
@@ -77,8 +80,8 @@ class RiskAppListScreen extends StatelessWidget {
                           packageName: app.packageName,
                           icon: Image.memory(
                             base64Decode(app.iconBase64),
-                            width: 40.w,
-                            height: 40.h,
+                            width: screenWidth * 0.1,
+                            height: screenHeight * 0.05,
                           ),
                           appName: app.appName,
                           permissions: app.permissions,

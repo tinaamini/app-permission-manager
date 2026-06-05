@@ -1,23 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/constant/risk_level.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 
 Widget sectionTitle(String text) {
-  return Text(
-    text,
-    style: AppTextStyle.trustTitle
-  );
+  return Text(text, style: AppTextStyle.trustTitle);
 }
 
 Widget paragraph(String text) {
   return Padding(
-    padding: EdgeInsets.only(top: 8.h),
+    padding: EdgeInsets.only(top: AppSize.height * 0.01),
     child: Text(
       text,
-      style:AppTextStyle.trustDescription.copyWith(color: AppColor.green2)
+      style: AppTextStyle.trustDescription.copyWith(color: AppColor.green2),
     ),
   );
 }
@@ -31,17 +27,14 @@ Widget riskBadge({required RiskLevel level}) {
       color = Colors.red;
       label = 'ACTION NEEDED';
       break;
-
     case RiskLevel.mediumRisk:
       color = Colors.orange;
       label = 'REVIEW';
       break;
-
     case RiskLevel.lowRisk:
       color = Colors.green;
       label = 'LOW';
       break;
-
     case RiskLevel.noRisk:
       color = Colors.blue;
       label = 'SECURE';
@@ -49,17 +42,20 @@ Widget riskBadge({required RiskLevel level}) {
   }
 
   return Container(
-    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+    padding: EdgeInsets.symmetric(
+      horizontal: AppSize.width * 0.03,
+      vertical: AppSize.height * 0.008,
+    ),
     decoration: BoxDecoration(
-      color: color.withOpacity(0.15),
-      borderRadius: BorderRadius.circular(20),
+      color: color.withAlpha(38),
+      borderRadius: BorderRadius.circular(AppSize.width * 0.05),
     ),
     child: Text(
       label,
       style: TextStyle(
         color: color,
         fontWeight: FontWeight.bold,
-        fontSize: 12.sp,
+        fontSize: AppSize.width * 0.03,
       ),
     ),
   );
@@ -75,18 +71,17 @@ Widget actionButton({
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColor.CartDark,
-        padding: EdgeInsets.symmetric(vertical: 14.h),
+        padding: EdgeInsets.symmetric(vertical: AppSize.height * 0.018),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSize.width * 0.03),
         ),
       ),
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 14.sp,
+          fontSize: AppSize.width * 0.035,
           fontWeight: FontWeight.w600,
           color: Colors.white,
-
         ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,

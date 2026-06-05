@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 
 
 class CustomDotsLoader extends StatefulWidget {
@@ -55,8 +55,8 @@ class _SvgLoaderAnimationState extends State<CustomDotsLoader> {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       svgPaths[_currentIndex],
-      height: 32,
-      width: 32,
+      height: AppSize.width * 0.08,
+      width: AppSize.width * 0.08,
       color: null,
     );
   }

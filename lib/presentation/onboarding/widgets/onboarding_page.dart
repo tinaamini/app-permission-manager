@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:permissions_app/constant/app_style.dart';
-import 'package:permissions_app/routs/rout_name.dart';
 import 'next_button.dart';
 import 'onboarding_data.dart';
 
@@ -24,19 +21,21 @@ class OnboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isLast = currentPage == totalPages - 1;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
+    return  ColoredBox(
+      color: Colors.black,
+      child: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05  ),
           child: Column(
             children: [
-              SizedBox(height: 30.h),
+              SizedBox(height: screenHeight * 0.03),
 
               // ===== Top visual area =====
               Expanded(
-                flex: 55,
+                flex: 45,
                 child: Center(
                   child: Stack(
                     alignment: Alignment.center,
@@ -44,13 +43,13 @@ class OnboardPage extends StatelessWidget {
                     children: [
                       // Glow
                       Container(
-                        width: 180.w,
-                        height: 180.w,
+                        width: screenWidth * 0.5,
+                        height:screenHeight * 0.5,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: data.color.withOpacity(0.40),
+                              color: data.color.withValues(alpha: 0.40),
                               blurRadius: 88,
                               spreadRadius: 10,
                             ),
@@ -60,11 +59,12 @@ class OnboardPage extends StatelessWidget {
 
                       // Illustration
                       SizedBox(
-                        width: currentPage == 0 ? 200.w :360.w,
-                        height: currentPage == 0 ? 200.h :360.h,
+                        width: currentPage == 0 ? screenWidth * 0.45 :screenWidth * 0.75 ,
+                        height: currentPage == 0 ? screenHeight * 0.45  :screenHeight * 0.75 ,
                         child: SvgPicture.asset(
                           data.svg,
                           fit: BoxFit.contain,
+
                         ),
                       ),
                     ],
@@ -77,7 +77,6 @@ class OnboardPage extends StatelessWidget {
                 flex: 65,
                 child: Column(
                   children: [
-
                     Text(
                       data.title,
                       textAlign: TextAlign.center,
@@ -86,18 +85,15 @@ class OnboardPage extends StatelessWidget {
                       style: AppTextStyle.onboardingTitle,
                     ),
 
-                    SizedBox(height: 5.h),
+                    SizedBox(height: screenHeight * 0.01),
 
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 2.w),
-                      child: Text(
-                        data.description,
-                        textAlign: TextAlign.center,
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyle.onboardingDescription
-                            .copyWith(color: data.color),
-                      ),
+                    Text(
+                      data.description,
+                      textAlign: TextAlign.center,
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyle.onboardingDescription
+                          .copyWith(color: data.color),
                     ),
                   ],
                 ),
@@ -105,11 +101,11 @@ class OnboardPage extends StatelessWidget {
 
               // ===== Button area =====
               Padding(
-                padding: EdgeInsets.only(bottom: 33.h),
+                padding: EdgeInsets.only(bottom: screenHeight * 0.03),
                 child: SizedBox(
                   width: double.infinity,
                   child: NextButton(
-                    OnTap: onNext,
+                    onTap: onNext,
 
                     text: isLast ? "Get Started" : "Next",
                   ),

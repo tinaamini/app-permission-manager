@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
 
 class PageIndicator extends StatelessWidget {
@@ -10,17 +9,19 @@ class PageIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         length,
             (index) => Container(
-          margin:  EdgeInsets.symmetric(horizontal:1.w),
-          width: currentIndex == index ? 60.w : 18.w,
-          height:3.w,
+          margin:  EdgeInsets.symmetric(horizontal:1),
+              width: currentIndex == index ? screenWidth *0.1 : screenWidth*0.05,
+          height:screenHeight * 0.005,
           decoration: BoxDecoration(
             color: currentIndex == index ? AppColor.blue1 : AppColor.blue2,
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(screenWidth * 0.05),
           ),
         ),
       ),

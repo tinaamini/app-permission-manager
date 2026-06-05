@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/core/models/scan_model.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 
 enum ScanTab { newApps, changedPerms }
 
@@ -47,54 +47,60 @@ class SinceLastScanWidget extends StatelessWidget {
         : 'Last Scan: ${lastScanTime!.toLocal().toString().substring(0, 16)}';
 
     return Container(
-      padding: EdgeInsets.all(14.r),
+      padding: EdgeInsets.all(AppSize.width * 0.035),
       decoration: BoxDecoration(
-        color:AppColor.CartDark,
-        borderRadius: BorderRadius.circular(16.r),
-        
-        border: Border.all(color: Colors.white.withOpacity(0.08)),
+        color: AppColor.CartDark,
+        borderRadius: BorderRadius.circular(AppSize.width * 0.04),
+        border: Border.all(color: Colors.white.withAlpha(20)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: [SvgPicture.asset("assets/dashboard/clock.svg"),
-              SizedBox(width: 8.w),
+            children: [
+              SvgPicture.asset("assets/dashboard/clock.svg"),
+              SizedBox(width: AppSize.width * 0.02),
               Expanded(
                 child: Text(
                   'Since last Scan',
-                  style: AppTextStyle.dashboardTitle
+                  style: AppTextStyle.dashboardTitle,
                 ),
               ),
               InkWell(
-                borderRadius: BorderRadius.circular(10.r),
+                borderRadius: BorderRadius.circular(AppSize.width * 0.025),
                 onTap: scanning ? null : onRunScan,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.width * 0.03,
+                    vertical: AppSize.height * 0.01,
+                  ),
                   decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1.w,
-                      color: AppColor.blue1
-                    ),
+                    border: Border.all(width: 1, color: AppColor.blue1),
                     color: AppColor.CartDark,
-                    borderRadius: BorderRadius.circular(10.r),
+                    borderRadius: BorderRadius.circular(AppSize.width * 0.025),
                   ),
                   child: Row(
                     children: [
                       if (scanning) ...[
                         SizedBox(
-                          width: 14.r,
-                          height: 14.r,
-                          child: const CircularProgressIndicator(strokeWidth: 2,color: AppColor.blue2,),
+                          width: AppSize.width * 0.04,
+                          height: AppSize.width * 0.04,
+                          child: const CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColor.blue2,
+                          ),
                         ),
-                        SizedBox(width: 8.w),
+                        SizedBox(width: AppSize.width * 0.02),
                       ] else ...[
-                        Icon(Icons.refresh, color: AppColor.blue1, size: 16.sp),
-                        SizedBox(width: 6.w),
+                        Icon(Icons.refresh,
+                            color: AppColor.blue1,
+                            size: AppSize.width * 0.04),
+                        SizedBox(width: AppSize.width * 0.015),
                       ],
                       Text(
                         scanning ? 'Scanning' : 'Run scan',
-                        style: AppTextStyle.trustDescription.copyWith(color: AppColor.blue1)
+                        style: AppTextStyle.trustDescription
+                            .copyWith(color: AppColor.blue1),
                       ),
                     ],
                   ),
@@ -102,34 +108,34 @@ class SinceLastScanWidget extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8.h),
-          Text(lastText, style: TextStyle(color: AppColor.blue2, fontSize: 11.sp)),
-          SizedBox(height: 12.h),
+          SizedBox(height: AppSize.height * 0.01),
+          Text(lastText,
+              style: TextStyle(
+                  color: AppColor.blue2, fontSize: AppSize.width * 0.028)),
+          SizedBox(height: AppSize.height * 0.015),
 
           Row(
             children: [
               _pill('New apps', newCount),
-              SizedBox(width: 8.w),
+              SizedBox(width: AppSize.width * 0.02),
               _pill('Changed permissions', changedCount),
             ],
           ),
 
-          SizedBox(height: 12.h),
+          SizedBox(height: AppSize.height * 0.015),
 
           Row(
             children: [
               Expanded(
                 child: _tabBtn(
-                  // coloring: true,
                   text: 'New apps',
                   selected: selectedTab == ScanTab.newApps,
                   onTap: () => onTabChange(ScanTab.newApps),
                 ),
               ),
-              SizedBox(width: 10.w),
+              SizedBox(width: AppSize.width * 0.025),
               Expanded(
                 child: _tabBtn(
-                  // coloring: false,
                   text: 'Changed',
                   selected: selectedTab == ScanTab.changedPerms,
                   onTap: () => onTabChange(ScanTab.changedPerms),
@@ -138,17 +144,19 @@ class SinceLastScanWidget extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: 12.h),
+          SizedBox(height: AppSize.height * 0.015),
 
           if (diff == null)
             Text(
               'Run a scan to compare changes.',
-              style:AppTextStyle.SpecialPermission.copyWith(color: AppColor.blue2),
+              style: AppTextStyle.specialPermission
+                  .copyWith(color: AppColor.blue2),
             )
           else if (diff!.isEmpty)
             Text(
               'No changes since the last scan.',
-              style:AppTextStyle.SpecialPermission.copyWith(color: AppColor.blue2),
+              style: AppTextStyle.specialPermission
+                  .copyWith(color: AppColor.blue2),
             )
           else
             _buildList(selectedTab, diff!, _decodeIcon),
@@ -159,14 +167,18 @@ class SinceLastScanWidget extends StatelessWidget {
 
   Widget _pill(String label, int count) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSize.width * 0.025,
+        vertical: AppSize.height * 0.008,
+      ),
       decoration: BoxDecoration(
-        color: AppColor.blue1.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(999.r),
+        color: AppColor.blue1.withAlpha(51),
+        borderRadius: BorderRadius.circular(AppSize.width * 0.25),
       ),
       child: Text(
         '$label: $count',
-        style: AppTextStyle.trustDescription.copyWith(fontSize: 12.sp)
+        style: AppTextStyle.trustDescription
+            .copyWith(fontSize: AppSize.width * 0.03),
       ),
     );
   }
@@ -175,16 +187,15 @@ class SinceLastScanWidget extends StatelessWidget {
     required String text,
     required bool selected,
     required VoidCallback onTap,
-    // required bool coloring
   }) {
     return InkWell(
-      borderRadius: BorderRadius.circular(10.r),
+      borderRadius: BorderRadius.circular(AppSize.width * 0.025),
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 12.h),
+        padding: EdgeInsets.symmetric(vertical: AppSize.height * 0.015),
         decoration: BoxDecoration(
-          color:AppColor.CartDark,
-          borderRadius: BorderRadius.circular(10.r),
+          color: AppColor.CartDark,
+          borderRadius: BorderRadius.circular(AppSize.width * 0.025),
           border: Border.all(
             color: selected ? AppColor.blue1 : Colors.transparent,
           ),
@@ -192,7 +203,9 @@ class SinceLastScanWidget extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style: AppTextStyle.System.copyWith(color: selected ? AppColor.blue1 :AppColor.BorderCard)
+            style: AppTextStyle.system.copyWith(
+              color: selected ? AppColor.blue1 : AppColor.BorderCard,
+            ),
           ),
         ),
       ),
@@ -242,16 +255,16 @@ class SinceLastScanWidget extends StatelessWidget {
     required Color trailingColor,
   }) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10.h),
-      padding: EdgeInsets.all(12.r),
+      margin: EdgeInsets.only(bottom: AppSize.height * 0.012),
+      padding: EdgeInsets.all(AppSize.width * 0.03),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.04),
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(AppSize.width * 0.03),
       ),
       child: Row(
         children: [
           _iconBox(icon),
-          SizedBox(width: 10.w),
+          SizedBox(width: AppSize.width * 0.025),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,26 +272,37 @@ class SinceLastScanWidget extends StatelessWidget {
                 Text(title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 13.sp)),
-                SizedBox(height: 4.h),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        fontSize: AppSize.width * 0.033)),
+                SizedBox(height: AppSize.height * 0.005),
                 Text(subtitle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: Colors.white38, fontSize: 11.sp)),
+                    style: TextStyle(
+                        color: Colors.white38,
+                        fontSize: AppSize.width * 0.028)),
               ],
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSize.width * 0.025,
+              vertical: AppSize.height * 0.008,
+            ),
             decoration: BoxDecoration(
-              color: trailingColor.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(999.r),
+            color: trailingColor.withAlpha(38),
+            borderRadius: BorderRadius.circular(AppSize.width * 0.25),
             ),
             child: Text(
               trailing,
-              style: TextStyle(color: trailingColor, fontWeight: FontWeight.w900, fontSize: 11.sp),
+              style: TextStyle(
+                  color: trailingColor,
+                  fontWeight: FontWeight.w900,
+                  fontSize: AppSize.width * 0.028),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -292,18 +316,17 @@ class SinceLastScanWidget extends StatelessWidget {
     required List<String> removed,
   }) {
     return Container(
-      margin: EdgeInsets.only(bottom: 10.h),
-      padding: EdgeInsets.all(12.r),
+      margin: EdgeInsets.only(bottom: AppSize.height * 0.012),
+      padding: EdgeInsets.all(AppSize.width * 0.03),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.04),
-        borderRadius: BorderRadius.circular(12.r),
+        color: Colors.white.withAlpha(10),        borderRadius: BorderRadius.circular(AppSize.width * 0.03),
       ),
       child: Column(
         children: [
           Row(
             children: [
               _iconBox(icon),
-              SizedBox(width: 10.w),
+              SizedBox(width: AppSize.width * 0.025),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -311,31 +334,43 @@ class SinceLastScanWidget extends StatelessWidget {
                     Text(title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 13.sp)),
-                    SizedBox(height: 4.h),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                            fontSize: AppSize.width * 0.033)),
+                    SizedBox(height: AppSize.height * 0.005),
                     Text(subtitle,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.white38, fontSize: 11.sp)),
+                        style: TextStyle(
+                            color: Colors.white38,
+                            fontSize: AppSize.width * 0.028)),
                   ],
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSize.width * 0.025,
+                  vertical: AppSize.height * 0.008,
+                ),
                 decoration: BoxDecoration(
-                  color: Colors.orangeAccent.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(999.r),
+                  color: Colors.orangeAccent.withAlpha(38),
+                  borderRadius: BorderRadius.circular(AppSize.width * 0.25),
                 ),
                 child: Text(
                   'CHANGED',
-                  style: TextStyle(color: Colors.orangeAccent, fontWeight: FontWeight.w900, fontSize: 11.sp),
+                  style: TextStyle(
+                      color: Colors.orangeAccent,
+                      fontWeight: FontWeight.w900,
+                      fontSize: AppSize.width * 0.028),
                 ),
-              )
+              ),
             ],
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: AppSize.height * 0.012),
           if (added.isNotEmpty) _changeLine('Added', added, Colors.greenAccent),
-          if (removed.isNotEmpty) _changeLine('Removed', removed, Colors.redAccent),
+          if (removed.isNotEmpty)
+            _changeLine('Removed', removed, Colors.redAccent),
         ],
       ),
     );
@@ -345,32 +380,35 @@ class SinceLastScanWidget extends StatelessWidget {
     final text = items.take(6).join(', ') + (items.length > 6 ? ' …' : '');
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(bottom: 6.h),
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: c.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: c.withOpacity(0.20)),
+      margin: EdgeInsets.only(bottom: AppSize.height * 0.008),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSize.width * 0.025,
+        vertical: AppSize.height * 0.01,
       ),
+      decoration: BoxDecoration(
+        color: c.withAlpha(20),
+        borderRadius: BorderRadius.circular(AppSize.width * 0.025),
+        border: Border.all(color: c.withAlpha(51)),      ),
       child: Text(
         '$label: $text',
-        style: TextStyle(color: Colors.white70, fontSize: 11.sp),
+        style:
+        TextStyle(color: Colors.white70, fontSize: AppSize.width * 0.028),
       ),
     );
   }
 
   Widget _iconBox(Uint8List? bytes) {
     return Container(
-      width: 40.r,
-      height: 40.r,
+      width: AppSize.width * 0.1,
+      height: AppSize.width * 0.1,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.06),
-        borderRadius: BorderRadius.circular(10.r),
+        color: Colors.white.withAlpha(15),
+        borderRadius: BorderRadius.circular(AppSize.width * 0.025),
       ),
       child: bytes == null
-          ? Icon(Icons.apps, color: Colors.white38, size: 20.sp)
+          ? Icon(Icons.apps, color: Colors.white38, size: AppSize.width * 0.05)
           : ClipRRect(
-        borderRadius: BorderRadius.circular(10.r),
+        borderRadius: BorderRadius.circular(AppSize.width * 0.025),
         child: Image.memory(bytes, fit: BoxFit.cover),
       ),
     );

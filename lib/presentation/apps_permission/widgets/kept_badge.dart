@@ -1,36 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class KeptBadge extends StatelessWidget {
   const KeptBadge({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Padding(
-      padding:  EdgeInsets.only(right: 25.w),
+      padding: EdgeInsets.only(right: screenWidth * 0.0625),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.025,
+          vertical: screenHeight * 0.0037,
+        ),
         decoration: BoxDecoration(
-          color: Colors.green.withOpacity(0.15),
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: Colors.green, width: 0.8),
+          color: Colors.green.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(screenWidth * 0.03),
+          border: Border.all(
+            color: Colors.green,
+            width: 0.8,
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               Icons.push_pin,
-              size: 12.sp,
+              size: screenWidth * 0.03,
               color: Colors.green,
             ),
-            SizedBox(width: 4.w),
+            SizedBox(width: screenWidth * 0.01),
             Text(
               'Kept',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: Colors.green,
-                fontSize: 10.sp,
+                fontSize: screenWidth * 0.025,
                 fontWeight: FontWeight.w600,
               ),
             ),

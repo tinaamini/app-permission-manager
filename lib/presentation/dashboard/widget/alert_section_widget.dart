@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/core/models/app_permission_item.dart';
 import 'package:permissions_app/core/servises/dashboard_permission_service.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 
 enum AlertSeverity { info, warning, critical }
 
@@ -35,14 +35,13 @@ class SafeAlertSectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final alerts = <SafeAlert>[];
 
-    // ✅ Accessibility alert
     if (accessibilityOn) {
       alerts.add(
         SafeAlert(
           severity: AlertSeverity.critical,
           title: 'Accessibility enabled',
           description:
-          'This permission allows an app to read screen content and control interactions.',
+              'This permission allows an app to read screen content and control interactions.',
           ctaText: 'Review in Settings',
           onTap: () => SafeDashboardPlatform.openAccessibilitySettings(),
         ),
@@ -50,16 +49,19 @@ class SafeAlertSectionWidget extends StatelessWidget {
     }
 
     final alwaysApps = apps.where((a) => a.locationState == 'always').toList();
+
     if (alwaysApps.isNotEmpty) {
       final top = alwaysApps.first;
+
       alerts.add(
         SafeAlert(
           severity: AlertSeverity.warning,
           title: 'Location set to “Always”',
           description:
-          '${top.name} can access your location even when you’re not using it.',
+              '${top.name} can access your location even when you’re not using it.',
           ctaText: 'Review in Settings',
-          onTap: () => SafeDashboardPlatform.openAppLocationSettings(top.packageName),
+          onTap: () =>
+              SafeDashboardPlatform.openAppLocationSettings(top.packageName),
         ),
       );
     }
@@ -72,18 +74,17 @@ class SafeAlertSectionWidget extends StatelessWidget {
         Text(
           'Alerts',
           style: TextStyle(
-            fontSize: 16.sp,
+            fontSize: AppSize.width * 0.04,
             fontWeight: FontWeight.w700,
             color: Colors.white,
           ),
         ),
-        SizedBox(height: 12.h),
+        SizedBox(height: AppSize.height * 0.015),
         ...alerts.map((a) => _AlertCard(alert: a)),
       ],
     );
   }
 }
-
 
 class _AlertCard extends StatelessWidget {
   final SafeAlert alert;
@@ -126,41 +127,57 @@ class _AlertCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 12.h),
-      padding: EdgeInsets.all(14.r),
+      margin: EdgeInsets.only(
+        bottom: AppSize.height * 0.015,
+      ),
+      padding: EdgeInsets.all(
+        AppSize.width * 0.035,
+      ),
       decoration: BoxDecoration(
-        color: _accent.withOpacity(0.10),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: _accent.withOpacity(0.35)),
+        color: _accent.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(
+          AppSize.width * 0.03,
+        ),
+        border: Border.all(
+          color: _accent.withValues(alpha: 0.35),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(_icon, color: _accent, size: 18.sp),
-              SizedBox(width: 8.w),
+              Icon(_icon, color: _accent,
+                size: AppSize.width * 0.045,
+              ),
+              SizedBox(width: AppSize.width * 0.02),
               Expanded(
                 child: Text(
                   alert.title,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 14.sp,
+                    fontSize: AppSize.width * 0.035,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSize.width * 0.02,
+                  vertical: AppSize.height * 0.005,
+                ),
                 decoration: BoxDecoration(
-                  color: _accent.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(999.r),
+                  color: _accent.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(
+                    AppSize.width * 0.2,
+                  ),
+
                 ),
                 child: Text(
                   _badgeText,
                   style: TextStyle(
                     color: _accent,
-                    fontSize: 10.sp,
+                    fontSize: AppSize.width * 0.025,
                     fontWeight: FontWeight.w800,
                     letterSpacing: 0.6,
                   ),
@@ -168,28 +185,32 @@ class _AlertCard extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: AppSize.height * 0.012),
+
           Text(
             alert.description,
             style: TextStyle(
               color: Colors.white70,
-              fontSize: 12.sp,
+              fontSize: AppSize.width * 0.03,
               height: 1.35,
             ),
           ),
-          SizedBox(height: 12.h),
+
+          SizedBox(height: AppSize.height * 0.015),
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: alert.onTap,
               style: TextButton.styleFrom(
                 foregroundColor: _accent,
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-              ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSize.width * 0.03,
+                  vertical: AppSize.height * 0.01,
+                ),              ),
               child: Text(
                 alert.ctaText,
                 style: TextStyle(
-                  fontSize: 12.sp,
+                  fontSize: AppSize.width * 0.03,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -205,21 +226,25 @@ class _EmptyAlertsState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(14.r),
+      padding: EdgeInsets.all(AppSize.width * 0.035),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12.r),
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(AppSize.width * 0.03),
       ),
       child: Row(
         children: [
-          Icon(Icons.verified_outlined, color: Colors.greenAccent, size: 18.sp),
-          SizedBox(width: 10.w),
+          Icon(
+            Icons.verified_outlined,
+            color: Colors.greenAccent,
+            size: AppSize.width * 0.045,
+          ),
+          SizedBox(width: AppSize.width * 0.025),
           Expanded(
             child: Text(
               'No sensitive configurations detected.',
               style: TextStyle(
                 color: Colors.white70,
-                fontSize: 12.sp,
+                fontSize: AppSize.width * 0.03,
                 fontWeight: FontWeight.w600,
               ),
             ),

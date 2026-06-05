@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,6 +7,7 @@ import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
 import 'package:permissions_app/presentation/group_permission/widget/btn_group_widget.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
 import 'package:permissions_app/routs/rout_name.dart';
 
@@ -22,8 +22,6 @@ class _GroupPermissionsScreenState extends State<GroupPermissionsScreen> {
   @override
   void initState() {
     super.initState();
-
-    // SAFE: اگر هنوز لود نشده، یکبار لود کن
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final cubit = context.read<AppPermissionCubit>();
       if (cubit.state is! AppPermissionLoaded) {
@@ -47,7 +45,7 @@ class _GroupPermissionsScreenState extends State<GroupPermissionsScreen> {
       _GroupItem('assets/group_permission/activity.png', 'Apps Using Activity', PermissionGroupType.activity),
     ];
 
-    final w = MediaQuery.of(context).size.width;
+    final w = AppSize.width;
     final crossAxisCount = w >= 900 ? 4 : (w >= 600 ? 3 : 2);
 
     return BaseScreen(
@@ -57,7 +55,7 @@ class _GroupPermissionsScreenState extends State<GroupPermissionsScreen> {
             text: "GROUP PERMISSIONS",
             ontap: () => context.pop(),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: AppSize.height * 0.015),
 
           Expanded(
             child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
@@ -65,14 +63,18 @@ class _GroupPermissionsScreenState extends State<GroupPermissionsScreen> {
                 final allApps = _extractAllApps(state);
 
                 return GridView.builder(
-                  padding: EdgeInsets.fromLTRB(16.w, 20.h, 16.w, 16.h),
+                  padding: EdgeInsets.fromLTRB(
+                    AppSize.width * 0.04,
+                    AppSize.height * 0.025,
+                    AppSize.width * 0.04,
+                    AppSize.height * 0.02,
+                  ),
                   itemCount: items.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: crossAxisCount,
-                    crossAxisSpacing: 16.w,
-                    mainAxisSpacing: 16.h,
-                    mainAxisExtent: 115.h,
-                    childAspectRatio: 1.75,
+                    crossAxisSpacing: AppSize.width * 0.04,
+                    mainAxisSpacing: AppSize.height * 0.02,
+                    mainAxisExtent: AppSize.height * 0.14,
                   ),
                   itemBuilder: (context, index) {
                     final item = items[index];

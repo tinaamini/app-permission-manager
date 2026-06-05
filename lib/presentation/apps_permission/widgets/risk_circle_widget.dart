@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/risk_level.dart';
 
 class RiskCircle extends StatelessWidget {
@@ -30,16 +29,18 @@ class RiskCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Container(
-      width: 36.w,
-      height: 36.w,
+      width:  screenWidth * 0.09,
+      height: screenHeight * 0.07,
       decoration: BoxDecoration(
 
         boxShadow: [
           BoxShadow(
-            color:   hasDangerousPermissions?
-        _color().withOpacity(0.25):Colors.transparent,
-            blurRadius: 22,
+            color:   hasDangerousPermissions? _color().withValues(alpha: 0.18):Colors.transparent,
+            blurRadius: (screenWidth + screenHeight) * 0.03,
             spreadRadius: 1,
             offset: const Offset(0, 6),
           ),
@@ -50,14 +51,14 @@ class RiskCircle extends StatelessWidget {
         children: [
           CircularProgressIndicator(
             value: percent,
-            strokeWidth: 4,
+            strokeWidth: screenWidth * 0.01,
             backgroundColor: Colors.white12,
             valueColor: AlwaysStoppedAnimation(_color()),
           ),
           if (hasDangerousPermissions)
             Icon(
               Icons.warning_amber_rounded,
-              size: 18.sp,
+              size: screenWidth * 0.045,
               color: _color(),
             ),
         ],

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
@@ -10,6 +9,7 @@ import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
 import 'package:permissions_app/presentation/apps_permission/widgets/keep_btn.dart';
 import 'package:permissions_app/presentation/apps_permission/widgets/permission_tile.dart';
 import 'package:permissions_app/presentation/apps_permission/widgets/trust_btn.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/permissionConst.dart';
@@ -58,6 +58,11 @@ class _AppDetailScreenState extends State<AppDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+
     return BaseScreen(
       child: BlocConsumer<AppPermissionCubit, AppPermissionState>(
         listenWhen: (_, current) =>
@@ -146,20 +151,24 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                 ontap: () => context.pop(),
               ),
 
-              SizedBox(height: 12.h),
-
+              SizedBox(
+                height: screenHeight * 0.015,
+              ),
               // Icon
               Image.memory(
                 base64Decode(app.iconBase64),
-                width: 80.w,
-                height: 80.h,
+                width: screenWidth * 0.2,
+                height: screenHeight * 0.1,
               ),
 
-              SizedBox(height: 12.h),
-
+              SizedBox(
+                height: screenHeight * 0.015,
+              ),
               // App name
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.05,
+                ),
                 child: Text(
                   app.appName,
                   textAlign: TextAlign.center,
@@ -167,27 +176,28 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
+                    fontSize: (AppSize.width * 0.045).clamp(14.0, 20.0),                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
 
-              SizedBox(height: 8.h),
-
+              SizedBox(
+                height: screenHeight * 0.01,
+              ),
               // Badge / Info
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.05,
+                ),
                 child: isTrust
                     ? Container(
                   padding: EdgeInsets.symmetric(
-                    horizontal: 14.w,
-                    vertical: 10.h,
+                    horizontal: screenWidth * 0.035,
+                    vertical: screenHeight * 0.012,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
+                    color: Colors.blue.withAlpha(38),
+                    borderRadius: BorderRadius.circular(screenWidth * 0.05),                  ),
                   child: Text(
                     "Trusted apps are excluded from risk warnings",
                     textAlign: TextAlign.center,
@@ -195,8 +205,7 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.blue,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w600,
+                      fontSize: AppSize.width * 0.03,                      fontWeight: FontWeight.w600,
                       letterSpacing: 0.2,
                     ),
                   ),
@@ -204,11 +213,14 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                     : RiskBadge(riskLevel: app.riskLevel),
               ),
 
-              SizedBox(height: 18.h),
-
+              SizedBox(
+                height: screenHeight * 0.022,
+              ),
               // Buttons row (anti overflow)
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.05,
+                ),
                 child: Row(
                   children: [
                     Expanded(
@@ -226,7 +238,9 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                         },
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(
+                      height: screenWidth * 0.015,
+                    ),
                     Expanded(
                       child: KeepAppButton(
                         isKept: isKept,
@@ -246,11 +260,14 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                 ),
               ),
 
-              SizedBox(height: 18.h),
-
+              SizedBox(
+                height: screenHeight * 0.022,
+              ),
               // Risk row
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth * 0.05,
+                ),
                 child: Row(
                   children: [
                     Expanded(
@@ -260,8 +277,7 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: isTrust ? Colors.blue : _riskColor(app.riskLevel),
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.bold,
+                          fontSize: AppSize.width * 0.05,                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -271,22 +287,22 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                           context: context,
                           builder: (_) => Dialog(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(screenWidth * 0.05),
                             ),
                             child: InfoWidget(),
                           ),
                         );
                       },
                       child: Container(
-                        width: 30.w,
-                        height: 30.w,
+                        width: screenWidth * 0.075,
+                        height: screenWidth * 0.075,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25.w),
+                          borderRadius: BorderRadius.circular(screenWidth * 0.0625),
                           color: AppColor.CartDark,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.5),
-                              blurRadius: 12,
+                              color: Colors.black.withValues(alpha: 0.5),
+                              blurRadius: screenWidth * 0.015,
                               spreadRadius: 1,
                               offset: const Offset(0, 6),
                             ),
@@ -302,12 +318,15 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                 ),
               ),
 
-              SizedBox(height: 12.h),
-
+              SizedBox(
+                height: screenHeight * 0.015,
+              ),
               // Permission list
               Expanded(
                 child: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.05,
+                  ),
                   children: PermissionConst.displayPermissions.entries.map((entry) {
                     final permissionKey = entry.key;
                     final permissionName = entry.value;

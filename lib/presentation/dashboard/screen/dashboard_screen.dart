@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:permissions_app/core/models/app_permission_item.dart';
@@ -15,6 +14,7 @@ import 'package:permissions_app/presentation/dashboard/widget/alert_section_widg
 import 'package:permissions_app/presentation/dashboard/widget/since_last_scan_widget.dart';
 import 'package:permissions_app/presentation/dashboard/widget/system_privacy_dashboard_card.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
 import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
 
@@ -112,71 +112,80 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
       setState(() => _scanning = false);
     }
   }
-
   @override
   Widget build(BuildContext context) {
-    return  BaseScreen(
+    return BaseScreen(
       child: Column(
-            children: [
-              AppBarWidget(
-                text: "DASHBOARD PERMISSION",
-                ontap: () => context.pop(),
+        children: [
+          AppBarWidget(
+            text: "DASHBOARD PERMISSION",
+            ontap: () => context.pop(),
+          ),
+
+          SizedBox(height: AppSize.height * 0.025),
+
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSize.width * 0.05,
+            ),
+          ),
+
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSize.width * 0.05,
               ),
-              SizedBox(height: 20.h),
-      Padding(
-        padding:  EdgeInsets.symmetric(horizontal: 20.w),),
-       Expanded(
-         child: Padding(
-      padding:  EdgeInsets.symmetric(horizontal: 20.w),
-       child: Column(
-          children: [
-            SystemPrivacyDashboardCard(),
-            SizedBox(height: 16.h),
+              child: Column(
+                children: [
+                  SystemPrivacyDashboardCard(),
 
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _loadingAlerts
-                        ? const  Center(
-                child: CustomDotsLoader(
-                    svgPath1:
-                    'assets/utils/Property 1=1 (1).svg',
-                    svgPath2: 'assets/utils/Property 1=2 (1).svg',
-                    svgPath3: 'assets/utils/Property 1=3 (1).svg',
-                    svgPath4:
-                    'assets/utils/Property 1=4 (1).svg'))
+                  SizedBox(height: AppSize.height * 0.02),
 
-                        : SafeAlertSectionWidget(
-                      accessibilityOn: _accessibilityOn,
-                      apps: _appsForAlerts,
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _loadingAlerts
+                              ? const Center(
+                            child: CustomDotsLoader(
+                              svgPath1:
+                              'assets/utils/Property 1=1 (1).svg',
+                              svgPath2:
+                              'assets/utils/Property 1=2 (1).svg',
+                              svgPath3:
+                              'assets/utils/Property 1=3 (1).svg',
+                              svgPath4:
+                              'assets/utils/Property 1=4 (1).svg',
+                            ),
+                          )
+                              : SafeAlertSectionWidget(
+                            accessibilityOn: _accessibilityOn,
+                            apps: _appsForAlerts,
+                          ),
+
+                          SizedBox(height: AppSize.height * 0.022),
+
+                          SinceLastScanWidget(
+                            diff: _scanDiff,
+                            lastScanTime: _lastScanTime,
+                            scanning: _scanning,
+                            onRunScan: _runScan,
+                            selectedTab: _scanTab,
+                            onTabChange: (t) =>
+                                setState(() => _scanTab = t),
+                          ),
+
+                          SizedBox(height: AppSize.height * 0.03),
+                        ],
+                      ),
                     ),
-
-                    SizedBox(height: 18.h),
-
-                    SinceLastScanWidget(
-                      diff: _scanDiff,
-                      lastScanTime: _lastScanTime,
-                      scanning: _scanning,
-                      onRunScan: _runScan,
-                      selectedTab: _scanTab,
-                      onTabChange: (t) => setState(() => _scanTab = t),
-                    ),
-
-                    SizedBox(height: 24.h),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-         ),
-       ),
-
-
-            ],
-
+          ),
+        ],
       ),
     );
   }

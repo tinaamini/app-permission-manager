@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class PermissionSwitchTile extends StatelessWidget {
   final String title;
@@ -21,15 +21,21 @@ class PermissionSwitchTile extends StatelessWidget {
     final Color activeColor = isDangerous ? Colors.red : Colors.orange;
 
     return Container(
-      margin: EdgeInsets.only(bottom: 10.h),
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+      margin: EdgeInsets.only(        bottom: AppSize.height * 0.012,
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSize.width * 0.035,
+        vertical: AppSize.height * 0.012,
+      ),
       decoration: BoxDecoration(
         color: AppColor.CartDark,
-        borderRadius: BorderRadius.circular(14.r),
+        borderRadius: BorderRadius.circular(
+          AppSize.width * 0.035,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            blurRadius: 12,
+            color: Colors.black.withValues(alpha: 0.5),
+            blurRadius: AppSize.width * 0.03,
             spreadRadius: 1,
             offset: const Offset(0, 6),
           ),
@@ -44,7 +50,7 @@ class PermissionSwitchTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 14.sp,
+                fontSize: AppSize.width * 0.035,
                 fontWeight: FontWeight.w500,
               ),
             ),

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
@@ -20,6 +19,11 @@ class KeepAppsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+
     return BaseScreen(
       child: Column(
         children: [
@@ -58,22 +62,27 @@ class KeepAppsScreen extends StatelessWidget {
                 }
 
                 return ListView(
-                  padding: EdgeInsets.all(16.w),
+                  padding: EdgeInsets.all(screenWidth * 0.04),
                   children: [
                     Row(
                       children: [
                         SvgPicture.asset("assets/app_permission/tick-square.svg"),
-                        SizedBox(width: 8.w),
+                        SizedBox(
+                          width: screenWidth * 0.02,
+                        ),
                         Text(
                           "REVIEWED LIST",
                           style: AppTextStyle.greenFont,
                         ),
                       ],
                     ),
-                    SizedBox(height: 6.h),
+                    SizedBox(
+                      height: screenHeight * 0.007,
+                    ),
                     Text("Marked as Safe", style: AppTextStyle.trustTitle),
-                    SizedBox(height: 6.h),
-
+                    SizedBox(
+                      height: screenHeight * 0.007,
+                    ),
                     Text(
                       "These are apps you have manually reviewed.\n"
                           "They will no longer trigger risk warnings unless\n"
@@ -83,8 +92,9 @@ class KeepAppsScreen extends StatelessWidget {
                       ),
                     ),
 
-                    SizedBox(height: 16.h),
-
+                    SizedBox(
+                      height: screenHeight * (16 / 812),
+                    ),
                     ...keptApps.map(
                           (app) => appTile(
                         context,
@@ -94,20 +104,21 @@ class KeepAppsScreen extends StatelessWidget {
                       ),
                     ),
 
-                    SizedBox(height: 12.h),
-
+                    SizedBox(
+                      height: screenHeight * (12 / 812),
+                    ),
                     Container(
-                      margin: EdgeInsets.only(bottom: 12.h),
-                      padding: EdgeInsets.all(12.w),
+                      margin: EdgeInsets.only(bottom: screenHeight * (12 / 812),),
+                      padding: EdgeInsets.all(screenWidth * (12 / 812),),
                       decoration: BoxDecoration(
-                        color: AppColor.green1.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(24.r),
+                        color: AppColor.green1.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(screenWidth * (24 / 812),),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SvgPicture.asset("assets/app_permission/danger.svg"),
-                          SizedBox(width: 12.w),
+                          SizedBox(width: screenWidth * (12 / 812),),
 
                           Expanded(
                             child: Text(

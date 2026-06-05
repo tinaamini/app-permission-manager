@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:permissions_app/constant/risk_level.dart';
@@ -21,6 +20,9 @@ class AppPermissionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return BlocBuilder<AppPermissionCubit, AppPermissionState>(
       builder: (context, state) {
         if (state is! AppPermissionLoaded) {
@@ -46,11 +48,13 @@ class AppPermissionScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15.w),
+                    padding: EdgeInsets.symmetric(  horizontal: screenWidth * 0.0375,
+                    ),
                     child: Column(
                       children: [
-                        SizedBox(height: 24.h),
-
+                        SizedBox(
+                          height: screenHeight * 0.03,
+                        ),
                         // ---- 2x2 permission buttons ----
                         Row(
                           children: [
@@ -68,7 +72,9 @@ class AppPermissionScreen extends StatelessWidget {
                                 color: Colors.blue,
                               ),
                             ),
-                            SizedBox(width: 12.w),
+                            SizedBox(
+                              width: screenWidth * 0.03,
+                            ),
                             Expanded(
                               child: BtnPermissionWidget(
                                 ontap: () {
@@ -86,8 +92,9 @@ class AppPermissionScreen extends StatelessWidget {
                           ],
                         ),
 
-                        SizedBox(height: 16.h),
-
+                        SizedBox(
+                          height: screenHeight * 0.02,
+                        ),
                         Row(
                           children: [
                             Expanded(
@@ -104,7 +111,9 @@ class AppPermissionScreen extends StatelessWidget {
                                 color: Colors.orange,
                               ),
                             ),
-                            SizedBox(width: 12.w),
+                            SizedBox(
+                              width: screenWidth * 0.03,
+                            ),
                             Expanded(
                               child: BtnPermissionWidget(
                                 ontap: () {
@@ -122,8 +131,9 @@ class AppPermissionScreen extends StatelessWidget {
                           ],
                         ),
 
-                        SizedBox(height: 24.h),
-
+                        SizedBox(
+                          height: screenHeight * (24 / 812),
+                        ),
                         // ---- Cards ----
                         BtnCard(
                           image: 'assets/app_permission/keep.svg',
@@ -131,16 +141,18 @@ class AppPermissionScreen extends StatelessWidget {
                           ontap: () => context.pushNamed(RouteName.keepApps),
                         ),
 
-                        SizedBox(height: 14.h),
-
+                        SizedBox(
+                          height: screenHeight * (14 / 812),
+                        ),
                         BtnCard(
                           image: 'assets/app_permission/trust.svg',
                           text: 'Trust Apps',
                           ontap: () => context.pushNamed(RouteName.trustedApps),
                         ),
 
-                        SizedBox(height: 14.h),
-
+                        SizedBox(
+                          height: screenHeight * (14 / 812),
+                        ),
                         BtnCard(
                           image: 'assets/app_permission/recent.svg',
                           text: "Usage Time",
@@ -168,8 +180,9 @@ class AppPermissionScreen extends StatelessWidget {
                           },
                         ),
 
-                        SizedBox(height: 24.h),
-                      ],
+                        SizedBox(
+                          height: screenHeight * 0.03,
+                        ),                      ],
                     ),
                   ),
                 ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class QuestionDialog extends StatelessWidget {
   final VoidCallback ontapManual;
@@ -20,14 +20,18 @@ class QuestionDialog extends StatelessWidget {
         maxHeight: (size.height * 0.6).clamp(220.0, 520.0),
       ),
       child: Container(
-        padding: EdgeInsets.all(20.w),
+        padding: EdgeInsets.all(
+          AppSize.width * 0.05,
+        ),
         decoration: BoxDecoration(
           color: AppColor.BcGround,
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(
+            AppSize.width * 0.05,
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.6),
-              blurRadius: 20,
+              color: Colors.black.withValues(alpha: 0.6),
+              blurRadius: AppSize.width * 0.05,
               offset: const Offset(0, 10),
             ),
           ],
@@ -41,49 +45,54 @@ class QuestionDialog extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16.sp,
+                  fontSize: AppSize.width * 0.04,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 12.h),
-
+              SizedBox(height: AppSize.height * 0.015),
               Text(
                 "Manual",
                 style: TextStyle(
                   color: AppColor.green1,
-                  fontSize: 14.sp,
+                  fontSize: AppSize.width * 0.035,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(height: 6.h),
+              SizedBox(
+                height: AppSize.height * 0.007,
+              ),
               Text(
                 "You will manually navigate through the system settings to manage app permissions.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppColor.green2,
-                  fontSize: 12.sp,
+                  fontSize: AppSize.width * 0.03,
                 ),
               ),
-
-              SizedBox(height: 20.h),
-
+              SizedBox(
+                height: AppSize.height * 0.025,
+              ),
               SizedBox(
                 width: double.infinity,
                 child: GestureDetector(
                   onTap: ontapManual,
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 14.h),
+                    padding: EdgeInsets.symmetric(
+                      vertical: AppSize.height * 0.017,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColor.CartDark,
-                      borderRadius: BorderRadius.circular(20.r),
-                      border: Border.all(width: 1.w, color: AppColor.green1),
+                      borderRadius: BorderRadius.circular(
+                        AppSize.width * 0.05,
+                      ),
+                      border: Border.all(width: 1, color: AppColor.green1),
                     ),
                     alignment: Alignment.center,
                     child: Text(
                       "Continue",
                       style: TextStyle(
                         color: AppColor.green1,
-                        fontSize: 14.sp,
+                        fontSize: AppSize.width * 0.035,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

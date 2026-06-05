@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class KeepAppButton extends StatelessWidget {
   final bool isKept;
@@ -20,20 +20,20 @@ class KeepAppButton extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
-        padding: EdgeInsets.symmetric(vertical: 14.h),
+        padding: EdgeInsets.symmetric(vertical: AppSize.height * 0.017,),
         decoration: BoxDecoration(
           color: isKept
-              ? Colors.green.withOpacity(0.15)
+              ?  Colors.green.withValues(alpha: 0.15)
               : AppColor.CartDark,
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular( AppSize.width * 0.04),
           border: Border.all(
             color: isKept ? Colors.green : Colors.white12,
             width: 1.2,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.35),
-              blurRadius: 12,
+              color: Colors.black.withValues(alpha: 0.35),
+              blurRadius: AppSize.width * 0.03,
               offset: const Offset(0, 6),
             ),
           ],
@@ -44,15 +44,15 @@ class KeepAppButton extends StatelessWidget {
             Icon(
               isKept ? Icons.verified_rounded : Icons.push_pin_outlined,
               color: isKept ? Colors.green : Colors.white70,
-              size: 22,
+              size: AppSize.width * 0.055,
             ),
-            SizedBox(width: 10.w),
+            SizedBox(              width: AppSize.width * 0.025,),
             Flexible(
               child: Text(
                 isKept ? 'App is Kept' : 'Keep App',
                 style: TextStyle(
                   color: isKept ? Colors.green : Colors.white,
-                  fontSize: 14.sp,
+                  fontSize: AppSize.width * 0.035,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.2,
                 ),

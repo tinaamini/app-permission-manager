@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/risk_level.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class RiskBadge extends StatelessWidget {
   final RiskLevel riskLevel;
@@ -12,22 +12,24 @@ class RiskBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _data = _mapRisk(riskLevel);
+    final data = _mapRisk(riskLevel);
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: 14.w,
-        vertical: 6.h,
+        horizontal: AppSize.width * 0.035,
+        vertical: AppSize.height * 0.007,
       ),
       decoration: BoxDecoration(
-        color: _data.color.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(20.r),
+        color: data.color.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(
+          AppSize.width * 0.05,
+        ),
       ),
       child: Text(
-        _data.text,
+        data.text,
         style: TextStyle(
-          color: _data.color,
-          fontSize: 12.sp,
+          color: data.color,
+          fontSize: AppSize.width * 0.03,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.5,
         ),

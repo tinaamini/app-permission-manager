@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permissions_app/constant/app_color.dart';
 
 import 'package:permissions_app/core/servises/installed_apps_service.dart';
 import 'package:permissions_app/logic/risk/device_risk_resolver.dart';
@@ -27,14 +25,15 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final h = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
-    final topSpace = (156.h).clamp(24.0, h * 0.18);
-    final midSpace = (110.h).clamp(12.0, h * 0.14);
+    final topSpace =(screenHeight * 0.20).clamp(24.0, screenHeight * 0.18);
+    final midSpace = (screenHeight * 0.12).clamp(12.0, screenHeight * 0.14);
 
     return BaseScreen(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 25.w),
+        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
         child: Column(
           children: [
             SizedBox(height: topSpace),
@@ -45,7 +44,7 @@ class HomeScreen extends StatelessWidget {
                 if (state is! AppPermissionLoaded) {
                   return Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(16.w),
+                    padding: EdgeInsets.all(16),
 
                     child: const  Center(
                   child: CustomDotsLoader(
@@ -88,7 +87,7 @@ class HomeScreen extends StatelessWidget {
                                 ontap: () => context.pushNamed(RouteName.appsPermission),
                               ),
                             ),
-                            SizedBox(width: 16.w),
+                            SizedBox(width: screenWidth *0.04),
                             Expanded(
                               child: BtnHomeWidget(
                                 image: 'assets/main/layer.svg',
@@ -99,7 +98,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 20.h),
+                        SizedBox(height: screenHeight * 0.025),
                         Row(
                           children: [
                             Expanded(
@@ -110,7 +109,7 @@ class HomeScreen extends StatelessWidget {
                                 ontap: () => context.pushNamed(RouteName.specialPermission),
                               ),
                             ),
-                            SizedBox(width: 16.w),
+                            SizedBox(width: screenWidth * 0.04),
                             Expanded(
                               child: BtnHomeWidget(
                                 image: 'assets/main/chart.svg',
@@ -121,7 +120,6 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 24.h),
                       ],
                     );
                   },

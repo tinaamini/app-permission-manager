@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:permissions_app/constant/app_color.dart';
@@ -15,6 +14,7 @@ import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
 import 'package:permissions_app/presentation/apps_permission/recently_apps/widgets/recent_item.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
 import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
 import 'package:permissions_app/presentation/utils/empty_page_widget.dart';
@@ -107,22 +107,22 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
                         AppBarWidget(text: "USAGE TIME ", ontap:(){
                           context.pop();
                         }, ),
-                        SizedBox(height: 12.h),
-                        Padding(  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        SizedBox(height: AppSize.height * 0.015),
+                        Padding(  padding: EdgeInsets.symmetric(horizontal:  AppSize.width * 0.04),
                             child: _summaryCard(items)),
-                        SizedBox(height: 26.h),
-                        Padding(
-                          padding:  EdgeInsets.only(left: 16.w),
+
+                  SizedBox(height: AppSize.height * 0.03),                        Padding(
+                          padding:  EdgeInsets.only(   left: AppSize.width * 0.04,),
                           child: Text("Recent apps",style: AppTextStyle.summary,),
                         ),
-                        SizedBox(height: 26.h),
+                        SizedBox(height: AppSize.height * 0.03),
                         Expanded(
                           child: ListView.separated(
                             itemCount: items.length,
                             separatorBuilder: (_, __) =>
                                 Padding(
-                                  padding:  EdgeInsets.symmetric(horizontal: 16.w),
-                                  child: Divider(color: Colors.orange, height: 40.h),
+                                  padding:  EdgeInsets.symmetric(horizontal:AppSize.width * 0.04,),
+                                  child: Divider(color: Colors.orange, height:AppSize.height * 0.04,),
                                 ),
                             itemBuilder: (context, index) {
                               final item = items[index];
@@ -154,10 +154,12 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
     );
 
     return Container(
-      padding:  EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(AppSize.width * 0.04),
       decoration: BoxDecoration(
         color: AppColor.CartDark,
-        borderRadius: BorderRadius.circular(14.r),
+        borderRadius: BorderRadius.circular(
+          AppSize.width * 0.035,
+        ),
         border: Border.all(color: Colors.white12),
       ),
       child: Column(
@@ -165,64 +167,71 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
         children: [
           Text(
             'Today Summary',
-            style:AppTextStyle.summary
+            style: AppTextStyle.summary,
           ),
-          SizedBox(height: 8.h),
-          _summaryRow('Apps used today', '$totalApps',),
+
+          SizedBox(height: AppSize.height * 0.01),
+
+          _summaryRow('Apps used today', '$totalApps'),
           _summaryRow('High risk apps used', '$highRiskCount'),
           _summaryRow('Total usage', formatDuration(totalTime)),
         ],
       ),
     );
   }
-
   Widget _summaryRow(String label, String value) {
     return Padding(
-      padding: EdgeInsets.only(top: 6.h),
+      padding: EdgeInsets.only(top: AppSize.height * 0.008),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            child: Text(label,  maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: Colors.white54, fontSize: 12.sp)),
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.white54,
+                fontSize: AppSize.width * 0.03,
+              ),
+            ),
           ),
-          Text(value,
-           style:AppTextStyle.summaryValue),
+
+          Text(
+            value,
+            style: AppTextStyle.summaryValue,
+          ),
         ],
       ),
     );
   }
-
   Widget _recentItem(_RecentItem item) {
     return Padding(
-  padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSize.width * 0.04,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           RecentItem(
             icon: Image.memory(
               base64Decode(item.app.iconBase64),
-              width: 40,
-              height: 40,
+              width: AppSize.width * 0.1,
+              height: AppSize.width * 0.1,
             ),
             appName: item.app.appName,
             packageName: item.app.packageName,
             permissions: item.app.permissions,
-            riskLevel: item.app.riskLevel, formData: '${formatTime(item.lastUsed)}', formatDuration: '${formatDuration(item.foregroundTime)}',
-       ),
-          SizedBox(height: 6.h),
-          // Text(
-          //   'Last used at ${formatTime(item.lastUsed)} · '
-          //       'Used today ${formatDuration(item.foregroundTime)}',
-          //   style: TextStyle(color: Colors.white54, fontSize: 12.sp),
-          // ),
-          SizedBox(height: 6.h),
+            riskLevel: item.app.riskLevel,
+            formData: formatTime(item.lastUsed),
+            formatDuration: formatDuration(item.foregroundTime),
+          ),
+
+          SizedBox(height: AppSize.height * 0.008),
         ],
       ),
     );
   }
-
   Widget _errorState(Object? error) {
     return Center(
       child: Text(

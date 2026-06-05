@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/material.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/constant/risk_level.dart';
 import 'package:permissions_app/core/servises/app_special_permiision_service.dart';
 import 'package:permissions_app/presentation/special_permissions/widget/helper_widgets.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
 
 class BatteryOptimizationDetail extends StatelessWidget {
@@ -18,7 +18,7 @@ class BatteryOptimizationDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseScreen(
       child: Padding(
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsets.all(AppSize.width * 0.04),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -28,7 +28,7 @@ class BatteryOptimizationDetail extends StatelessWidget {
                   'in the background, which may increase battery usage.',
             ),
 
-            SizedBox(height: 16.h),
+            SizedBox(height: AppSize.height * 0.02),
 
             FutureBuilder<bool>(
               future: AppSpecialPermissionPlatform().isIgnoringBatteryOptimizations(),
@@ -38,16 +38,19 @@ class BatteryOptimizationDetail extends StatelessWidget {
               },
             ),
 
-            SizedBox(height: 24.h),
+            SizedBox(height: AppSize.height * 0.03),
 
             GestureDetector(
+              onTap: () {
+                AppSpecialPermissionPlatform().openBatteryOptimizationSettings();
+              },
               child: Container(
                 width: double.infinity,
-                height: 48.h,
+                height: AppSize.height * 0.06,
                 decoration: BoxDecoration(
                   color: AppColor.CartDark,
-                  border: Border.all(width: 1.w, color: AppColor.green1),
-                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(width: 1, color: AppColor.green1),
+                  borderRadius: BorderRadius.circular(AppSize.width * 0.04),
                 ),
                 child: Center(
                   child: Text(
@@ -59,9 +62,6 @@ class BatteryOptimizationDetail extends StatelessWidget {
                   ),
                 ),
               ),
-              onTap: () {
-                AppSpecialPermissionPlatform().openBatteryOptimizationSettings();
-              },
             ),
           ],
         ),

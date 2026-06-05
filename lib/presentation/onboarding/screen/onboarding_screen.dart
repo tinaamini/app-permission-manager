@@ -1,15 +1,12 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/logic/onboarding/onboarding_cubit.dart';
 import 'package:permissions_app/logic/onboarding/show_onboarding/show_onboarding_cubit.dart';
 import 'package:permissions_app/presentation/onboarding/widgets/onboarding_data.dart';
 import 'package:permissions_app/presentation/onboarding/widgets/onboarding_page.dart';
 import 'package:permissions_app/presentation/onboarding/widgets/page_indicator.dart';
-import 'package:permissions_app/routs/rout_name.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -40,8 +37,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         curve: Curves.ease,
       );
     } else {
-      // context.replaceNamed(RouteName.home);
        await context.read<OnboardingShowCubit>().complete();
+       if (!mounted) return;
     }
   }
 
@@ -71,20 +68,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   },
                 ),
                 Positioned(
+                  top: 20,
+                  right: 15,
                   child: SafeArea(
                     child: Visibility(
                       visible: currentPage == 0,
-                      child: Padding(
-                        padding:  EdgeInsets.only(top: 18.h, left: 300.w),
-                        child: TextButton(
-                          onPressed: () {
-                            // context.goNamed(RouteName.home);
-                            context.read<OnboardingShowCubit>().complete();
-                          },
-                          child: Text(
-                            "skip",
-                            style: AppTextStyle.onboardingSkip
-                          ),
+                      child: TextButton(
+                        onPressed: () {
+                          context.read<OnboardingShowCubit>().complete();
+                        },
+                        child: Text(
+                          "skip",
+                          style: AppTextStyle.onboardingSkip
                         ),
                       ),
                     ),

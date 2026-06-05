@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:permissions_app/constant/app_color.dart';
@@ -14,25 +12,25 @@ import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
 import 'package:permissions_app/presentation/apps_permission/widgets/question_dialog.dart';
 import 'package:permissions_app/presentation/group_permission/widget/permission_item.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
 import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
 import 'package:permissions_app/presentation/utils/empty_page_widget.dart';
 
 class PermissionDetailScreen extends StatefulWidget {
-
   final PermissionGroupType groupType;
 
   const PermissionDetailScreen({
     super.key,
     required this.groupType,
-
   });
 
   @override
   State<PermissionDetailScreen> createState() => _PermissionDetailScreenState();
 }
 
-class _PermissionDetailScreenState extends State<PermissionDetailScreen>   with WidgetsBindingObserver {
+class _PermissionDetailScreenState extends State<PermissionDetailScreen>
+    with WidgetsBindingObserver {
 
   @override
   void initState() {
@@ -52,98 +50,93 @@ class _PermissionDetailScreenState extends State<PermissionDetailScreen>   with 
       context.read<AppPermissionCubit>().refreshAll();
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    return  BaseScreen(
+    return BaseScreen(
       child: Column(
-            children: [
-              AppBarWidget(
-                text: _title(),
-                ontap: () => context.pop(),
-              ),
+        children: [
+          AppBarWidget(
+            text: _title(),
+            ontap: () => context.pop(),
+          ),
 
-              Expanded(
-                child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
-                  builder: (context, state) {
-                    if (state is! AppPermissionLoaded) {
-                      return const  Center(
-                          child: CustomDotsLoader(
-                              svgPath1: 'assets/utils/Property 1=1 (1).svg',
-                              svgPath2: 'assets/utils/Property 1=2 (1).svg',
-                              svgPath3: 'assets/utils/Property 1=3 (1).svg',
-                              svgPath4: 'assets/utils/Property 1=4 (1).svg'));
+          Expanded(
+            child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
+              builder: (context, state) {
+                if (state is! AppPermissionLoaded) {
+                  return const Center(
+                    child: CustomDotsLoader(
+                      svgPath1: 'assets/utils/Property 1=1 (1).svg',
+                      svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                      svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                      svgPath4: 'assets/utils/Property 1=4 (1).svg',
+                    ),
+                  );
+                }
 
+                final apps = _filterApps(state);
 
-                    }
+                if (apps.isEmpty) {
+                  return EmptyPageWidget(text: 'No apps use this permission');
+                }
 
-                    final apps = _filterApps(state);
+                return ListView.builder(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSize.width * 0.04,
+                    vertical: AppSize.height * 0.015,
+                  ),
+                  itemCount: apps.length,
+                  itemBuilder: (context, index) {
+                    final app = apps[index];
 
-                    if (apps.isEmpty) {
-                      return EmptyPageWidget(text:'No apps use this permission',);
-
-
-                    }
-
-                    return ListView.builder(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16.w,
-                        vertical: 12.h,
-                      ),
-                      itemCount: apps.length,
-
-                      itemBuilder: (context, index) {
-                        final app = apps[index];
-
-                        return Padding(
-                          padding:  EdgeInsets.symmetric(vertical: 10.w),
-                          child: PermissionItem(
-                            icon: Image.memory(
-                              base64Decode(app.iconBase64),
-                              width: 40,
-                              height: 40,
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: AppSize.height * 0.012),
+                      child: PermissionItem(
+                        icon: Image.memory(
+                          base64Decode(app.iconBase64),
+                          width: AppSize.width * 0.1,
+                          height: AppSize.width * 0.1,
+                        ),
+                        appName: app.appName,
+                        packageName: app.packageName,
+                        permissions: app.permissions,
+                        enabled: true,
+                        isDangerous: true,
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (dialogContext) => Dialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(AppSize.width * 0.05),
+                              ),
+                              child: QuestionDialog(
+                                ontapManual: () async {
+                                  if (dialogContext.canPop()) {
+                                    Navigator.pop(dialogContext);
+                                  }
+                                  await Future.delayed(
+                                    const Duration(milliseconds: 50),
+                                  );
+                                  await AppPermissionPlatform()
+                                      .openAppSettings(app.packageName);
+                                },
+                              ),
                             ),
-                            appName: app.appName,
-                            packageName: app.packageName,
-                            permissions: app.permissions,
-                            enabled: true,
-                            isDangerous: true,
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (dialogContext) => Dialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: QuestionDialog(
-                                    ontapManual: () async {
-                                      if (dialogContext.canPop()) {
-                                        Navigator.pop(dialogContext);
-                                      }
-                                      await Future.delayed(
-                                        const Duration(milliseconds: 50),
-                                      );
-                                      await AppPermissionPlatform()
-                                          .openAppSettings(app.packageName);
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     );
                   },
-                ),
-              ),
-            ],
-
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
-
   }
 
-  // ================= Helpers =================
   String _title() {
     switch (widget.groupType) {
       case PermissionGroupType.location:
@@ -224,11 +217,7 @@ class _PermissionDetailScreenState extends State<PermissionDetailScreen>   with 
     final groupPermissions = _permissionsByGroup();
 
     return state.allApps.where((app) {
-      return app.permissions.any(
-            (p) => groupPermissions.contains(p),
-      );
+      return app.permissions.any((p) => groupPermissions.contains(p));
     }).toList();
   }
-
-
 }

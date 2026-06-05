@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
@@ -21,20 +20,23 @@ class BtnHomeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return GestureDetector(
       onTap: ontap,
       child: Container(
 
 
         padding: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: 16.h,
+          horizontal: screenWidth * 0.05,
+          vertical: screenHeight * 0.017,
         ),
         decoration: BoxDecoration(
           color: AppColor.CartDark,
-          borderRadius: BorderRadius.circular(24.r),
+          borderRadius: BorderRadius.circular(screenWidth * 0.05),
           border: Border.all(
-            width: 1.w,
+            width: 1,
             color: AppColor.CartDarkBorder,
           ),
         ),
@@ -43,10 +45,10 @@ class BtnHomeWidget extends StatelessWidget {
           children: [
             SvgPicture.asset(
               image,
-              width: 48.w,
-              height: 48.h,
+              width: screenWidth * 0.05,
+              height: screenHeight * 0.054,
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: screenHeight * 0.008),
 
             Text(
               text,
@@ -56,11 +58,11 @@ class BtnHomeWidget extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
 
-            SizedBox(height: 4.h),
+            SizedBox(height: screenHeight * 0.005),
 
             Text(
               textCount,
-              style: AppTextStyle.CartDarkCount,
+              style: AppTextStyle.cartDarkCount,
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

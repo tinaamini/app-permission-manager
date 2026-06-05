@@ -15,6 +15,7 @@ class AppTextStyle {
       fontSize: 40.sp,
       fontWeight: FontWeight.w700,
       color: AppColor.white);
+
   static TextStyle get onboardingDescription => TextStyle(
       fontFamily: 'Inter',
       fontSize: 16.sp,
@@ -29,7 +30,7 @@ class AppTextStyle {
       color: AppColor.blue1
       );
 
-  static TextStyle get EmptyPage => TextStyle(
+  static TextStyle get emptyPage => TextStyle(
       fontFamily: 'Inter',
       fontSize: 18.sp,
       fontWeight: FontWeight.w600,
@@ -48,7 +49,7 @@ class AppTextStyle {
       fontWeight: FontWeight.w700,
      );
 
-  static TextStyle get CartDarkCount =>TextStyle(
+  static TextStyle get cartDarkCount =>TextStyle(
       fontFamily: 'Inter',
       fontSize: 12.sp,
       fontWeight: FontWeight.w400,
@@ -93,12 +94,12 @@ class AppTextStyle {
       fontWeight: FontWeight.w700,
       color: AppColor.CartDarkCount);
 
-  static TextStyle get System =>TextStyle(
+  static TextStyle get system =>TextStyle(
       fontFamily: 'Inter',
       fontSize: 12.sp,
       fontWeight: FontWeight.w500,);
 
-  static TextStyle get keepbtn =>TextStyle(
+  static TextStyle get keepBtn =>TextStyle(
       fontFamily: 'Inter',
       fontSize: 8.sp,
       fontWeight: FontWeight.w400,
@@ -109,14 +110,14 @@ class AppTextStyle {
       fontSize: 12.sp,
       fontWeight: FontWeight.w400,
       color: AppColor.white,
-  height: 1.4.h);
+  height: 1.4);
 
   static TextStyle get summary =>TextStyle(
       fontFamily: 'Inter',
       fontSize: 16.sp,
       fontWeight: FontWeight.w400,
       color: AppColor.summary,
-  height: 1.4.h);
+  height: 1.4);
 
   static TextStyle get summaryValue =>TextStyle(
 
@@ -124,7 +125,7 @@ class AppTextStyle {
       fontSize: 12.sp,
       fontWeight: FontWeight.w400,
       color: AppColor.summary,
-  height: 1.4.h);
+  height: 1.4);
 
 
   static TextStyle get groupPermission =>TextStyle(
@@ -133,23 +134,23 @@ class AppTextStyle {
       fontSize: 11.sp,
       fontWeight: FontWeight.w500,
       color: AppColor.white,
-  height: 1.4.h);
+  height: 1.4);
 
-  static TextStyle get SpecialPermission =>TextStyle(
+  static TextStyle get specialPermission =>TextStyle(
 
       fontFamily: 'Inter',
       fontSize: 12.sp,
       fontWeight: FontWeight.w400,
       color: AppColor.white,
-      height: 1.4.h);
+      height: 1.4);
 
-  static TextStyle get SpecialPermissiontitle =>TextStyle(
+  static TextStyle get specialPermissiontitle =>TextStyle(
 
       fontFamily: 'Inter',
       fontSize: 10.sp,
       fontWeight: FontWeight.w300,
       color: AppColor.white1,
-      height: 1.4.h);
+      height: 1.4);
 
   static TextStyle get warning =>TextStyle(
 
@@ -157,7 +158,9 @@ class AppTextStyle {
       fontSize: 9.sp,
       fontWeight: FontWeight.w600,
       color: AppColor.warningborder,
-      height: 1.4.h);
+      height: 1.4);
+
+
   static TextStyle get dashboardTitle =>TextStyle(
 
       fontFamily: 'Inter',

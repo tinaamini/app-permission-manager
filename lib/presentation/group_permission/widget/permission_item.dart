@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/permissionConst.dart';
-
-
+import 'package:permissions_app/presentation/utils/app_size.dart';
 
 List<String> getDangerousPermissions(List<String> permissions) {
   return permissions
@@ -29,23 +27,21 @@ class PermissionItem extends StatelessWidget {
     required this.enabled,
     required this.isDangerous,
     required this.onTap,
-
   });
 
   @override
   Widget build(BuildContext context) {
-    final Color activeColor =
-    isDangerous ? Colors.red : Colors.orange;
+    final Color activeColor = isDangerous ? Colors.red : Colors.orange;
 
     return Container(
-      padding: EdgeInsets.all(12.w),
+      padding: EdgeInsets.all(AppSize.width * 0.03),
       decoration: BoxDecoration(
         color: AppColor.CartDark,
-        borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(width: 1.w,color: AppColor.CartDarkBorder),
+        borderRadius: BorderRadius.circular(AppSize.width * 0.06),
+        border: Border.all(width: 1, color: AppColor.CartDarkBorder),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withAlpha(128),
             blurRadius: 12,
             spreadRadius: 1,
             offset: const Offset(0, 6),
@@ -54,10 +50,13 @@ class PermissionItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          SizedBox(width: 12.w),
-          SizedBox(width: 44.w, height: 44.w, child: icon),
-          SizedBox(width: 12.w),
-
+          SizedBox(width: AppSize.width * 0.03),
+          SizedBox(
+            width: AppSize.width * 0.11,
+            height: AppSize.width * 0.11,
+            child: icon,
+          ),
+          SizedBox(width: AppSize.width * 0.03),
           Expanded(
             child: Row(
               children: [
@@ -66,13 +65,12 @@ class PermissionItem extends StatelessWidget {
                     appName,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 14.sp,
+                      fontSize: AppSize.width * 0.035,
                       fontWeight: FontWeight.w600,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-
                 Switch(
                   value: enabled,
                   onChanged: (_) => onTap(),
@@ -83,8 +81,6 @@ class PermissionItem extends StatelessWidget {
               ],
             ),
           ),
-
-
         ],
       ),
     );

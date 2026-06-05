@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'app_size.dart';
+
 class BaseScreen extends StatelessWidget {
   final Widget child;
 
@@ -8,6 +10,8 @@ class BaseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppSize.init(context);
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(

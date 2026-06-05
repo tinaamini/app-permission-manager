@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class InfoWidget extends StatelessWidget {
   const InfoWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
 
     return ConstrainedBox(
       constraints: BoxConstraints(
-        maxWidth: (size.width * 0.9).clamp(280.0, 520.0),
-        maxHeight: (size.height * 0.75).clamp(260.0, 700.0),
+        maxWidth: (AppSize.width * 0.9).clamp(280.0, 520.0),
+        maxHeight: (AppSize.height * 0.75).clamp(260.0, 700.0),
       ),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSize.width * 0.05,
+          vertical: AppSize.height * 0.02,),
         decoration: BoxDecoration(
           color: AppColor.BcGround,
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(AppSize.width * 0.05),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.6),
-              blurRadius: 20,
+              color: Colors.black.withValues(alpha: 0.6),
+              blurRadius: AppSize.width * 0.05,
               offset: const Offset(0, 10),
             ),
           ],
@@ -33,29 +34,28 @@ class InfoWidget extends StatelessWidget {
             children: [
               // Header Icon
               Container(
-                width: 60.w,
-                height: 60.w,
+                width: AppSize.width * 0.15,
+                height: AppSize.width * 0.15,
                 decoration: BoxDecoration(
-                  color: Colors.orange.withOpacity(0.15),
+                  color: Colors.orange.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child:  Icon(
                   Icons.security_rounded,
                   color: Colors.orange,
-                  size: 34,
-                ),
+                  size: AppSize.width * 0.085,                ),
               ),
-              SizedBox(height: 14.h),
+              SizedBox(height: AppSize.height * 0.02),
 
               Text(
                 'Security Overview',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 17.sp,
+                  fontSize: AppSize.width * 0.04,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: AppSize.height * 0.01),
 
               Text(
                 'This app’s risk level is calculated based on the permissions you have granted.\n\n'
@@ -65,12 +65,12 @@ class InfoWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white70,
-                  fontSize: 12.sp,
+                  fontSize: AppSize.width * 0.03,
                   height: 1.5,
                 ),
               ),
 
-              SizedBox(height: 20.h),
+              SizedBox(height: AppSize.height * 0.025),
 
               _RiskLevelItem(
                 icon: Icons.check_circle_outline,
@@ -92,30 +92,29 @@ class InfoWidget extends StatelessWidget {
                 color: Colors.redAccent,
               ),
 
-              SizedBox(height: 18.h),
+              SizedBox(height: AppSize.height * 0.02),
 
               Container(
-                padding: EdgeInsets.all(14.w),
+                padding: EdgeInsets.all(AppSize.width * 0.035),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.25),
-                  borderRadius: BorderRadius.circular(14.r),
+                  color: Colors.black.withValues(alpha: 0.25),
+                  borderRadius: BorderRadius.circular(AppSize.width * 0.035),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
+                     Icon(
                       Icons.lock_outline,
                       color: Colors.lightBlueAccent,
-                      size: 22,
-                    ),
-                    SizedBox(width: 10.w),
+                      size: AppSize.width * 0.055,                    ),
+                    SizedBox(width: AppSize.width * 0.025),
                     Expanded(
                       child: Text(
                         'You can reduce risk by disabling permissions that are not actively used. '
                             'Permissions can be changed at any time from system settings.',
                         style: TextStyle(
                           color: Colors.white70,
-                          fontSize: 12.sp,
+                          fontSize: AppSize.width * 0.03,
                           height: 1.4,
                         ),
                       ),
@@ -124,7 +123,7 @@ class InfoWidget extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 10.h),
+              SizedBox(height: AppSize.height * 0.015),
             ],
           ),
         ),
@@ -149,11 +148,17 @@ class _RiskLevelItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 10.h),
+      padding: EdgeInsets.only(
+        bottom: AppSize.height * 0.012,
+      ),
       child: Row(
         children: [
-          Icon(icon, color: color, size: 22),
-          SizedBox(width: 10.w),
+          Icon(icon,  color: color,
+            size: AppSize.width * 0.055,
+          ),
+          SizedBox(
+            width: AppSize.width * 0.025,
+          ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,7 +167,7 @@ class _RiskLevelItem extends StatelessWidget {
                   title,
                   style: TextStyle(
                     color: color,
-                    fontSize: 13.sp,
+                    fontSize: AppSize.width * 0.032,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -170,7 +175,7 @@ class _RiskLevelItem extends StatelessWidget {
                   description,
                   style: TextStyle(
                     color: Colors.white60,
-                    fontSize: 11.sp,
+                    fontSize: AppSize.width * 0.028,
                   ),
                 ),
               ],

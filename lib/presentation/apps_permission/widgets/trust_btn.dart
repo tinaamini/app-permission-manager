@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class TrustBtn extends StatelessWidget {
   final bool isTrusted;
@@ -21,18 +21,27 @@ class TrustBtn extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSize.width * 0.03,
+          vertical: AppSize.height * 0.017,
+        ),
         decoration: BoxDecoration(
-          color: isTrusted ? Colors.blueAccent.withOpacity(0.15) : AppColor.CartDark,
-          borderRadius: BorderRadius.circular(16.r),
+          color: isTrusted
+              ? Colors.blueAccent.withValues(alpha: 0.15)
+              : AppColor.CartDark,
+          borderRadius: BorderRadius.circular(
+            AppSize.width * 0.04,
+          ),
           border: Border.all(
-            color: isTrusted ? Colors.blueAccent : Colors.white12,
+            color: isTrusted
+                ? Colors.blueAccent
+                : Colors.white12,
             width: 1.2,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.35),
-              blurRadius: 12,
+              color: Colors.black.withValues(alpha: 0.35),
+              blurRadius: AppSize.width * 0.03,
               offset: const Offset(0, 6),
             ),
           ],
@@ -43,8 +52,8 @@ class TrustBtn extends StatelessWidget {
           children: [
             if (isTrusting)
               SizedBox(
-                width: 16.w,
-                height: 16.w,
+                width: AppSize.width * 0.04,
+                height: AppSize.width * 0.04,
                 child: const CircularProgressIndicator(
                   strokeWidth: 2,
                   color: Colors.white,
@@ -52,12 +61,16 @@ class TrustBtn extends StatelessWidget {
               )
             else
               Icon(
-                isTrusted ? Icons.verified_rounded : Icons.verified_outlined,
-                color: isTrusted ? Colors.blueAccent : Colors.white70,
-                size: 22.sp,
+                isTrusted
+                    ? Icons.verified_rounded
+                    : Icons.verified_outlined,
+                color: isTrusted
+                    ? Colors.blueAccent
+                    : Colors.white70,
+                size: AppSize.width * 0.055,
               ),
 
-            SizedBox(width: 8.w),
+            SizedBox(width: AppSize.width * 0.02),
 
             Flexible(
               child: Text(
@@ -71,8 +84,10 @@ class TrustBtn extends StatelessWidget {
                 style: TextStyle(
                   color: isTrusting
                       ? Colors.white
-                      : (isTrusted ? Colors.blueAccent : Colors.white),
-                  fontSize: 14.sp,
+                      : (isTrusted
+                      ? Colors.blueAccent
+                      : Colors.white),
+                  fontSize: AppSize.width * 0.035,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.2,
                 ),

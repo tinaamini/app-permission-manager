@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter/material.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/constant/risk_level.dart';
 import 'package:permissions_app/core/servises/app_special_permiision_service.dart';
 import 'package:permissions_app/presentation/special_permissions/widget/helper_widgets.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class DisplayOverAppsDetail extends StatelessWidget {
   const DisplayOverAppsDetail({super.key});
@@ -16,7 +16,7 @@ class DisplayOverAppsDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(AppSize.width * 0.04),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -26,7 +26,7 @@ class DisplayOverAppsDetail extends StatelessWidget {
                 'This may be used for chat heads, floating tools, or overlays.',
           ),
 
-          SizedBox(height: 16.h),
+          SizedBox(height: AppSize.height * 0.02),
 
           FutureBuilder<bool>(
             future: AppSpecialPermissionPlatform().checkOverlayPermission(),
@@ -36,16 +36,19 @@ class DisplayOverAppsDetail extends StatelessWidget {
             },
           ),
 
-          SizedBox(height: 24.h),
+          SizedBox(height: AppSize.height * 0.03),
 
           GestureDetector(
+            onTap: () {
+              AppSpecialPermissionPlatform().openOverlaySettings();
+            },
             child: Container(
               width: double.infinity,
-              height: 48.h,
+              height: AppSize.height * 0.06,
               decoration: BoxDecoration(
                 color: AppColor.CartDark,
-                border: Border.all(width: 1.w, color: AppColor.green1),
-                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(width: 1, color: AppColor.green1),
+                borderRadius: BorderRadius.circular(AppSize.width * 0.04),
               ),
               child: Center(
                 child: Text(
@@ -57,19 +60,15 @@ class DisplayOverAppsDetail extends StatelessWidget {
                 ),
               ),
             ),
-            onTap: () {
-              AppSpecialPermissionPlatform().openOverlaySettings();
-            },
           ),
 
-          SizedBox(height: 32.h),
+          SizedBox(height: AppSize.height * 0.04),
 
           Expanded(
             child: Text(
               'Android does not allow apps to list overlay permissions directly. '
                   'To review apps with this access, use the system settings.',
-              style: AppTextStyle.trustDescription
-                  .copyWith(color: AppColor.green2),
+              style: AppTextStyle.trustDescription.copyWith(color: AppColor.green2),
             ),
           ),
         ],

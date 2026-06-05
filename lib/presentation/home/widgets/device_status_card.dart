@@ -10,12 +10,14 @@ class DeviceStatusCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return ConstrainedBox(
       constraints: BoxConstraints(
-        minWidth: 180.w,
-        maxWidth: 240.w,
-        minHeight: 200.h,
-        maxHeight: 260.h,
+        minWidth: screenWidth * 0.45,
+        maxWidth: screenWidth * 0.60,
+        minHeight: screenHeight * 0.25,
+        maxHeight: screenHeight * 0.32,
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -24,29 +26,33 @@ class DeviceStatusCard extends StatelessWidget {
           children: [
             SvgPicture.asset(
               status.svgAsset,
-              width: 100.w,
-              height: 100.h,
+              width: screenWidth * 0.24,
+              height: screenHeight * 0.11,
             ),
-            SizedBox(height: 16.h),
+            SizedBox(  height: screenHeight * (16 / 812),
+            ),
 
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+              padding: EdgeInsets.symmetric(  horizontal: screenWidth * 0.035,
+                vertical: screenHeight * 0.012,),
               decoration: BoxDecoration(
-                color: status.color.withOpacity(0.1),
+                color: status.color.withAlpha(26),
                 border: Border.all(width: 1.w, color: status.color),
-                borderRadius: BorderRadius.circular(61.r),
-              ),
+                borderRadius: BorderRadius.circular(
+                  (screenWidth + screenHeight) * 0.04,
+                ),              ),
               child: Text(
                 status.subtitle,
-                style: AppTextStyle.System.copyWith(color: status.color),
+                style: AppTextStyle.system.copyWith(color: status.color),
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
 
-            SizedBox(height: 16.h),
-
+            SizedBox(
+              height: screenHeight * 0.02,
+            ),
             Text(
               status.title,
               style: AppTextStyle.titleSecure,

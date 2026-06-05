@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/risk_level.dart';
 import 'package:permissions_app/constant/specialPermissionType.dart';
 import 'package:permissions_app/core/servises/app_permission_service.dart';
 import 'package:permissions_app/core/servises/app_special_permiision_service.dart';
 import 'package:permissions_app/core/utils/special_permission_risk_resolver.dart';
 import 'package:permissions_app/presentation/special_permissions/widget/helper_widgets.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
 import 'package:permissions_app/presentation/utils/empty_page_widget.dart';
 
@@ -17,7 +17,7 @@ class NotificationAccessDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(AppSize.width * 0.04),
       child: FutureBuilder<List<Map<String, dynamic>>>(
         future: AppSpecialPermissionPlatform().getNotificationAccessApps(),
         builder: (context, snapshot) {
@@ -47,22 +47,21 @@ class NotificationAccessDetail extends StatelessWidget {
                 'Allows apps to read notifications, including messages and alerts. '
                     'This may expose sensitive information.',
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: AppSize.height * 0.02),
 
               riskBadge(level: level),
 
-              SizedBox(height: 24.h),
+              SizedBox(height: AppSize.height * 0.03),
               actionButton(
                 text: 'Open Notification Access Settings',
                 onTap: () {
-                  AppSpecialPermissionPlatform()
-                      .openNotificationAccessSettings();
+                  AppSpecialPermissionPlatform().openNotificationAccessSettings();
                 },
               ),
 
-              SizedBox(height: 32.h),
+              SizedBox(height: AppSize.height * 0.04),
               sectionTitle('Apps with Notification Access'),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSize.height * 0.015),
 
               Expanded(
                 child: apps.isEmpty
@@ -74,7 +73,7 @@ class NotificationAccessDetail extends StatelessWidget {
                     : ListView.separated(
                   itemCount: apps.length,
                   separatorBuilder: (_, __) =>
-                      Divider(color: Colors.white12),
+                  const Divider(color: Colors.white12),
                   itemBuilder: (context, index) {
                     final app = apps[index];
                     return ListTile(
@@ -82,8 +81,8 @@ class NotificationAccessDetail extends StatelessWidget {
                       leading: app['icon'] != null
                           ? Image.memory(
                         base64Decode(app['icon']),
-                        width: 40,
-                        height: 40,
+                        width: AppSize.width * 0.1,
+                        height: AppSize.width * 0.1,
                       )
                           : const Icon(
                         Icons.notifications,
@@ -93,14 +92,14 @@ class NotificationAccessDetail extends StatelessWidget {
                         app['name'] ?? '',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14.sp,
+                          fontSize: AppSize.width * 0.035,
                         ),
                       ),
                       subtitle: Text(
                         app['package'] ?? '',
                         style: TextStyle(
                           color: Colors.white54,
-                          fontSize: 12.sp,
+                          fontSize: AppSize.width * 0.03,
                         ),
                       ),
                       trailing: const Icon(

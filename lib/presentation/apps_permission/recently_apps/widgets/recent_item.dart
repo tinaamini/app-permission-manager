@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/risk_level.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
@@ -8,6 +7,7 @@ import 'package:permissions_app/presentation/apps_permission/widgets/app_item_wi
 import 'package:permissions_app/presentation/apps_permission/widgets/kept_badge.dart';
 import 'package:permissions_app/presentation/apps_permission/widgets/risk_circle_widget.dart';
 import 'package:permissions_app/presentation/apps_permission/widgets/trusted_badge.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 import 'package:permissions_app/presentation/utils/permission_ui_helper.dart';
 
 
@@ -45,14 +45,16 @@ class RecentItem extends StatelessWidget {
     );
 
     return Container(
-      padding: EdgeInsets.all(12.w),
+      padding: EdgeInsets.all(AppSize.width * 0.03),
       decoration: BoxDecoration(
         color: AppColor.CartDark,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(
+          AppSize.width * 0.03,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            blurRadius: 12,
+            color: Colors.black.withValues(alpha: 0.5),
+            blurRadius: AppSize.width * 0.03,
             spreadRadius: 1,
             offset: const Offset(0, 6),
           ),
@@ -64,8 +66,13 @@ class RecentItem extends StatelessWidget {
           // ===== Top Row =====
           Row(
             children: [
-              SizedBox(width: 44.w, height: 44.h, child: icon),
-              SizedBox(width: 12.w),
+              SizedBox(
+                width: AppSize.width * 0.11,
+                height: AppSize.width * 0.11,
+                child: icon,
+              ),
+
+              SizedBox(width: AppSize.width * 0.03),
 
               Expanded(
                 child: Row(
@@ -75,8 +82,7 @@ class RecentItem extends StatelessWidget {
                         appName,
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
+                          fontSize: AppSize.width * 0.035,                          fontWeight: FontWeight.w600,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,                      ),
@@ -98,19 +104,16 @@ class RecentItem extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: 8.h),
-
+           SizedBox(width: AppSize.width * 0.02),
           // ===== Usage Info =====
           Text(
             'Last used at $formData · Used today $formatDuration',
             style: TextStyle(
               color: Colors.white54,
-              fontSize: 12.sp,
-            ),
+              fontSize: (AppSize.width * 0.03).clamp(10.0, 14.0),            ),
           ),
 
-          SizedBox(height: 8.h),
-
+          SizedBox(height: AppSize.height * 0.01),
           // ===== Permission Availability =====
           _permissionAvailability(),
         ],
@@ -216,15 +219,19 @@ class RecentItem extends StatelessWidget {
     );
   }
 
-
   Widget _permChip(String label, bool enabled) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSize.width * 0.025,
+        vertical: AppSize.height * 0.005,
+      ),
       decoration: BoxDecoration(
         color: enabled
-            ? Colors.orange.withOpacity(0.15)
+            ? Colors.orange.withValues(alpha: 0.15)
             : Colors.white12,
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(
+          AppSize.width * 0.05,
+        ),
       ),
       child: Text(
         enabled ? '$label enabled' : '$label disabled',
@@ -232,7 +239,7 @@ class RecentItem extends StatelessWidget {
           color: enabled
               ? Colors.orangeAccent
               : Colors.white38,
-          fontSize: 10.sp,
+          fontSize: AppSize.width * 0.025,
         ),
       ),
     );

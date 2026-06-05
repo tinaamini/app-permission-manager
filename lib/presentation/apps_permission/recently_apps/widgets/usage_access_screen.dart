@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/core/servises/usage_access_service.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class UsageAccessScreen extends StatefulWidget {
   const UsageAccessScreen({super.key});
@@ -43,13 +43,13 @@ class _UsageAccessScreenState extends State<UsageAccessScreen>
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.all(   AppSize.width * 0.05,),
       decoration: BoxDecoration(
         color: AppColor.BcGround,
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(   AppSize.width * 0.05,),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.6),
+            color: Colors.black.withValues(alpha: 0.6),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -59,10 +59,10 @@ class _UsageAccessScreenState extends State<UsageAccessScreen>
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 60.w,
-            height: 60.w,
+            width: AppSize.width*0.15,
+            height: AppSize.height * 0.15,
             decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.15),
+              color: Colors.blue.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
             child: const Icon(
@@ -71,19 +71,19 @@ class _UsageAccessScreenState extends State<UsageAccessScreen>
               size: 34,
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: AppSize.height * 0.03),
 
           Text(
             "To show the apps used today, please enable Usage Access permission.",
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white70,
-              fontSize: 12.sp,
+              fontSize: AppSize.width * 0.03,
               height: 1.5,
             ),
           ),
 
-          SizedBox(height: 24.h),
+          SizedBox(height: AppSize.height * 0.03),
 
           GestureDetector(
             onTap: () async {
@@ -91,16 +91,17 @@ class _UsageAccessScreenState extends State<UsageAccessScreen>
               await UsageAccessService.openUsageAccessSettings();
             },
             child: Container(
-              width: 200.w,
-              height: 50.h,
+              width: AppSize.width * 0.5,
+              height: AppSize.height * 0.06,
               decoration: BoxDecoration(
                 color: AppColor.CartDark,
-                borderRadius: BorderRadius.circular(16.r),
+                borderRadius: BorderRadius.circular(                  AppSize.width * 0.04,
+                ),
                 border: Border.all(color: Colors.white12, width: 1.2),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.blue.withOpacity(0.35),
-                    blurRadius: 12,
+                    color: Colors.blue.withValues(alpha: 0.35),
+                    blurRadius: AppSize.width * 0.03,
                     offset: const Offset(0, 6),
                   ),
                 ],

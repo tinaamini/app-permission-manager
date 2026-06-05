@@ -35,6 +35,8 @@ class AppItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     final dangerousPermissions = getDangerousPermissions(permissions);
     final riskPercent = calculateRiskPercent(permissions);
     final isTrusted = context.select<AppPermissionCubit, bool>(
@@ -46,15 +48,19 @@ class AppItem extends StatelessWidget {
     );
 
     return Container(
-      padding: EdgeInsets.all(12.w),
+      padding: EdgeInsets.all(
+        screenWidth * 0.03,
+      ),
       decoration: BoxDecoration(
-        border: Border.all(width: 1.w,color: AppColor.CartDarkBorder),
+        border: Border.all(width: 1,color: AppColor.CartDarkBorder),
         color: AppColor.CartDark,
-        borderRadius: BorderRadius.circular(24.r),
+        borderRadius: BorderRadius.circular(
+          screenWidth * 0.06,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            blurRadius: 12,
+            color: Colors.black.withValues(alpha: 0.5),
+            blurRadius: screenWidth * 0.03,
             spreadRadius: 1,
             offset: const Offset(0, 6),
           ),
@@ -62,11 +68,17 @@ class AppItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          SizedBox(width: 5.w),
-
-          SizedBox(width: 44.w, height: 44.w, child: icon),
-          SizedBox(width: 20.w),
-
+          SizedBox(
+            width: screenWidth * 0.0125,
+          ),
+          SizedBox(
+            width: screenWidth * 0.11,
+            height: screenWidth * 0.11,
+            child: icon,
+          ),
+          SizedBox(
+            width: screenWidth * 0.05,
+          ),
           Expanded(
             child: Row(
               children: [
