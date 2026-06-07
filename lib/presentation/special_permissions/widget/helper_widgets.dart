@@ -2,42 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/constant/risk_level.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
 
-Widget sectionTitle(String text) {
-  return Text(text, style: AppTextStyle.trustTitle);
+Widget sectionTitle(String text,BuildContext context) {
+  return Text(text, style: AppTextStyle.trustTitle(context));
 }
 
-Widget paragraph(String text) {
+Widget paragraph(String text,BuildContext context) {
   return Padding(
     padding: EdgeInsets.only(top: AppSize.height * 0.01),
     child: Text(
       text,
-      style: AppTextStyle.trustDescription.copyWith(color: AppColor.green2),
+      style: AppTextStyle.trustDescription(context).copyWith(color: AppColor.green2),
     ),
   );
 }
 
-Widget riskBadge({required RiskLevel level}) {
+Widget riskBadge(BuildContext context,{required RiskLevel level,}) {
   late Color color;
   late String label;
+  final l10n=AppLocalizations.of(context)!;
 
   switch (level) {
     case RiskLevel.highRisk:
       color = Colors.red;
-      label = 'ACTION NEEDED';
+      label = l10n.actionNeeded;
       break;
     case RiskLevel.mediumRisk:
       color = Colors.orange;
-      label = 'REVIEW';
+      label = l10n.review;
       break;
     case RiskLevel.lowRisk:
       color = Colors.green;
-      label = 'LOW';
+      label = l10n.low;
       break;
     case RiskLevel.noRisk:
       color = Colors.blue;
-      label = 'SECURE';
+      label = l10n.secure;
       break;
   }
 

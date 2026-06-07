@@ -20,7 +20,7 @@ class NextButton extends StatelessWidget {
           color: AppColor.blue1,
           borderRadius: BorderRadius.all(Radius.circular( screenWidth * 0.038,)),
         ),
-        child: Center(child: Text(text,style: AppTextStyle.nameApp,)),
+        child: Center(child: Text(text,style: AppTextStyle.nameApp(context),)),
       ),
     );
   }

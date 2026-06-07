@@ -42,7 +42,7 @@ class BtnCard extends StatelessWidget {
                 height: screenWidth * 0.12,),
               SizedBox(width: screenWidth * 0.025),
 
-                  Expanded(child: Text(text,style: AppTextStyle.btnHome,)),
+                  Expanded(child: Text(text,style: AppTextStyle.btnHome(context),)),
 
             ],
           ),

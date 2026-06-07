@@ -1,174 +1,164 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 
 import 'app_color.dart';
 
 class AppTextStyle {
-  static TextStyle get nameApp => TextStyle(
-      fontFamily: 'Inter',
-      fontSize: 16.sp,
+  static String _font(BuildContext context) {
+    final lang = Localizations.localeOf(context).languageCode;
+    return lang == 'fa' ? 'BYekan+' : 'Inter';
+  }
+  static bool _fa(BuildContext context) =>
+      Localizations.localeOf(context).languageCode == 'fa';
+
+
+  static TextStyle nameApp(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
+      fontSize:_fa(context) ?20.sp : 16.sp,
       fontWeight: FontWeight.w400,
       color: AppColor.white);
 
-  static TextStyle get onboardingTitle => TextStyle(
-      fontFamily: 'Inter',
+  static TextStyle onboardingTitle(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 40.sp,
       fontWeight: FontWeight.w700,
       color: AppColor.white);
 
-  static TextStyle get onboardingDescription => TextStyle(
-      fontFamily: 'Inter',
-      fontSize: 16.sp,
+  static TextStyle onboardingDescription(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
+      fontSize:16.sp,
       fontWeight: FontWeight.w400,
-      color: AppColor.white
-      );
+      color: AppColor.white);
 
-  static TextStyle get onboardingSkip => TextStyle(
-      fontFamily: 'Inter',
-      fontSize: 16.sp,
+  static TextStyle onboardingSkip(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
+      fontSize: _fa(context) ?18.sp :16.sp,
       fontWeight: FontWeight.w600,
-      color: AppColor.blue1
-      );
+      color: AppColor.blue1);
 
-  static TextStyle get emptyPage => TextStyle(
-      fontFamily: 'Inter',
+  static TextStyle emptyPage(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 18.sp,
       fontWeight: FontWeight.w600,
       color: AppColor.green2);
 
-  static TextStyle get btnHome =>TextStyle(
-      fontFamily: 'Inter',
+  static TextStyle btnHome(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 14.sp,
       fontWeight: FontWeight.w400,
       color: AppColor.white);
 
-
-  static TextStyle get btnAppPermissionInt =>TextStyle(
-      fontFamily: 'Inter',
+  static TextStyle btnAppPermissionInt(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 14.sp,
-      fontWeight: FontWeight.w700,
-     );
+      fontWeight: FontWeight.w700);
 
-  static TextStyle get cartDarkCount =>TextStyle(
-      fontFamily: 'Inter',
+  static TextStyle cartDarkCount(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 12.sp,
       fontWeight: FontWeight.w400,
       color: AppColor.CartDarkCount);
 
-  static TextStyle get greenFont =>TextStyle(
-      fontFamily: 'Inter',
+  static TextStyle greenFont(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 14.sp,
       fontWeight: FontWeight.w500,
       color: AppColor.green1);
 
-  static TextStyle get greenWarning =>TextStyle(
-      fontFamily: 'Inter',
+  static TextStyle greenWarning(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 12.sp,
       fontWeight: FontWeight.w500,
       color: AppColor.green1);
 
-  static TextStyle get blueFont =>TextStyle(
-      fontFamily: 'Inter',
+  static TextStyle blueFont(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 14.sp,
       fontWeight: FontWeight.w500,
       color: AppColor.blue1);
 
-  static TextStyle get trustTitle =>TextStyle(
-      fontFamily: 'Inter',
+  static TextStyle trustTitle(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 20.sp,
       fontWeight: FontWeight.w700,
       color: AppColor.white);
 
-  static TextStyle get trustDescription  =>TextStyle(
-      fontFamily: 'Inter',
+  static TextStyle trustDescription(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 14.sp,
       fontWeight: FontWeight.w400,
       color: AppColor.blue2);
 
-
-
-
-  static TextStyle get titleSecure =>TextStyle(
-      fontFamily: 'Inter',
+  static TextStyle titleSecure(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 22.sp,
       fontWeight: FontWeight.w700,
       color: AppColor.CartDarkCount);
 
-  static TextStyle get system =>TextStyle(
-      fontFamily: 'Inter',
-      fontSize: 12.sp,
-      fontWeight: FontWeight.w500,);
+  static TextStyle system(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
+      fontSize: _fa(context) ? AppSize.width * 0.027 : AppSize.width * 0.027,
+      fontWeight: FontWeight.w500);
 
-  static TextStyle get keepBtn =>TextStyle(
-      fontFamily: 'Inter',
+  static TextStyle keepBtn(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 8.sp,
       fontWeight: FontWeight.w400,
       color: AppColor.white);
 
-  static TextStyle get usage =>TextStyle(
-      fontFamily: 'Inter',
-      fontSize: 12.sp,
-      fontWeight: FontWeight.w400,
-      color: AppColor.white,
-  height: 1.4);
-
-  static TextStyle get summary =>TextStyle(
-      fontFamily: 'Inter',
-      fontSize: 16.sp,
-      fontWeight: FontWeight.w400,
-      color: AppColor.summary,
-  height: 1.4);
-
-  static TextStyle get summaryValue =>TextStyle(
-
-      fontFamily: 'Inter',
-      fontSize: 12.sp,
-      fontWeight: FontWeight.w400,
-      color: AppColor.summary,
-  height: 1.4);
-
-
-  static TextStyle get groupPermission =>TextStyle(
-
-      fontFamily: 'Inter',
-      fontSize: 11.sp,
-      fontWeight: FontWeight.w500,
-      color: AppColor.white,
-  height: 1.4);
-
-  static TextStyle get specialPermission =>TextStyle(
-
-      fontFamily: 'Inter',
+  static TextStyle usage(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 12.sp,
       fontWeight: FontWeight.w400,
       color: AppColor.white,
       height: 1.4);
 
-  static TextStyle get specialPermissiontitle =>TextStyle(
+  static TextStyle summary(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
+      fontSize: 16.sp,
+      fontWeight: FontWeight.w400,
+      color: AppColor.summary,
+      height: 1.4);
 
-      fontFamily: 'Inter',
+  static TextStyle summaryValue(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
+      fontSize: 12.sp,
+      fontWeight: FontWeight.w400,
+      color: AppColor.summary,
+      height: 1.4);
+
+  static TextStyle groupPermission(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
+      fontSize: 11.sp,
+      fontWeight: FontWeight.w500,
+      color: AppColor.white,
+      height: 1.4);
+
+  static TextStyle specialPermission(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
+      fontSize: 12.sp,
+      fontWeight: FontWeight.w400,
+      color: AppColor.white,
+      height: 1.4);
+
+  static TextStyle specialPermissiontitle(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 10.sp,
       fontWeight: FontWeight.w300,
       color: AppColor.white1,
       height: 1.4);
 
-  static TextStyle get warning =>TextStyle(
-
-      fontFamily: 'Inter',
+  static TextStyle warning(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 9.sp,
       fontWeight: FontWeight.w600,
       color: AppColor.warningborder,
       height: 1.4);
 
-
-  static TextStyle get dashboardTitle =>TextStyle(
-
-      fontFamily: 'Inter',
+  static TextStyle dashboardTitle(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
       fontSize: 14.sp,
       fontWeight: FontWeight.w500,
-      color: AppColor.white,
-      );
-
-
+      color: AppColor.white);
 }
-

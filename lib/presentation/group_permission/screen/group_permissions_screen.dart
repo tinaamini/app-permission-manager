@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:permissions_app/constant/permission_group_type.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
 import 'package:permissions_app/presentation/group_permission/widget/btn_group_widget.dart';
@@ -10,6 +11,8 @@ import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
 import 'package:permissions_app/routs/rout_name.dart';
+
+
 
 class GroupPermissionsScreen extends StatefulWidget {
   const GroupPermissionsScreen({super.key});
@@ -32,19 +35,21 @@ class _GroupPermissionsScreenState extends State<GroupPermissionsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final items = <_GroupItem>[
-      _GroupItem('assets/group_permission/location.png', 'Apps Using Location', PermissionGroupType.location),
-      _GroupItem('assets/group_permission/camera.png', 'Apps Using Camera', PermissionGroupType.camera),
-      _GroupItem('assets/group_permission/microphone.png', 'Apps Using Microphone', PermissionGroupType.microphone),
-      _GroupItem('assets/group_permission/contacts.png', 'Apps Using Contacts', PermissionGroupType.contacts),
-      _GroupItem('assets/group_permission/sms.png', 'Apps Using SMS', PermissionGroupType.sms),
-      _GroupItem('assets/group_permission/call.png', 'Apps Using Call', PermissionGroupType.call),
-      _GroupItem('assets/group_permission/files.png', 'Apps Using Storage', PermissionGroupType.storage),
-      _GroupItem('assets/group_permission/calendar.png', 'Apps Using Calendar', PermissionGroupType.calendar),
-      _GroupItem('assets/group_permission/notification.png', 'Apps Using Notifications', PermissionGroupType.notification),
-      _GroupItem('assets/group_permission/activity.png', 'Apps Using Activity', PermissionGroupType.activity),
-    ];
+    final l10n = AppLocalizations.of(context)!;
 
+    final items = <_GroupItem>[
+    _GroupItem('assets/group_permission/location.png', l10n.locationPermission, PermissionGroupType.location),
+    _GroupItem('assets/group_permission/camera.png', l10n.cameraPermission, PermissionGroupType.camera),
+    _GroupItem('assets/group_permission/microphone.png', l10n.microphonePermission, PermissionGroupType.microphone),
+    _GroupItem('assets/group_permission/contacts.png', l10n.contactsPermission, PermissionGroupType.contacts),
+    _GroupItem('assets/group_permission/sms.png', l10n.smsPermission, PermissionGroupType.sms),
+    _GroupItem('assets/group_permission/call.png', l10n.callPermission, PermissionGroupType.call),
+    _GroupItem('assets/group_permission/files.png', l10n.storagePermission, PermissionGroupType.storage),
+    _GroupItem('assets/group_permission/calendar.png', l10n.calendarPermission, PermissionGroupType.calendar),
+    _GroupItem('assets/group_permission/notification.png', l10n.notificationPermission, PermissionGroupType.notification),
+    _GroupItem('assets/group_permission/activity.png', l10n.activityPermission, PermissionGroupType.activity),
+
+    ];
     final w = AppSize.width;
     final crossAxisCount = w >= 900 ? 4 : (w >= 600 ? 3 : 2);
 
@@ -52,7 +57,7 @@ class _GroupPermissionsScreenState extends State<GroupPermissionsScreen> {
       child: Column(
         children: [
           AppBarWidget(
-            text: "GROUP PERMISSIONS",
+            text: l10n.groupPermission,
             ontap: () => context.pop(),
           ),
           SizedBox(height: AppSize.height * 0.015),

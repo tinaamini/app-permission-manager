@@ -7,6 +7,7 @@ import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/constant/risk_level.dart';
 import 'package:permissions_app/constant/specialPermissionType.dart';
 import 'package:permissions_app/core/servises/app_special_permiision_service.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/logic/special_permission/pecial_permission_state.dart';
 import 'package:permissions_app/logic/special_permission/special_permission_cubit.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
@@ -49,6 +50,7 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n=AppLocalizations.of(context)!;
     return BaseScreen(
       child: BlocBuilder<SpecialPermissionCubit, SpecialPermissionState>(
         builder: (context, state) {
@@ -68,7 +70,7 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
           return Column(
             children: [
               AppBarWidget(
-                text: "SPECIAL PERMISSIONS",
+                text:l10n.specialPermission,
                 ontap: () => context.pop(),
               ),
 
@@ -80,9 +82,8 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
                     padding: EdgeInsets.symmetric(horizontal: AppSize.width * 0.04),
                     child: Column(
                       children: [
-                        Text(
-                          "High-level system permissions that can affect your privacy.",
-                          style: AppTextStyle.summaryValue,
+                        Text(l10n.descSpecialPermission,
+                          style: AppTextStyle.summaryValue(context),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
@@ -99,8 +100,8 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
                             );
                             return BtnSpecialPermission(
                               image: 'assets/special_permission/usage.png',
-                              title: "Usage Data Access",
-                              text: "View app usage statistics",
+                              title: l10n.usageAccessTitle,
+                              text: l10n.usageStatsPermission,
                               riskLevel: level,
                               enabled: apps.isNotEmpty,
                               ontap: () => context.pushNamed(
@@ -122,8 +123,8 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
                             );
                             return BtnSpecialPermission(
                               image: 'assets/special_permission/notification.png',
-                              title: "Notification Access",
-                              text: "Read and monitor notifications",
+                              title: l10n.notificationAccessTitle,
+                              text: l10n.notificationAccessPermission,
                               riskLevel: level,
                               enabled: apps.isNotEmpty,
                               ontap: () => context.pushNamed(
@@ -141,8 +142,8 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
                             final enabled = snapshot.data ?? false;
                             return BtnSpecialPermission(
                               image: 'assets/special_permission/display.png',
-                              title: "Display over other apps",
-                              text: "Appear on top of other apps",
+                              title: l10n.displayOverApps,
+                              text: l10n.overlayPermission,
                               riskLevel: SpecialPermissionRiskResolver.fromEnabled(
                                 type: SpecialPermissionType.displayOverApps,
                                 enabled: enabled,
@@ -163,8 +164,8 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
                             final enabled = snapshot.data ?? false;
                             return BtnSpecialPermission(
                               image: 'assets/special_permission/Battery.png',
-                              title: "Unrestricted Battery",
-                              text: "Allowed Apps To Run In Background",
+                              title:l10n.unrestrictedBatteryTitle,
+                              text: l10n.unrestrictedBatteryDesc,
                               riskLevel: SpecialPermissionRiskResolver.fromEnabled(
                                 type: SpecialPermissionType.batteryOptimization,
                                 enabled: enabled,
@@ -185,8 +186,8 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
                             final enabled = snapshot.data ?? false;
                             return BtnSpecialPermission(
                               image: 'assets/special_permission/Disturb.png',
-                              title: "Do Not Disturb",
-                              text: "Control notification interruptions",
+                              title: l10n.doNotDisturb,
+                              text: l10n.doNotDisturbPermission,
                               riskLevel: SpecialPermissionRiskResolver.fromEnabled(
                                 type: SpecialPermissionType.doNotDisturb,
                                 enabled: enabled,
@@ -233,16 +234,16 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
                                     left: AppSize.width * 0.125,
                                     top: AppSize.height * 0.012,
                                     child: Text(
-                                      "This permission allows deep access to system data.",
-                                      style: AppTextStyle.warning,
+                                      l10n.specialPermissionWarning,
+                                      style: AppTextStyle.warning(context),
                                     ),
                                   ),
                                   Positioned(
                                     left: AppSize.width * 0.2,
                                     top: AppSize.height * 0.037,
                                     child: Text(
-                                      "Only enable if you trust the app.",
-                                      style: AppTextStyle.specialPermissiontitle,
+                                    l10n.specialPermissionWarningDesc,
+                                      style: AppTextStyle.specialPermissiontitle(context),
                                     ),
                                   ),
                                 ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:permissions_app/constant/app_color.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class InfoWidget extends StatelessWidget {
@@ -7,6 +8,7 @@ class InfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
 
     return ConstrainedBox(
       constraints: BoxConstraints(
@@ -16,7 +18,8 @@ class InfoWidget extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: AppSize.width * 0.05,
-          vertical: AppSize.height * 0.02,),
+          vertical: AppSize.height * 0.02,
+        ),
         decoration: BoxDecoration(
           color: AppColor.BcGround,
           borderRadius: BorderRadius.circular(AppSize.width * 0.05),
@@ -32,7 +35,6 @@ class InfoWidget extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Header Icon
               Container(
                 width: AppSize.width * 0.15,
                 height: AppSize.width * 0.15,
@@ -40,15 +42,16 @@ class InfoWidget extends StatelessWidget {
                   color: Colors.orange.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
-                child:  Icon(
+                child: Icon(
                   Icons.security_rounded,
                   color: Colors.orange,
-                  size: AppSize.width * 0.085,                ),
+                  size: AppSize.width * 0.085,
+                ),
               ),
               SizedBox(height: AppSize.height * 0.02),
 
               Text(
-                'Security Overview',
+                l10n.securityOverview,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: AppSize.width * 0.04,
@@ -58,10 +61,7 @@ class InfoWidget extends StatelessWidget {
               SizedBox(height: AppSize.height * 0.01),
 
               Text(
-                'This app’s risk level is calculated based on the permissions you have granted.\n\n'
-                    'Some permissions provide powerful access to your device. While they may be required for certain features, '
-                    'they can increase potential impact if misused.\n\n'
-                    'A higher risk does not mean the app is malicious — it means it has greater access.',
+                l10n.securityOverviewDesc,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white70,
@@ -74,21 +74,20 @@ class InfoWidget extends StatelessWidget {
 
               _RiskLevelItem(
                 icon: Icons.check_circle_outline,
-                title: 'Low Risk',
-                description: 'Limited permissions with minimal impact',
+                title: l10n.lowRisk,
+                description: l10n.lowRiskDesc,
                 color: Colors.green,
               ),
               _RiskLevelItem(
                 icon: Icons.remove_circle_outline,
-                title: 'Medium Risk',
-                description: 'Sensitive permissions required for core features',
+                title: l10n.mediumRisk,
+                description: l10n.mediumRiskDesc,
                 color: Colors.orange,
               ),
               _RiskLevelItem(
                 icon: Icons.warning_amber_rounded,
-                title: 'High Risk',
-                description:
-                'Permissions that are unusual or unnecessary for this type of app',
+                title: l10n.highRisk,
+                description: l10n.highRiskDesc,
                 color: Colors.redAccent,
               ),
 
@@ -103,15 +102,15 @@ class InfoWidget extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                     Icon(
+                    Icon(
                       Icons.lock_outline,
                       color: Colors.lightBlueAccent,
-                      size: AppSize.width * 0.055,                    ),
+                      size: AppSize.width * 0.055,
+                    ),
                     SizedBox(width: AppSize.width * 0.025),
                     Expanded(
                       child: Text(
-                        'You can reduce risk by disabling permissions that are not actively used. '
-                            'Permissions can be changed at any time from system settings.',
+                        l10n.reduceRiskTip,
                         style: TextStyle(
                           color: Colors.white70,
                           fontSize: AppSize.width * 0.03,
@@ -148,17 +147,11 @@ class _RiskLevelItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: AppSize.height * 0.012,
-      ),
+      padding: EdgeInsets.only(bottom: AppSize.height * 0.012),
       child: Row(
         children: [
-          Icon(icon,  color: color,
-            size: AppSize.width * 0.055,
-          ),
-          SizedBox(
-            width: AppSize.width * 0.025,
-          ),
+          Icon(icon, color: color, size: AppSize.width * 0.055),
+          SizedBox(width: AppSize.width * 0.025),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

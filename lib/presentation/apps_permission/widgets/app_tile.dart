@@ -49,7 +49,7 @@ Widget appTile(
               borderRadius: BorderRadius.circular(8.r),
               color: AppColor.summary.withOpacity(0.2)
             ),
-            child: Center(child: Text(actionText,style: AppTextStyle.summaryValue,)),
+            child: Center(child: Text(actionText,style: AppTextStyle.summaryValue(context),)),
           ),
         ),
         SizedBox(width: screenWidth * 0.02),

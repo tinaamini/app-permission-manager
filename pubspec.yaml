@@ -2,7 +2,7 @@ name: permissions_app
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.0.1+2
+version: 1.0.3+3
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -20,17 +20,19 @@ dependencies:
   flutter_bloc: ^9.0.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-
+  intl: ^0.20.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.4.0
 
 flutter:
+  generate: true
+
   uses-material-design: true
+
   assets:
     - assets/main/
     - assets/fonts/
@@ -39,9 +41,7 @@ flutter:
     - assets/special_permission/
     - assets/dashboard/
     - assets/utils/
-    - assets/logo/icon.png
-
-
+    - assets/logo/
 
   fonts:
     - family: Inter
@@ -54,6 +54,8 @@ flutter:
           weight: 600
         - asset: assets/fonts/Inter-Bold.ttf
           weight: 700
+        - asset: assets/fonts/BYekan+.ttf
+
 
 flutter_launcher_icons:
   android: true

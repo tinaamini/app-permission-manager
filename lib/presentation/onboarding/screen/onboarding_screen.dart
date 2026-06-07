@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permissions_app/constant/app_style.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/logic/onboarding/onboarding_cubit.dart';
 import 'package:permissions_app/logic/onboarding/show_onboarding/show_onboarding_cubit.dart';
 import 'package:permissions_app/presentation/onboarding/widgets/onboarding_data.dart';
@@ -30,20 +31,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
-  void _nextPage(BuildContext context, int currentPage)async {
-    if (currentPage < onboardingPages.length - 1) {
+  void _nextPage(BuildContext context, int currentPage) async {
+    final l10n = AppLocalizations.of(context)!;
+    final pages = getOnboardingPages(context);
+
+    if (currentPage < pages.length - 1) {
       _controller.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.ease,
       );
     } else {
-       await context.read<OnboardingShowCubit>().complete();
-       if (!mounted) return;
+      await context.read<OnboardingShowCubit>().complete();
+      if (!mounted) return;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final pages = getOnboardingPages(context);
+
     return BlocProvider(
       create: (_) => OnboardingCubit(),
       child: Scaffold(
@@ -54,15 +61,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               children: [
                 PageView.builder(
                   controller: _controller,
-                  itemCount: onboardingPages.length,
+                  itemCount: pages.length,
                   onPageChanged: (index) {
                     context.read<OnboardingCubit>().setPage(index);
                   },
                   itemBuilder: (context, index) {
                     return OnboardPage(
-                      data: onboardingPages[index],
+                      data: pages[index],
                       currentPage: index,
-                      totalPages: onboardingPages.length,
+                      totalPages: pages.length,
                       onNext: () => _nextPage(context, currentPage),
                     );
                   },
@@ -78,8 +85,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           context.read<OnboardingShowCubit>().complete();
                         },
                         child: Text(
-                          "skip",
-                          style: AppTextStyle.onboardingSkip
+                          l10n.skip,
+                          style: AppTextStyle.onboardingSkip(context),
                         ),
                       ),
                     ),
@@ -89,7 +96,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   bottom: 100.w,
                   child: PageIndicator(
                     currentIndex: currentPage,
-                    length: onboardingPages.length,
+                    length: pages.length,
                   ),
                 ),
               ],

@@ -62,7 +62,7 @@ class BtnPermissionWidget extends StatelessWidget {
                           child: Center(
                               child: Text(
                             integer,
-                            style: AppTextStyle.btnAppPermissionInt
+                            style: AppTextStyle.btnAppPermissionInt(context)
                                 .copyWith(color: color),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -81,7 +81,7 @@ class BtnPermissionWidget extends StatelessWidget {
 
                 child: Text(
                   text,
-                  style: AppTextStyle.nameApp,
+                  style: AppTextStyle.nameApp(context),
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,

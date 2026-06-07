@@ -1,14 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:permissions_app/core/servises/installed_apps_service.dart';
-import 'package:permissions_app/logic/risk/device_risk_resolver.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
-import 'package:permissions_app/presentation/home/widgets/device_status_card.dart';
+import 'package:permissions_app/logic/locale/locale_cubit.dart';
+import 'package:permissions_app/logic/risk/device_risk_resolver.dart';
 import 'package:permissions_app/presentation/home/widgets/btn_home_widget.dart';
+import 'package:permissions_app/presentation/home/widgets/device_status_card.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
 import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
 import 'package:permissions_app/routs/rout_name.dart';
@@ -22,13 +22,13 @@ class HomeScreen extends StatelessWidget {
   late final Future<int> _appsCountFuture = _appsService.fetchInstalledAppsCount();
 
   @override
-  @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
 
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    final topSpace =(screenHeight * 0.20).clamp(24.0, screenHeight * 0.18);
+    final topSpace = (screenHeight * 0.20).clamp(24.0, screenHeight * 0.18);
     final midSpace = (screenHeight * 0.12).clamp(12.0, screenHeight * 0.14);
 
     return BaseScreen(
@@ -36,28 +36,34 @@ class HomeScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
         child: Column(
           children: [
+
             SizedBox(height: topSpace),
-
-
+            Padding(
+              padding: const EdgeInsets.only(right: 325),
+              child: IconButton(
+                onPressed: () => context.read<LocaleCubit>().toggle(),
+                icon: const Icon(Icons.language),
+              ),
+            ),
             BlocBuilder<AppPermissionCubit, AppPermissionState>(
               builder: (context, state) {
                 if (state is! AppPermissionLoaded) {
                   return Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(16),
-
-                    child: const  Center(
-                  child: CustomDotsLoader(
-                      svgPath1:
-                      'assets/utils/Property 1=1 (1).svg',
-                      svgPath2: 'assets/utils/Property 1=2 (1).svg',
-                      svgPath3: 'assets/utils/Property 1=3 (1).svg',
-                      svgPath4:
-                      'assets/utils/Property 1=4 (1).svg'))
+                    padding: const EdgeInsets.all(16),
+                    child: const Center(
+                      child: CustomDotsLoader(
+                        svgPath1: 'assets/utils/Property 1=1 (1).svg',
+                        svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                        svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                        svgPath4: 'assets/utils/Property 1=4 (1).svg',
+                      ),
+                    ),
                   );
                 }
 
                 final status = _riskResolver.resolve(
+                  context,
                   high: state.highRisk.length,
                   medium: state.mediumRisk.length,
                   low: state.lowRisk.length,
@@ -66,7 +72,9 @@ class HomeScreen extends StatelessWidget {
                 return DeviceStatusCard(status: status);
               },
             ),
+
             SizedBox(height: midSpace),
+
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -82,17 +90,17 @@ class HomeScreen extends StatelessWidget {
                             Expanded(
                               child: BtnHomeWidget(
                                 image: 'assets/main/grid.svg',
-                                text: 'App Permissions',
-                                textCount: '$countText Apps Checked',
+                                text: l10n.appPermission,
+                                textCount: '$countText ${l10n.appsChecked}',
                                 ontap: () => context.pushNamed(RouteName.appsPermission),
                               ),
                             ),
-                            SizedBox(width: screenWidth *0.04),
+                            SizedBox(width: screenWidth * 0.04),
                             Expanded(
                               child: BtnHomeWidget(
                                 image: 'assets/main/layer.svg',
-                                text: 'Group Permissions',
-                                textCount: '10 Categories',
+                                text: l10n.groupPermission,
+                                textCount: '10 ${l10n.categories}',
                                 ontap: () => context.pushNamed(RouteName.groupPermission),
                               ),
                             ),
@@ -104,8 +112,8 @@ class HomeScreen extends StatelessWidget {
                             Expanded(
                               child: BtnHomeWidget(
                                 image: 'assets/main/varning.svg',
-                                text: 'Special',
-                                textCount: '5 Sensitive Access',
+                                text: l10n.specialPermission,
+                                textCount: '5 ${l10n.sensitiveAccess}',
                                 ontap: () => context.pushNamed(RouteName.specialPermission),
                               ),
                             ),
@@ -113,8 +121,8 @@ class HomeScreen extends StatelessWidget {
                             Expanded(
                               child: BtnHomeWidget(
                                 image: 'assets/main/chart.svg',
-                                text: 'Dashboard',
-                                textCount: 'View States',
+                                text: l10n.dashboard,
+                                textCount: l10n.viewStates,
                                 ontap: () => context.pushNamed(RouteName.dashboardPermission),
                               ),
                             ),
@@ -129,4 +137,6 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-    );  }}
+    );
+  }
+}

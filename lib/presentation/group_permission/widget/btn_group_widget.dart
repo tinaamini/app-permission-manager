@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
-
+import 'package:intl/intl.dart';
 class BtnGroupWidget extends StatelessWidget {
   final String image;
   final String text;
@@ -19,6 +19,10 @@ class BtnGroupWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+    final formattedCount =
+    NumberFormat.decimalPattern(locale.languageCode).format(count);
+
     return InkWell(
       onTap: ontap,
       borderRadius: BorderRadius.circular(AppSize.width * 0.03),
@@ -62,7 +66,7 @@ class BtnGroupWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppSize.width * 0.02),
                 ),
                 child: Center(
-                  child: Text("$count", style: AppTextStyle.emptyPage),
+                  child: Text(formattedCount, style: AppTextStyle.emptyPage(context)),
                 ),
               ),
             ),
@@ -73,7 +77,7 @@ class BtnGroupWidget extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: AppSize.height * 0.008),
                 child: Text(
                   text,
-                  style: AppTextStyle.groupPermission,
+                  style: AppTextStyle.groupPermission(context),
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,

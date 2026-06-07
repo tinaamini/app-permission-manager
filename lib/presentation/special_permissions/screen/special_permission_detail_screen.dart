@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permissions_app/constant/specialPermissionType.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
 import 'package:permissions_app/presentation/special_permissions/screen/usage_access_detail.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
@@ -24,7 +25,7 @@ class SpecialPermissionDetailScreen extends StatelessWidget {
       child: Column(
         children: [
           AppBarWidget(
-            text: _title(),
+            text: _title(context),
             ontap: () => context.pop(),
           ),
 
@@ -36,18 +37,20 @@ class SpecialPermissionDetailScreen extends StatelessWidget {
     );
   }
 
-  String _title() {
+  String _title(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     switch (type) {
       case SpecialPermissionType.usageAccess:
-        return 'Usage Data Access';
+        return l10n.usageAccessTitle;
       case SpecialPermissionType.notificationAccess:
-        return 'Notification Access';
+        return l10n.notificationAccessTitle;
       case SpecialPermissionType.displayOverApps:
-        return 'Display over other apps';
+        return l10n.displayOverApps;
       case SpecialPermissionType.batteryOptimization:
-        return 'Battery Optimization';
+        return l10n.batteryOptimization;
       case SpecialPermissionType.doNotDisturb:
-        return 'Do Not Disturb';
+        return l10n.doNotDisturb;
     }
   }
 

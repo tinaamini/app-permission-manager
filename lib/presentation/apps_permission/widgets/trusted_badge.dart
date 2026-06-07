@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 
 class TrustedBadge extends StatelessWidget {
   const TrustedBadge({super.key});
@@ -7,6 +8,7 @@ class TrustedBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final l10n = AppLocalizations.of(context)!;
 
     return Padding(
       padding: EdgeInsets.only(right: screenWidth * 0.05),
@@ -33,7 +35,7 @@ class TrustedBadge extends StatelessWidget {
             ),
             SizedBox(width: screenWidth * 0.01),
             Text(
-              'Trusted',
+              l10n.trusted,
               style: TextStyle(
                 color: Colors.blueAccent,
                 fontSize: screenWidth * 0.025,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/constant/risk_level.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class BtnSpecialPermission extends StatelessWidget {
@@ -62,14 +63,14 @@ class BtnSpecialPermission extends StatelessWidget {
                     title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyle.specialPermission,
+                    style: AppTextStyle.specialPermission(context),
                   ),
                   SizedBox(height: AppSize.height * 0.005),
                   Text(
                     text,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyle.specialPermissiontitle,
+                    style: AppTextStyle.specialPermissiontitle(context),
                   ),
                 ],
               ),
@@ -81,9 +82,9 @@ class BtnSpecialPermission extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _riskBadge(),
+                  _riskBadge(context),
                   SizedBox(height: AppSize.height * 0.012),
-                  _statusText(),
+                  _statusText(context),
                 ],
               ),
             ),
@@ -93,26 +94,28 @@ class BtnSpecialPermission extends StatelessWidget {
     );
   }
 
-  Widget _riskBadge() {
+  Widget _riskBadge(BuildContext context) {
     late final Color color;
     late final String label;
+    final l10n=AppLocalizations.of(context)!;
+
 
     switch (riskLevel) {
       case RiskLevel.highRisk:
         color = Colors.redAccent;
-        label = 'HIGH RISK';
+        label = l10n.highRisk;
         break;
       case RiskLevel.mediumRisk:
         color = Colors.orangeAccent;
-        label = 'MEDIUM RISK';
+        label = l10n.mediumRisk;
         break;
       case RiskLevel.lowRisk:
         color = Colors.greenAccent;
-        label = 'LOW RISK';
+        label = l10n.lowRisk;
         break;
       case RiskLevel.noRisk:
         color = Colors.lightBlueAccent;
-        label = 'ALL GOOD';
+        label = l10n.noRisk;
         break;
     }
 
@@ -128,7 +131,7 @@ class BtnSpecialPermission extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: AppTextStyle.specialPermission.copyWith(
+        style: AppTextStyle.specialPermission(context).copyWith(
           color: color,
           fontSize: AppSize.width * 0.028,
           fontWeight: FontWeight.bold,
@@ -137,7 +140,9 @@ class BtnSpecialPermission extends StatelessWidget {
     );
   }
 
-  Widget _statusText() {
+  Widget _statusText(BuildContext context) {
+    final l10n=AppLocalizations.of(context)!;
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -151,8 +156,8 @@ class BtnSpecialPermission extends StatelessWidget {
         ),
         SizedBox(width: AppSize.width * 0.015),
         Text(
-          enabled ? 'Enabled' : 'Disabled',
-          style: AppTextStyle.specialPermissiontitle.copyWith(
+          enabled ? l10n.enabled : l10n.disabled,
+          style: AppTextStyle.specialPermissiontitle(context).copyWith(
             color: enabled ? AppColor.summary : AppColor.white1,
             fontSize: AppSize.width * 0.03,
           ),

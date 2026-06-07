@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class HeaderSection extends StatelessWidget {
@@ -6,11 +7,13 @@ class HeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Review your app permissions',
+          l10n.reviewYourAppPermissions,
           style: TextStyle(
             fontSize: AppSize.width * 0.05,
             fontWeight: FontWeight.w800,
@@ -21,7 +24,7 @@ class HeaderSection extends StatelessWidget {
         SizedBox(height: AppSize.height * 0.008),
 
         Text(
-          'Understand your permissions. Stay in control.',
+          l10n.understandYourPermissions,
           style: TextStyle(
             fontSize: AppSize.width * 0.033,
             color: Colors.white70,

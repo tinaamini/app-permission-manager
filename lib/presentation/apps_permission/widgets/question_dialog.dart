@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:permissions_app/constant/app_color.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class QuestionDialog extends StatelessWidget {
@@ -13,6 +14,7 @@ class QuestionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final l10n = AppLocalizations.of(context)!;
 
     return ConstrainedBox(
       constraints: BoxConstraints(
@@ -20,14 +22,10 @@ class QuestionDialog extends StatelessWidget {
         maxHeight: (size.height * 0.6).clamp(220.0, 520.0),
       ),
       child: Container(
-        padding: EdgeInsets.all(
-          AppSize.width * 0.05,
-        ),
+        padding: EdgeInsets.all(AppSize.width * 0.05),
         decoration: BoxDecoration(
           color: AppColor.BcGround,
-          borderRadius: BorderRadius.circular(
-            AppSize.width * 0.05,
-          ),
+          borderRadius: BorderRadius.circular(AppSize.width * 0.05),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.6),
@@ -41,7 +39,7 @@ class QuestionDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "APP PERMISSION",
+                l10n.appPermission,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -51,27 +49,23 @@ class QuestionDialog extends StatelessWidget {
               ),
               SizedBox(height: AppSize.height * 0.015),
               Text(
-                "Manual",
+                l10n.manual,
                 style: TextStyle(
                   color: AppColor.green1,
                   fontSize: AppSize.width * 0.035,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(
-                height: AppSize.height * 0.007,
-              ),
+              SizedBox(height: AppSize.height * 0.007),
               Text(
-                "You will manually navigate through the system settings to manage app permissions.",
+                l10n.youWillManuallyNavigate,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppColor.green2,
                   fontSize: AppSize.width * 0.03,
                 ),
               ),
-              SizedBox(
-                height: AppSize.height * 0.025,
-              ),
+              SizedBox(height: AppSize.height * 0.025),
               SizedBox(
                 width: double.infinity,
                 child: GestureDetector(
@@ -82,14 +76,12 @@ class QuestionDialog extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: AppColor.CartDark,
-                      borderRadius: BorderRadius.circular(
-                        AppSize.width * 0.05,
-                      ),
+                      borderRadius: BorderRadius.circular(AppSize.width * 0.05),
                       border: Border.all(width: 1, color: AppColor.green1),
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      "Continue",
+                      l10n.continueBtn,
                       style: TextStyle(
                         color: AppColor.green1,
                         fontSize: AppSize.width * 0.035,

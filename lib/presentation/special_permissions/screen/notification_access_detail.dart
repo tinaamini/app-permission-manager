@@ -6,6 +6,7 @@ import 'package:permissions_app/constant/specialPermissionType.dart';
 import 'package:permissions_app/core/servises/app_permission_service.dart';
 import 'package:permissions_app/core/servises/app_special_permiision_service.dart';
 import 'package:permissions_app/core/utils/special_permission_risk_resolver.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/presentation/special_permissions/widget/helper_widgets.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
 import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
@@ -16,6 +17,8 @@ class NotificationAccessDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: EdgeInsets.all(AppSize.width * 0.04),
       child: FutureBuilder<List<Map<String, dynamic>>>(
@@ -42,32 +45,29 @@ class NotificationAccessDetail extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              sectionTitle('What is Notification Access?'),
-              paragraph(
-                'Allows apps to read notifications, including messages and alerts. '
-                    'This may expose sensitive information.',
-              ),
+              sectionTitle(l10n.whatIsNotificationAccess,context),
+              paragraph(l10n.notificationAccessDesc,context),
               SizedBox(height: AppSize.height * 0.02),
 
-              riskBadge(level: level),
+              riskBadge(level: level,context),
 
               SizedBox(height: AppSize.height * 0.03),
               actionButton(
-                text: 'Open Notification Access Settings',
+                text: l10n.openNotificationAccessSettings,
                 onTap: () {
                   AppSpecialPermissionPlatform().openNotificationAccessSettings();
                 },
               ),
 
               SizedBox(height: AppSize.height * 0.04),
-              sectionTitle('Apps with Notification Access'),
+              sectionTitle(l10n.appsWithNotificationAccess,context),
               SizedBox(height: AppSize.height * 0.015),
 
               Expanded(
                 child: apps.isEmpty
                     ? Center(
                   child: EmptyPageWidget(
-                    text: 'No apps with notification access found',
+                    text: l10n.noAppsWithNotificationAccess,
                   ),
                 )
                     : ListView.separated(

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/core/servises/system_settings_platform.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class SystemPrivacyDashboardCard extends StatelessWidget {
@@ -10,6 +11,8 @@ class SystemPrivacyDashboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       padding: EdgeInsets.all(AppSize.width * 0.035),
       decoration: BoxDecoration(
@@ -18,58 +21,58 @@ class SystemPrivacyDashboardCard extends StatelessWidget {
         border: Border.all(color: AppColor.CartDarkBorder),
       ),
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-      Row(
-      children: [
-      SvgPicture.asset("assets/dashboard/shield-tick.svg"),
-      SizedBox(width: AppSize.width * 0.02),
-      Expanded(
-        child: Text(
-          'System Privacy Dashboard',
-          style: AppTextStyle.dashboardTitle,
-        ),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              SvgPicture.asset("assets/dashboard/shield-tick.svg"),
+              SizedBox(width: AppSize.width * 0.02),
+              Expanded(
+                child: Text(
+                  l10n.systemPrivacyDashboard,
+                  style: AppTextStyle.dashboardTitle(context),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: AppSize.height * 0.012),
+          Text(
+            l10n.systemPrivacyDashboardDesc,
+            style: AppTextStyle.trustDescription(context).copyWith(color: AppColor.green2),
+          ),
+          SizedBox(height: AppSize.height * 0.015),
+
+          Row(
+            children: [
+              Expanded(
+                child: _ActionBtn(
+                  color: AppColor.green1,
+                  text: l10n.openPrivacy,
+                  onTap: () => SystemSettingsPlatform.openPrivacySettings(),
+                ),
+              ),
+              SizedBox(width: AppSize.width * 0.025),
+              Expanded(
+                child: _ActionBtn(
+                  color: AppColor.green1,
+                  text: l10n.permissionManager,
+                  onTap: () => SystemSettingsPlatform.openPermissionManager(),
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(height: AppSize.height * 0.015),
+          Text(
+            l10n.ifItDoesntOpen,
+            style: TextStyle(
+              color: AppColor.green2,
+              fontSize: AppSize.width * 0.028,
+              height: 1.35,
+            ),
+          ),
+        ],
       ),
-      ],
-    ),
-    SizedBox(height: AppSize.height * 0.012),
-    Text(
-    'View permission activity and manage access directly in your phone settings.',
-    style: AppTextStyle.trustDescription.copyWith(color: AppColor.green2),
-    ),
-    SizedBox(height: AppSize.height * 0.015),
-
-    Row(
-    children: [
-    Expanded(
-    child: _ActionBtn(
-    color: AppColor.green1,
-    text: 'Open Privacy',
-    onTap: () => SystemSettingsPlatform.openPrivacySettings(),
-    ),
-    ),
-    SizedBox(width: AppSize.width * 0.025),
-    Expanded(
-    child: _ActionBtn(
-    color: AppColor.green1,
-    text: 'Permission Manager',
-    onTap: () => SystemSettingsPlatform.openPermissionManager(),
-    ),
-    ),
-    ],
-    ),
-
-    SizedBox(height: AppSize.height * 0.015),
-    Text(
-      'If it doesn’t open:\nSettings → Privacy → ...',
-    style: TextStyle(
-    color: AppColor.green2,
-    fontSize: AppSize.width * 0.028,
-    height: 1.35,
-    ),
-    ),
-    ],
-    ),
     );
   }
 }

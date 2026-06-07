@@ -30,7 +30,7 @@ class EmptyPageWidget extends StatelessWidget {
             SizedBox(height: AppSize.height * 0.022),
             Text(
               text,
-              style: AppTextStyle.emptyPage,
+              style: AppTextStyle.emptyPage(context),
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

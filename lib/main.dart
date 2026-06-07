@@ -1,15 +1,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:permissions_app/routs/rout.dart';
-
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'core/servises/app_special_permiision_service.dart';
 import 'core/utils/onboarding_storage.dart';
 import 'logic/app_permission/app_permission_cubit.dart';
+import 'logic/locale/locale_cubit.dart';
 import 'logic/onboarding/show_onboarding/show_onboarding_cubit.dart';
 import 'logic/special_permission/special_permission_cubit.dart';
 
@@ -59,6 +61,9 @@ class MainApp extends StatelessWidget {
         ),
         BlocProvider<SpecialPermissionCubit>(
           create: (_) => SpecialPermissionCubit(AppSpecialPermissionPlatform()),
+        ),
+        BlocProvider<LocaleCubit>(
+          create: (_) => LocaleCubit(),
         ),
       ],
       child: _AppBootstrap(router: router),
@@ -128,19 +133,33 @@ class _AppBootstrapState extends State<_AppBootstrap> {
     });
   }
   @override
+  @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(412, 917),
       minTextAdapt: true,
-
-        builder: (context, child) {
-        return MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          routerConfig: widget.router,
+      builder: (context, child) {
+        return BlocBuilder<LocaleCubit, Locale>(
+          builder: (context, locale) {
+            return MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              routerConfig: widget.router,
+              locale: locale,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('en'),
+                Locale('fa'),
+              ],
+            );
+          },
         );
       },
     );
   }
-
 
 }

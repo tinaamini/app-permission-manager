@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/permission_group_type.dart';
 import 'package:permissions_app/core/servises/app_permission_service.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
 import 'package:permissions_app/presentation/apps_permission/widgets/question_dialog.dart';
@@ -53,6 +53,8 @@ class _PermissionDetailScreenState extends State<PermissionDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BaseScreen(
       child: Column(
         children: [
@@ -78,7 +80,7 @@ class _PermissionDetailScreenState extends State<PermissionDetailScreen>
                 final apps = _filterApps(state);
 
                 if (apps.isEmpty) {
-                  return EmptyPageWidget(text: 'No apps use this permission');
+                  return EmptyPageWidget(text: l10n.noAppsUseThisPermission);
                 }
 
                 return ListView.builder(
@@ -138,27 +140,28 @@ class _PermissionDetailScreenState extends State<PermissionDetailScreen>
   }
 
   String _title() {
+    final l10n = AppLocalizations.of(context)!;
     switch (widget.groupType) {
       case PermissionGroupType.location:
-        return 'Location Permission';
+        return l10n.locationPermission;
       case PermissionGroupType.camera:
-        return 'Camera Permission';
+        return l10n.cameraPermission;
       case PermissionGroupType.microphone:
-        return 'Microphone Permission';
+        return  l10n.microphonePermission;
       case PermissionGroupType.contacts:
-        return 'Contacts Permission';
+        return l10n.contactsPermission;
       case PermissionGroupType.sms:
-        return 'SMS Permission';
+        return  l10n.smsPermission;
       case PermissionGroupType.call:
-        return 'Phone Permission';
+        return l10n.callPermission;
       case PermissionGroupType.storage:
-        return 'Storage Permission';
+        return l10n.storagePermission;
       case PermissionGroupType.calendar:
-        return 'Calendar Permission';
+        return  l10n.calendarPermission;
       case PermissionGroupType.notification:
-        return 'Notification Permission';
+        return l10n.notificationPermission;
       case PermissionGroupType.activity:
-        return 'Activity Permission';
+        return l10n.activityPermission;
     }
   }
 

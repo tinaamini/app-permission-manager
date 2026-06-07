@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:permissions_app/constant/app_color.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class TrustBtn extends StatelessWidget {
@@ -16,6 +17,8 @@ class TrustBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return GestureDetector(
       onTap: isTrusting ? null : onTap,
       child: AnimatedContainer(
@@ -75,10 +78,10 @@ class TrustBtn extends StatelessWidget {
             Flexible(
               child: Text(
                 isTrusting
-                    ? 'Trusting...'
+                    ? l10n.trusting
                     : isTrusted
-                    ? 'Trusted'
-                    : 'Trust App',
+                    ? l10n.trusted
+                    : l10n.trustApp,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(

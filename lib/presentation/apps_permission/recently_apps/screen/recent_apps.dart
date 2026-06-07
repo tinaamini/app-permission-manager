@@ -113,7 +113,7 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
 
                   SizedBox(height: AppSize.height * 0.03),                        Padding(
                           padding:  EdgeInsets.only(   left: AppSize.width * 0.04,),
-                          child: Text("Recent apps",style: AppTextStyle.summary,),
+                          child: Text("Recent apps",style: AppTextStyle.summary(context),),
                         ),
                         SizedBox(height: AppSize.height * 0.03),
                         Expanded(
@@ -167,7 +167,7 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
         children: [
           Text(
             'Today Summary',
-            style: AppTextStyle.summary,
+            style: AppTextStyle.summary(context),
           ),
 
           SizedBox(height: AppSize.height * 0.01),
@@ -199,7 +199,7 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
 
           Text(
             value,
-            style: AppTextStyle.summaryValue,
+            style: AppTextStyle.summaryValue(context),
           ),
         ],
       ),

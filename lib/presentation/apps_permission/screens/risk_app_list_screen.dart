@@ -9,10 +9,12 @@ import 'package:go_router/go_router.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/risk_level.dart';
 import 'package:permissions_app/core/models/app_permission_ui.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
 import 'package:permissions_app/presentation/apps_permission/widgets/app_item_widget.dart';
 import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
+import 'package:permissions_app/presentation/utils/app_size.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
 import 'package:permissions_app/presentation/utils/empty_page_widget.dart';
 import 'package:permissions_app/routs/rout_name.dart';
@@ -31,15 +33,16 @@ class RiskAppListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final l10n = AppLocalizations.of(context)!;
 
     return BaseScreen(
       child: Column(
         children: [
           AppBarWidget(
-            text: _title(),
+            text: _title(l10n),
             ontap: () => context.pop(),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: AppSize.height * 0.015),
 
           Expanded(
             child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
@@ -58,7 +61,7 @@ class RiskAppListScreen extends StatelessWidget {
                 final apps = _getAppsByRisk(state);
 
                 if (apps.isEmpty) {
-                  return const EmptyPageWidget(text: 'No applications found');
+                  return  EmptyPageWidget(text: l10n.noAppsFound);
                 }
 
                 return ListView.builder(
@@ -99,16 +102,16 @@ class RiskAppListScreen extends StatelessWidget {
     );
   }
 
-  String _title() {
+  String _title(AppLocalizations l10n) {
     switch (riskLevel) {
       case RiskLevel.noRisk:
-        return 'NO RISK APPS';
+        return l10n.noRiskApps;
       case RiskLevel.lowRisk:
-        return 'LOW RISK APPS';
+        return l10n.lowRiskApps;
       case RiskLevel.mediumRisk:
-        return 'MEDIUM RISK APPS';
+        return l10n.mediumRiskApps;
       case RiskLevel.highRisk:
-        return 'HIGH RISK APPS';
+        return l10n.highRiskApps;
     }
   }
 

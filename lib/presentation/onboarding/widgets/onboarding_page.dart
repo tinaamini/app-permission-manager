@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:permissions_app/constant/app_style.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'next_button.dart';
 import 'onboarding_data.dart';
 
@@ -23,6 +24,7 @@ class OnboardPage extends StatelessWidget {
     final isLast = currentPage == totalPages - 1;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final l10n = AppLocalizations.of(context)!;
 
     return  ColoredBox(
       color: Colors.black,
@@ -82,7 +84,7 @@ class OnboardPage extends StatelessWidget {
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyle.onboardingTitle,
+                      style: AppTextStyle.onboardingTitle(context),
                     ),
 
                     SizedBox(height: screenHeight * 0.01),
@@ -92,7 +94,7 @@ class OnboardPage extends StatelessWidget {
                       textAlign: TextAlign.center,
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyle.onboardingDescription
+                      style: AppTextStyle.onboardingDescription(context)
                           .copyWith(color: data.color),
                     ),
                   ],
@@ -107,7 +109,7 @@ class OnboardPage extends StatelessWidget {
                   child: NextButton(
                     onTap: onNext,
 
-                    text: isLast ? "Get Started" : "Next",
+                    text: isLast ? l10n.getStarted : l10n.next,
                   ),
                 ),
               ),

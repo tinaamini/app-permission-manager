@@ -52,7 +52,7 @@ class BtnHomeWidget extends StatelessWidget {
 
             Text(
               text,
-              style: AppTextStyle.btnHome,
+              style: AppTextStyle.btnHome(context),
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -62,7 +62,7 @@ class BtnHomeWidget extends StatelessWidget {
 
             Text(
               textCount,
-              style: AppTextStyle.cartDarkCount,
+              style: AppTextStyle.cartDarkCount(context),
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

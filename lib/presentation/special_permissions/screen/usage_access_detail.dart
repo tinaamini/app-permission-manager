@@ -5,6 +5,7 @@ import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/risk_level.dart';
 import 'package:permissions_app/core/servises/app_permission_service.dart';
 import 'package:permissions_app/core/servises/app_special_permiision_service.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/presentation/special_permissions/widget/helper_widgets.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
 import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
@@ -20,15 +21,16 @@ class UsageAccessDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n=AppLocalizations.of(context)!;
+
     return Padding(
       padding: EdgeInsets.all(AppSize.width * 0.04),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          sectionTitle('What is Usage Data Access?'),
+          sectionTitle(l10n.usageAccessTitle2,context),
           paragraph(
-            'Allows apps to view how often and how long other apps are used. '
-                'This access can reveal sensitive behavior patterns.',
+         l10n.usageAccessDesc,context
           ),
           SizedBox(height: AppSize.height * 0.02),
 
@@ -53,17 +55,17 @@ class UsageAccessDetail extends StatelessWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    riskBadge(level: level),
+                    riskBadge(level: level,context),
                     SizedBox(height: AppSize.height * 0.03),
 
-                    sectionTitle('Apps with Usage Access'),
+                    sectionTitle(l10n.appsWithUsageAccessTitle,context),
                     SizedBox(height: AppSize.height * 0.015),
 
                     Expanded(
                       child: apps.isEmpty
                           ? Center(
                         child: Text(
-                          'No apps with usage access found',
+                         l10n.noUsageAccessApps,
                           style: TextStyle(
                             color: Colors.white54,
                             fontSize: AppSize.width * 0.035,

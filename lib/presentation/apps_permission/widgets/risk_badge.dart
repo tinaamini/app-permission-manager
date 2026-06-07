@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:permissions_app/constant/risk_level.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class RiskBadge extends StatelessWidget {
@@ -12,7 +13,7 @@ class RiskBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final data = _mapRisk(riskLevel);
+    final data = _mapRisk(riskLevel,context);
 
     return Container(
       padding: EdgeInsets.symmetric(
@@ -37,16 +38,19 @@ class RiskBadge extends StatelessWidget {
     );
   }
 
-  _RiskData _mapRisk(RiskLevel level) {
+  _RiskData _mapRisk(RiskLevel level,BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     switch (level) {
+
       case RiskLevel.noRisk:
-        return _RiskData('SAFE', Colors.blue);
+        return _RiskData(l10n.safe, Colors.blue);
       case RiskLevel.lowRisk:
-        return _RiskData('LOW RISK', Colors.green);
+        return _RiskData(l10n.lowRisk, Colors.green);
       case RiskLevel.mediumRisk:
-        return _RiskData('MEDIUM RISK', Colors.orange);
+        return _RiskData(l10n.mediumRisk, Colors.orange);
       case RiskLevel.highRisk:
-        return _RiskData('HIGH RISK', Colors.red);
+        return _RiskData(l10n.highRisk, Colors.red);
     }
   }
 }

@@ -9,6 +9,7 @@ import 'package:permissions_app/core/servises/dashboard_permission_service.dart'
 import 'package:permissions_app/core/servises/scan_service.dart';
 import 'package:permissions_app/core/servises/scan_storage_hive.dart';
 import 'package:permissions_app/core/utils/scan_diff.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 
 import 'package:permissions_app/presentation/dashboard/widget/alert_section_widget.dart';
 import 'package:permissions_app/presentation/dashboard/widget/since_last_scan_widget.dart';
@@ -114,11 +115,13 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
   }
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BaseScreen(
       child: Column(
         children: [
           AppBarWidget(
-            text: "DASHBOARD PERMISSION",
+            text: l10n.dashboardPermission,
             ontap: () => context.pop(),
           ),
 

@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/core/models/scan_model.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
 
 enum ScanTab { newApps, changedPerms }
@@ -14,7 +15,6 @@ class SinceLastScanWidget extends StatelessWidget {
   final DateTime? lastScanTime;
   final bool scanning;
   final VoidCallback onRunScan;
-
   final ScanTab selectedTab;
   final void Function(ScanTab) onTabChange;
 
@@ -39,12 +39,14 @@ class SinceLastScanWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final newCount = diff?.newApps.length ?? 0;
     final changedCount = diff?.changedApps.length ?? 0;
 
     final lastText = (lastScanTime == null)
-        ? 'No previous scan yet'
-        : 'Last Scan: ${lastScanTime!.toLocal().toString().substring(0, 16)}';
+        ? l10n.noPreviousScan
+        : l10n.lastScan(lastScanTime!.toLocal().toString().substring(0, 16));
 
     return Container(
       padding: EdgeInsets.all(AppSize.width * 0.035),
@@ -62,8 +64,8 @@ class SinceLastScanWidget extends StatelessWidget {
               SizedBox(width: AppSize.width * 0.02),
               Expanded(
                 child: Text(
-                  'Since last Scan',
-                  style: AppTextStyle.dashboardTitle,
+                  l10n.sinceLastScan,
+                  style: AppTextStyle.dashboardTitle(context),
                 ),
               ),
               InkWell(
@@ -93,13 +95,12 @@ class SinceLastScanWidget extends StatelessWidget {
                         SizedBox(width: AppSize.width * 0.02),
                       ] else ...[
                         Icon(Icons.refresh,
-                            color: AppColor.blue1,
-                            size: AppSize.width * 0.04),
+                            color: AppColor.blue1, size: AppSize.width * 0.04),
                         SizedBox(width: AppSize.width * 0.015),
                       ],
                       Text(
-                        scanning ? 'Scanning' : 'Run scan',
-                        style: AppTextStyle.trustDescription
+                        scanning ? l10n.scanning : l10n.runScan,
+                        style: AppTextStyle.trustDescription(context)
                             .copyWith(color: AppColor.blue1),
                       ),
                     ],
@@ -116,9 +117,9 @@ class SinceLastScanWidget extends StatelessWidget {
 
           Row(
             children: [
-              _pill('New apps', newCount),
+              _pill(l10n.newApps, newCount,context),
               SizedBox(width: AppSize.width * 0.02),
-              _pill('Changed permissions', changedCount),
+              _pill(l10n.changedPermissions, changedCount,context),
             ],
           ),
 
@@ -127,16 +128,16 @@ class SinceLastScanWidget extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: _tabBtn(
-                  text: 'New apps',
+                child: _tabBtn(context,
+                  text: l10n.newApps,
                   selected: selectedTab == ScanTab.newApps,
                   onTap: () => onTabChange(ScanTab.newApps),
                 ),
               ),
               SizedBox(width: AppSize.width * 0.025),
               Expanded(
-                child: _tabBtn(
-                  text: 'Changed',
+                child: _tabBtn(context,
+                  text: l10n.changed,
                   selected: selectedTab == ScanTab.changedPerms,
                   onTap: () => onTabChange(ScanTab.changedPerms),
                 ),
@@ -148,24 +149,24 @@ class SinceLastScanWidget extends StatelessWidget {
 
           if (diff == null)
             Text(
-              'Run a scan to compare changes.',
-              style: AppTextStyle.specialPermission
+              l10n.runScanToCompare,
+              style: AppTextStyle.specialPermission(context)
                   .copyWith(color: AppColor.blue2),
             )
           else if (diff!.isEmpty)
             Text(
-              'No changes since the last scan.',
-              style: AppTextStyle.specialPermission
+              l10n.noChangesSinceLastScan,
+              style: AppTextStyle.specialPermission(context)
                   .copyWith(color: AppColor.blue2),
             )
           else
-            _buildList(selectedTab, diff!, _decodeIcon),
+            _buildList(selectedTab, diff!, _decodeIcon, l10n),
         ],
       ),
     );
   }
 
-  Widget _pill(String label, int count) {
+  Widget _pill(String label, int count,BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSize.width * 0.025,
@@ -177,13 +178,13 @@ class SinceLastScanWidget extends StatelessWidget {
       ),
       child: Text(
         '$label: $count',
-        style: AppTextStyle.trustDescription
+        style: AppTextStyle.trustDescription(context)
             .copyWith(fontSize: AppSize.width * 0.03),
       ),
     );
   }
 
-  Widget _tabBtn({
+  Widget _tabBtn(BuildContext context,{
     required String text,
     required bool selected,
     required VoidCallback onTap,
@@ -203,7 +204,7 @@ class SinceLastScanWidget extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style: AppTextStyle.system.copyWith(
+            style: AppTextStyle.system(context).copyWith(
               color: selected ? AppColor.blue1 : AppColor.BorderCard,
             ),
           ),
@@ -216,6 +217,7 @@ class SinceLastScanWidget extends StatelessWidget {
       ScanTab tab,
       ScanDiff diff,
       Uint8List? Function(String?) decodeIcon,
+      AppLocalizations l10n,
       ) {
     if (tab == ScanTab.newApps) {
       return Column(
@@ -225,7 +227,7 @@ class SinceLastScanWidget extends StatelessWidget {
             icon: bytes,
             title: a.name,
             subtitle: a.packageName,
-            trailing: 'NEW',
+            trailing: l10n.newLabel,
             trailingColor: Colors.greenAccent,
           );
         }).toList(),
@@ -242,6 +244,7 @@ class SinceLastScanWidget extends StatelessWidget {
           subtitle: a.packageName,
           added: c.added,
           removed: c.removed,
+          l10n: l10n,
         );
       }).toList(),
     );
@@ -292,8 +295,8 @@ class SinceLastScanWidget extends StatelessWidget {
               vertical: AppSize.height * 0.008,
             ),
             decoration: BoxDecoration(
-            color: trailingColor.withAlpha(38),
-            borderRadius: BorderRadius.circular(AppSize.width * 0.25),
+              color: trailingColor.withAlpha(38),
+              borderRadius: BorderRadius.circular(AppSize.width * 0.25),
             ),
             child: Text(
               trailing,
@@ -314,12 +317,14 @@ class SinceLastScanWidget extends StatelessWidget {
     required String subtitle,
     required List<String> added,
     required List<String> removed,
+    required AppLocalizations l10n,
   }) {
     return Container(
       margin: EdgeInsets.only(bottom: AppSize.height * 0.012),
       padding: EdgeInsets.all(AppSize.width * 0.03),
       decoration: BoxDecoration(
-        color: Colors.white.withAlpha(10),        borderRadius: BorderRadius.circular(AppSize.width * 0.03),
+        color: Colors.white.withAlpha(10),
+        borderRadius: BorderRadius.circular(AppSize.width * 0.03),
       ),
       child: Column(
         children: [
@@ -358,7 +363,7 @@ class SinceLastScanWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppSize.width * 0.25),
                 ),
                 child: Text(
-                  'CHANGED',
+                  l10n.changed,
                   style: TextStyle(
                       color: Colors.orangeAccent,
                       fontWeight: FontWeight.w900,
@@ -368,9 +373,10 @@ class SinceLastScanWidget extends StatelessWidget {
             ],
           ),
           SizedBox(height: AppSize.height * 0.012),
-          if (added.isNotEmpty) _changeLine('Added', added, Colors.greenAccent),
+          if (added.isNotEmpty)
+            _changeLine(l10n.added, added, Colors.greenAccent),
           if (removed.isNotEmpty)
-            _changeLine('Removed', removed, Colors.redAccent),
+            _changeLine(l10n.removed, removed, Colors.redAccent),
         ],
       ),
     );
@@ -388,11 +394,12 @@ class SinceLastScanWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: c.withAlpha(20),
         borderRadius: BorderRadius.circular(AppSize.width * 0.025),
-        border: Border.all(color: c.withAlpha(51)),      ),
+        border: Border.all(color: c.withAlpha(51)),
+      ),
       child: Text(
         '$label: $text',
-        style:
-        TextStyle(color: Colors.white70, fontSize: AppSize.width * 0.028),
+        style: TextStyle(
+            color: Colors.white70, fontSize: AppSize.width * 0.028),
       ),
     );
   }
@@ -406,7 +413,8 @@ class SinceLastScanWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSize.width * 0.025),
       ),
       child: bytes == null
-          ? Icon(Icons.apps, color: Colors.white38, size: AppSize.width * 0.05)
+          ? Icon(Icons.apps,
+          color: Colors.white38, size: AppSize.width * 0.05)
           : ClipRRect(
         borderRadius: BorderRadius.circular(AppSize.width * 0.025),
         child: Image.memory(bytes, fit: BoxFit.cover),

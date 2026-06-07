@@ -43,7 +43,7 @@ class DeviceStatusCard extends StatelessWidget {
                 ),              ),
               child: Text(
                 status.subtitle,
-                style: AppTextStyle.system.copyWith(color: status.color),
+                style: AppTextStyle.system(context).copyWith(color: status.color),
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -55,7 +55,7 @@ class DeviceStatusCard extends StatelessWidget {
             ),
             Text(
               status.title,
-              style: AppTextStyle.titleSecure,
+              style: AppTextStyle.titleSecure(context),
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

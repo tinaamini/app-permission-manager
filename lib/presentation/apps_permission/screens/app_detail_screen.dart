@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 
 import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
@@ -58,10 +58,9 @@ class _AppDetailScreenState extends State<AppDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
+    final l10n = AppLocalizations.of(context)!;
 
     return BaseScreen(
       child: BlocConsumer<AppPermissionCubit, AppPermissionState>(
@@ -73,33 +72,33 @@ class _AppDetailScreenState extends State<AppDetailScreen>
         listener: (context, state) {
           if (state is AppTrustedSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('App marked as Trusted'),
-                duration: Duration(seconds: 3),
+              SnackBar(
+                content: Text(l10n.appMarkedTrusted),
+                duration: const Duration(seconds: 3),
               ),
             );
           }
           if (state is AppUntrustedSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('App untrusted'),
-                duration: Duration(seconds: 3),
+              SnackBar(
+                content: Text(l10n.appUntrusted),
+                duration: const Duration(seconds: 3),
               ),
             );
           }
           if (state is AppKeptSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('App added to Keep list'),
-                duration: Duration(seconds: 3),
+              SnackBar(
+                content: Text(l10n.appAddedToKeep),
+                duration: const Duration(seconds: 3),
               ),
             );
           }
           if (state is AppUnkeptSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('App removed from Keep list'),
-                duration: Duration(seconds: 3),
+              SnackBar(
+                content: Text(l10n.appRemovedFromKeep),
+                duration: const Duration(seconds: 3),
               ),
             );
           }
@@ -108,18 +107,19 @@ class _AppDetailScreenState extends State<AppDetailScreen>
         current is AppPermissionLoaded || current is AppTrusting,
         builder: (context, state) {
           if (state is! AppPermissionLoaded && state is! AppTrusting) {
-            return const  Center(
-                child: CustomDotsLoader(
-                    svgPath1:
-                    'assets/utils/Property 1=1 (1).svg',
-                    svgPath2: 'assets/utils/Property 1=2 (1).svg',
-                    svgPath3: 'assets/utils/Property 1=3 (1).svg',
-                    svgPath4:
-                    'assets/utils/Property 1=4 (1).svg'));
+            return const Center(
+              child: CustomDotsLoader(
+                svgPath1: 'assets/utils/Property 1=1 (1).svg',
+                svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                svgPath4: 'assets/utils/Property 1=4 (1).svg',
+              ),
+            );
           }
 
-          final AppPermissionLoaded loaded =
-          state is AppPermissionLoaded ? state : (state as AppTrusting).previous;
+          final AppPermissionLoaded loaded = state is AppPermissionLoaded
+              ? state
+              : (state as AppTrusting).previous;
 
           final app = [
             ...loaded.noRisk,
@@ -147,28 +147,24 @@ class _AppDetailScreenState extends State<AppDetailScreen>
           return Column(
             children: [
               AppBarWidget(
-                text: 'APP DETAILS',
+                text: l10n.appDetails,
                 ontap: () => context.pop(),
               ),
 
-              SizedBox(
-                height: screenHeight * 0.015,
-              ),
-              // Icon
+              SizedBox(height: screenHeight * 0.015),
+
+              // App icon
               Image.memory(
                 base64Decode(app.iconBase64),
                 width: screenWidth * 0.2,
                 height: screenHeight * 0.1,
               ),
 
-              SizedBox(
-                height: screenHeight * 0.015,
-              ),
+              SizedBox(height: screenHeight * 0.015),
+
               // App name
               Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.05,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                 child: Text(
                   app.appName,
                   textAlign: TextAlign.center,
@@ -176,19 +172,17 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: (AppSize.width * 0.045).clamp(14.0, 20.0),                    fontWeight: FontWeight.bold,
+                    fontSize: (AppSize.width * 0.045).clamp(14.0, 20.0),
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
 
-              SizedBox(
-                height: screenHeight * 0.01,
-              ),
-              // Badge / Info
+              SizedBox(height: screenHeight * 0.01),
+
+              // Trust badge or risk badge
               Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.05,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                 child: isTrust
                     ? Container(
                   padding: EdgeInsets.symmetric(
@@ -197,15 +191,18 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                   ),
                   decoration: BoxDecoration(
                     color: Colors.blue.withAlpha(38),
-                    borderRadius: BorderRadius.circular(screenWidth * 0.05),                  ),
+                    borderRadius:
+                    BorderRadius.circular(screenWidth * 0.05),
+                  ),
                   child: Text(
-                    "Trusted apps are excluded from risk warnings",
+                    l10n.trustedAppsExcluded,
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.blue,
-                      fontSize: AppSize.width * 0.03,                      fontWeight: FontWeight.w600,
+                      fontSize: AppSize.width * 0.03,
+                      fontWeight: FontWeight.w600,
                       letterSpacing: 0.2,
                     ),
                   ),
@@ -213,14 +210,11 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                     : RiskBadge(riskLevel: app.riskLevel),
               ),
 
-              SizedBox(
-                height: screenHeight * 0.022,
-              ),
-              // Buttons row (anti overflow)
+              SizedBox(height: screenHeight * 0.022),
+
+              // Trust & Keep buttons
               Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.05,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                 child: Row(
                   children: [
                     Expanded(
@@ -238,9 +232,7 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                         },
                       ),
                     ),
-                    SizedBox(
-                      height: screenWidth * 0.015,
-                    ),
+                    SizedBox(width: screenWidth * 0.015),
                     Expanded(
                       child: KeepAppButton(
                         isKept: isKept,
@@ -260,24 +252,25 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                 ),
               ),
 
-              SizedBox(
-                height: screenHeight * 0.022,
-              ),
-              // Risk row
+              SizedBox(height: screenHeight * 0.022),
+
+              // Risk percentage row
               Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.05,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                 child: Row(
                   children: [
                     Expanded(
                       child: Text(
-                        '${(percent * 100).round()}% RISK',
+                        l10n.riskPercent(
+                            (percent * 100).round()),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: isTrust ? Colors.blue : _riskColor(app.riskLevel),
-                          fontSize: AppSize.width * 0.05,                          fontWeight: FontWeight.bold,
+                          color: isTrust
+                              ? Colors.blue
+                              : _riskColor(app.riskLevel),
+                          fontSize: AppSize.width * 0.05,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -287,7 +280,8 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                           context: context,
                           builder: (_) => Dialog(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(screenWidth * 0.05),
+                              borderRadius:
+                              BorderRadius.circular(screenWidth * 0.05),
                             ),
                             child: InfoWidget(),
                           ),
@@ -297,7 +291,8 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                         width: screenWidth * 0.075,
                         height: screenWidth * 0.075,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(screenWidth * 0.0625),
+                          borderRadius:
+                          BorderRadius.circular(screenWidth * 0.0625),
                           color: AppColor.CartDark,
                           boxShadow: [
                             BoxShadow(
@@ -318,16 +313,15 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                 ),
               ),
 
-              SizedBox(
-                height: screenHeight * 0.015,
-              ),
-              // Permission list
+              SizedBox(height: screenHeight * 0.015),
+
+              // Permissions list
               Expanded(
                 child: ListView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * 0.05,
-                  ),
-                  children: PermissionConst.displayPermissions.entries.map((entry) {
+                  padding:
+                  EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                  children:
+                  PermissionConst.displayPermissions.entries.map((entry) {
                     final permissionKey = entry.key;
                     final permissionName = entry.value;
 

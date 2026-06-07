@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/core/servises/usage_access_service.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
 
 class UsageAccessScreen extends StatefulWidget {
@@ -42,6 +43,8 @@ class _UsageAccessScreenState extends State<UsageAccessScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n=AppLocalizations.of(context)!;
+
     return Container(
       padding: EdgeInsets.all(   AppSize.width * 0.05,),
       decoration: BoxDecoration(
@@ -74,7 +77,7 @@ class _UsageAccessScreenState extends State<UsageAccessScreen>
           SizedBox(height: AppSize.height * 0.03),
 
           Text(
-            "To show the apps used today, please enable Usage Access permission.",
+            l10n.enableUsageAccessMessage,
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white70,
@@ -108,8 +111,8 @@ class _UsageAccessScreenState extends State<UsageAccessScreen>
               ),
               child: Center(
                 child: Text(
-                  'Open Usage Access Settings',
-                  style: AppTextStyle.usage,
+                  l10n.openUsageAccessSettings,
+                  style: AppTextStyle.usage(context),
                   textAlign: TextAlign.center,
                 ),
               ),

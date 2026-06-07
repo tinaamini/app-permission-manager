@@ -3,6 +3,7 @@ import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/constant/risk_level.dart';
 import 'package:permissions_app/core/servises/app_special_permiision_service.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/presentation/special_permissions/widget/helper_widgets.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
 
@@ -15,16 +16,15 @@ class DisplayOverAppsDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: EdgeInsets.all(AppSize.width * 0.04),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          sectionTitle('Display over other apps'),
-          paragraph(
-            'Apps with this permission can appear on top of other apps. '
-                'This may be used for chat heads, floating tools, or overlays.',
-          ),
+          sectionTitle(l10n.displayOverOtherApps,context),
+          paragraph(l10n.displayOverAppsDesc,context),
 
           SizedBox(height: AppSize.height * 0.02),
 
@@ -32,7 +32,7 @@ class DisplayOverAppsDetail extends StatelessWidget {
             future: AppSpecialPermissionPlatform().checkOverlayPermission(),
             builder: (context, snapshot) {
               final enabled = snapshot.data ?? false;
-              return riskBadge(level: _overlayLevel(enabled));
+              return riskBadge(level: _overlayLevel(enabled),context);
             },
           ),
 
@@ -52,10 +52,10 @@ class DisplayOverAppsDetail extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  'Open Display Over Apps Settings',
+                  l10n.openDisplayOverAppsSettings,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyle.greenFont,
+                  style: AppTextStyle.greenFont(context),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -66,9 +66,8 @@ class DisplayOverAppsDetail extends StatelessWidget {
 
           Expanded(
             child: Text(
-              'Android does not allow apps to list overlay permissions directly. '
-                  'To review apps with this access, use the system settings.',
-              style: AppTextStyle.trustDescription.copyWith(color: AppColor.green2),
+              l10n.overlayPermissionNote,
+              style: AppTextStyle.trustDescription(context).copyWith(color: AppColor.green2),
             ),
           ),
         ],

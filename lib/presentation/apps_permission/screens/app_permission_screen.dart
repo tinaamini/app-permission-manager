@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:permissions_app/constant/risk_level.dart';
 import 'package:permissions_app/core/servises/usage_access_service.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
 import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
 import 'package:permissions_app/presentation/apps_permission/recently_apps/widgets/usage_access_screen.dart';
@@ -22,6 +23,8 @@ class AppPermissionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final l10n = AppLocalizations.of(context)!;
+
 
     return BlocBuilder<AppPermissionCubit, AppPermissionState>(
       builder: (context, state) {
@@ -40,7 +43,7 @@ class AppPermissionScreen extends StatelessWidget {
           child: Column(
             children: [
               AppBarWidget(
-                text: "APP PERMISSION",
+                text: l10n.appPermission,
                 ontap: () => context.pop(),
               ),
 
@@ -67,7 +70,7 @@ class AppPermissionScreen extends StatelessWidget {
                                   );
                                 },
                                 image: 'assets/app_permission/noRisk.svg',
-                                text: 'No Risk Apps',
+                                text: l10n.noRisk,
                                 integer: state.noRisk.length.toString(),
                                 color: Colors.blue,
                               ),
@@ -84,7 +87,7 @@ class AppPermissionScreen extends StatelessWidget {
                                   );
                                 },
                                 image: 'assets/app_permission/lowRisk.svg',
-                                text: 'Low Risk Apps',
+                                text: l10n.lowRisk,
                                 integer: state.lowRisk.length.toString(),
                                 color: Colors.green,
                               ),
@@ -106,7 +109,7 @@ class AppPermissionScreen extends StatelessWidget {
                                   );
                                 },
                                 image: 'assets/app_permission/mediumRisk.svg',
-                                text: 'Medium Risk Apps',
+                                text: l10n.mediumRisk,
                                 integer: state.mediumRisk.length.toString(),
                                 color: Colors.orange,
                               ),
@@ -123,7 +126,7 @@ class AppPermissionScreen extends StatelessWidget {
                                   );
                                 },
                                 image: 'assets/app_permission/highRisk.svg',
-                                text: 'High Risk Apps',
+                                text: l10n.highRisk,
                                 integer: state.highRisk.length.toString(),
                                 color: Colors.red,
                               ),
@@ -137,7 +140,7 @@ class AppPermissionScreen extends StatelessWidget {
                         // ---- Cards ----
                         BtnCard(
                           image: 'assets/app_permission/keep.svg',
-                          text: 'Keep Apps',
+                          text: l10n.keepApp,
                           ontap: () => context.pushNamed(RouteName.keepApps),
                         ),
 
@@ -146,7 +149,7 @@ class AppPermissionScreen extends StatelessWidget {
                         ),
                         BtnCard(
                           image: 'assets/app_permission/trust.svg',
-                          text: 'Trust Apps',
+                          text: l10n.trustApp,
                           ontap: () => context.pushNamed(RouteName.trustedApps),
                         ),
 
@@ -155,7 +158,7 @@ class AppPermissionScreen extends StatelessWidget {
                         ),
                         BtnCard(
                           image: 'assets/app_permission/recent.svg',
-                          text: "Usage Time",
+                          text: l10n.recentApps,
                           ontap: () async {
                             final granted =
                             await UsageAccessService.isUsageAccessGranted();

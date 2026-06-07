@@ -3,6 +3,7 @@ import 'package:permissions_app/constant/app_color.dart';
 import 'package:permissions_app/constant/app_style.dart';
 import 'package:permissions_app/constant/risk_level.dart';
 import 'package:permissions_app/core/servises/app_special_permiision_service.dart';
+import 'package:permissions_app/generated/app_localizations.dart';
 import 'package:permissions_app/presentation/special_permissions/widget/helper_widgets.dart';
 import 'package:permissions_app/presentation/utils/app_size.dart';
 import 'package:permissions_app/presentation/utils/base_screen.dart';
@@ -16,17 +17,16 @@ class BatteryOptimizationDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BaseScreen(
       child: Padding(
         padding: EdgeInsets.all(AppSize.width * 0.04),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            sectionTitle('Battery Optimization'),
-            paragraph(
-              'Some apps can ignore battery optimizations and continue running '
-                  'in the background, which may increase battery usage.',
-            ),
+            sectionTitle(l10n.batteryOptimization,context),
+            paragraph(l10n.batteryOptimizationDesc,context),
 
             SizedBox(height: AppSize.height * 0.02),
 
@@ -34,7 +34,7 @@ class BatteryOptimizationDetail extends StatelessWidget {
               future: AppSpecialPermissionPlatform().isIgnoringBatteryOptimizations(),
               builder: (context, snapshot) {
                 final ignoring = snapshot.data ?? false;
-                return riskBadge(level: _levelFromIgnoring(ignoring));
+                return riskBadge(level: _levelFromIgnoring(ignoring),context);
               },
             ),
 
@@ -54,10 +54,10 @@ class BatteryOptimizationDetail extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    'Open Battery Optimization Settings',
+                    l10n.openBatteryOptimizationSettings,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyle.greenFont,
+                    style: AppTextStyle.greenFont(context),
                     textAlign: TextAlign.center,
                   ),
                 ),
