@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
 
 Widget description(String text) => Padding(
   padding: EdgeInsets.only(

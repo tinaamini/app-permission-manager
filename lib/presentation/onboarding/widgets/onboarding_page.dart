@@ -1,120 +1,102 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:permissions_app/constant/app_style.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
-import 'next_button.dart';
+import 'package:Privio/constant/app_style.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
 import 'onboarding_data.dart';
 
 class OnboardPage extends StatelessWidget {
   final OnboardingData data;
   final int currentPage;
   final int totalPages;
-  final VoidCallback onNext;
 
   const OnboardPage({
     super.key,
     required this.data,
     required this.currentPage,
     required this.totalPages,
-    required this.onNext,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isLast = currentPage == totalPages - 1;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    final l10n = AppLocalizations.of(context)!;
+    final size = MediaQuery.of(context).size;
 
-    return  ColoredBox(
-      color: Colors.black,
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05  ),
-          child: Column(
-            children: [
-              SizedBox(height: screenHeight * 0.03),
-
-              // ===== Top visual area =====
-              Expanded(
-                flex: 45,
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // ===== TOP VISUAL =====
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding:  EdgeInsets.only(top: AppSize.width * 0.1),
                 child: Center(
                   child: Stack(
                     alignment: Alignment.center,
-                    clipBehavior: Clip.none,
                     children: [
                       // Glow
                       Container(
-                        width: screenWidth * 0.5,
-                        height:screenHeight * 0.5,
+                        width: size.width * 0.75,
+                        height: size.width * 0.75,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: data.color.withValues(alpha: 0.40),
-                              blurRadius: 88,
-                              spreadRadius: 10,
+                              color: data.color.withValues(alpha: 0.25),
+                              blurRadius: 90,
                             ),
                           ],
                         ),
                       ),
 
-                      // Illustration
-                      SizedBox(
-                        width: currentPage == 0 ? screenWidth * 0.45 :screenWidth * 0.75 ,
-                        height: currentPage == 0 ? screenHeight * 0.45  :screenHeight * 0.75 ,
+                      // SVG
+                      FractionallySizedBox(
+                        widthFactor: currentPage == 1 ? 0.45 : 0.85,
                         child: SvgPicture.asset(
                           data.svg,
-                          fit: BoxFit.contain,
-
+                          fit: currentPage == 2 ?BoxFit.none:BoxFit.fitWidth,
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
+            ),
 
-              // ===== Text area =====
-              Expanded(
-                flex: 65,
+            // ===== TEXT =====
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       data.title,
                       textAlign: TextAlign.center,
                       maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                       style: AppTextStyle.onboardingTitle(context),
                     ),
 
-                    SizedBox(height: screenHeight * 0.01),
+                    const SizedBox(height: 12),
 
                     Text(
                       data.description,
                       textAlign: TextAlign.center,
                       maxLines: 4,
-                      overflow: TextOverflow.ellipsis,
                       style: AppTextStyle.onboardingDescription(context)
                           .copyWith(color: data.color),
                     ),
                   ],
                 ),
               ),
+            ),
+            currentPage==0 ?SizedBox.shrink(): Spacer(flex: 1),
+            // ===== BOTTOM WIDGET =====
+         Expanded(   flex: 2,
+             child: data.bottomWidget ?? const SizedBox.shrink()),
 
-              // ===== Button area =====
-              Padding(
-                padding: EdgeInsets.only(bottom: screenHeight * 0.03),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: NextButton(
-                    onTap: onNext,
-
-                    text: isLast ? l10n.getStarted : l10n.next,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          ],
         ),
       ),
     );

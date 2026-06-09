@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:permissions_app/constant/permission_group_type.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
-import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
-import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
-import 'package:permissions_app/presentation/group_permission/widget/btn_group_widget.dart';
-import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
-import 'package:permissions_app/presentation/utils/base_screen.dart';
-import 'package:permissions_app/routs/rout_name.dart';
+import 'package:Privio/constant/permission_group_type.dart';
+import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
+import 'package:Privio/logic/app_permission/app_permission_state.dart';
+import 'package:Privio/presentation/group_permission/widget/btn_group_widget.dart';
+import 'package:Privio/presentation/utils/app_bar.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:Privio/presentation/utils/base_screen.dart';
+import 'package:Privio/routs/rout_name.dart';
 
 
 

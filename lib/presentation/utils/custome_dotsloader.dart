@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
 
 
 class CustomDotsLoader extends StatefulWidget {

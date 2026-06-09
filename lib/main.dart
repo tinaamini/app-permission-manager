@@ -6,17 +6,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:permissions_app/routs/rout.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:Privio/routs/rout.dart';
+import 'package:Privio/generated/app_localizations.dart';
 import 'core/servises/app_special_permiision_service.dart';
 import 'core/utils/onboarding_storage.dart';
 import 'logic/app_permission/app_permission_cubit.dart';
 import 'logic/locale/locale_cubit.dart';
+import 'logic/onboarding/onboarding_cubit.dart';
 import 'logic/onboarding/show_onboarding/show_onboarding_cubit.dart';
 import 'logic/special_permission/special_permission_cubit.dart';
 
 Future<void> main() async {
   await _precacheSvgs();
+
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -55,7 +58,9 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: onboardingShowCubit),
-
+        BlocProvider<BtnLanguageCubit>(
+          create: (_) => BtnLanguageCubit(),
+        ),
         BlocProvider<AppPermissionCubit>(
           create: (_) => AppPermissionCubit(),
         ),
@@ -75,15 +80,29 @@ Future<void> _precacheSvgs() async {
     'assets/utils/eye.svg',
     'assets/utils/shield-search.svg',
     'assets/utils/lock.svg',
+    'assets/utils/emoji-sad.svg',
+    'assets/utils/global.svg',
     'assets/utils/Property 1=1 (1).svg',
     'assets/utils/Property 1=2 (1).svg',
     'assets/utils/Property 1=3 (1).svg',
     'assets/utils/Property 1=4 (1).svg',
+    'assets/special_permission/Battery.svg',
+    'assets/special_permission/display.svg',
+    'assets/special_permission/Disturb.svg',
+    'assets/special_permission/notification.svg',
+    'assets/special_permission/usage.svg',
+    'assets/main/danger.svg',
+    'assets/main/danger_alert.svg',
+    'assets/main/low.svg',
+    'assets/main/safe_alert.svg',
     'assets/main/grid.svg',
+    'assets/main/warning_alert.svg',
     'assets/main/layer.svg',
     'assets/main/varning.svg',
     'assets/main/chart.svg',
     "assets/main/back_icon.svg",
+    "assets/dashboard/clock.svg",
+    "assets/dashboard/shield-tick.svg",
     'assets/app_permission/noRisk.svg',
     'assets/app_permission/lowRisk.svg',
     'assets/app_permission/mediumRisk.svg',
@@ -124,6 +143,8 @@ class _AppBootstrapState extends State<_AppBootstrap> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+     AppSize.init(context);
+
     if (_started) return;
     _started = true;
 

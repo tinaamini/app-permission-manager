@@ -43,12 +43,14 @@
   "runScan": "Run scan",
   "scanning": "Scanning...",
 
-  "onboardingTitle1": "Complete Transparency",
-  "onboardingDesc1": "We scan every app on your device to reveal exactly what data they're accessing.",
-  "onboardingTitle2": "Risk Intelligence",
-  "onboardingDesc2": "Our system categorizes apps into risk levels to keep you safe.",
-  "onboardingTitle3": "Take Control",
-  "onboardingDesc3": "Easily manage permissions and trust the apps you know.",
+  "onboardingTitle1": "Complete\n Transparency",
+  "onboardingDesc1": "We scan every app on your device to \n reveal exactly what data they're accessing \n behind the scenes.",
+  "onboardingTitle2": "Risk \n Intelligence",
+  "onboardingDesc2": "Our system\n  categorizes apps into\n risk levels to keep you safe.",
+  "onboardingTitle3": "Take \n Control",
+  "onboardingTitle4": "Choose Your\n Language",
+  "onboardingDesc3": "Easily manage permissions \n and trust the apps you know.",
+  "onboardingDesc4": "Select your preferred language to\n personalize your experience.",
 
   "skip": "Skip",
   "next": "Next",
@@ -204,8 +206,49 @@
   "minorRisksDetected": "Minor risks detected",
     "allGood": "All Good",
     "yourPrivacyLooksStrong": "Your Privacy Looks Strong",
-    "noAppsUseThisPermission": "No apps use this permission"
+    "noAppsUseThisPermission": "No apps use this permission",
+"lastUsed": "Last used at {date} · Used today {duration}",
+"@lastUsed": {
+  "placeholders": {
+    "date": {"type": "String"},
+    "duration": {"type": "String"}
+  }
 
+
+},
+"permLocation": "Location",
+"permBackgroundLocation": "Background location",
+"permCamera": "Camera",
+"permMicrophone": "Microphone",
+"permContacts": "Contacts",
+"permSms": "SMS",
+"permCallLogs": "Call logs",
+"permPhone": "Phone",
+"permStorage": "Storage",
+"permCalendar": "Calendar",
+"permBluetooth": "Bluetooth",
+"permNotifications": "Notifications",
+"permSensors": "Sensors",
+"permEnabled": "{label} enabled",
+"@permEnabled": {
+  "placeholders": {
+    "label": {"type": "String"}
+  }
+},
+"permDisabled": "{label} disabled",
+"@permDisabled": {
+  "placeholders": {
+    "label": {"type": "String"}
+  }
+},
+"recentApps": "Recent Apps",
+"usageTime": "Usage Time",
+"noAppsUsedToday": "No apps used today",
+"todaySummary": "Today Summary",
+"appsUsedToday": "Apps used today",
+"highRiskAppsUsed": "High risk apps used",
+"totalUsage": "Total usage",
+"somethingWentWrong": "Something went wrong"
 
 
 

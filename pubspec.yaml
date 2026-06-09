@@ -1,8 +1,8 @@
-name: permissions_app
+name: Privio
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.0.3+3
+version: 1.0.4+4
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -54,17 +54,55 @@ flutter:
           weight: 600
         - asset: assets/fonts/Inter-Bold.ttf
           weight: 700
-        - asset: assets/fonts/BYekan+.ttf
+#    - family: IRANSansX
+#      fonts:
+#        - asset: assets/fonts/IRANSansX-Regular.ttf
+#          weight: 400
+#        - asset: assets/fonts/IRANSansX-Medium.ttf
+#          weight: 500
+#        - asset: assets/fonts/IRANSansX-DemiBold.ttf
+#          weight: 600
+#        - asset: assets/fonts/IRANSansX-Bold.ttf
+#          weight: 700
+fonts:
+  - family: Shabnam
+    fonts:
+      - asset: assets/fonts/Shabnam-Light.ttf
+        weight: 300
 
+      - asset: assets/fonts/Shabnam.ttf
+        weight: 400
+
+      - asset: assets/fonts/Shabnam-Medium.ttf
+        weight: 500
+
+      - asset: assets/fonts/Shabnam-Bold.ttf
+        weight: 600
+
+      - asset: assets/fonts/Shabnam-Bold.ttf
+        weight: 700
 
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/logo/icon.png"
+
+  image_path: "assets/logo/Icon.png"
+
+  adaptive_icon_foreground: "assets/logo/icon.png"
+  adaptive_icon_background: "#0D0D0D"
+
   min_sdk_android: 21
 
+
 flutter_native_splash:
-  color: "#000000"
-  image: assets/logo/splash.png
+  color: "#0D0D0D"
+  color_dark: "#0D0D0D"
+  image: assets/logo/splash_old.png
   android: true
   ios: true
+  web: true
+
+  android_12:
+    color: "#0D0D0D"
+    color_dark: "#0D0D0D"
+    image: assets/logo/splash_android12.png

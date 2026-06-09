@@ -1,5 +1,5 @@
 
-import 'package:permissions_app/core/models/scan_model.dart';
+import 'package:Privio/core/models/scan_model.dart';
 
 ScanDiff diffSnapshots(ScanSnapshot prev, ScanSnapshot curr) {
   final prevPkgs = prev.appsByPackage.keys.toSet();

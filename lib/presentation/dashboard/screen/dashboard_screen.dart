@@ -2,22 +2,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:permissions_app/core/models/app_permission_item.dart';
-import 'package:permissions_app/core/models/scan_model.dart';
-import 'package:permissions_app/core/servises/dashboard.dart';
-import 'package:permissions_app/core/servises/dashboard_permission_service.dart';
-import 'package:permissions_app/core/servises/scan_service.dart';
-import 'package:permissions_app/core/servises/scan_storage_hive.dart';
-import 'package:permissions_app/core/utils/scan_diff.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
+import 'package:Privio/core/models/app_permission_item.dart';
+import 'package:Privio/core/models/scan_model.dart';
+import 'package:Privio/core/servises/dashboard.dart';
+import 'package:Privio/core/servises/dashboard_permission_service.dart';
+import 'package:Privio/core/servises/scan_service.dart';
+import 'package:Privio/core/servises/scan_storage_hive.dart';
+import 'package:Privio/core/utils/scan_diff.dart';
+import 'package:Privio/generated/app_localizations.dart';
 
-import 'package:permissions_app/presentation/dashboard/widget/alert_section_widget.dart';
-import 'package:permissions_app/presentation/dashboard/widget/since_last_scan_widget.dart';
-import 'package:permissions_app/presentation/dashboard/widget/system_privacy_dashboard_card.dart';
-import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
-import 'package:permissions_app/presentation/utils/base_screen.dart';
-import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
+import 'package:Privio/presentation/dashboard/widget/alert_section_widget.dart';
+import 'package:Privio/presentation/dashboard/widget/since_last_scan_widget.dart';
+import 'package:Privio/presentation/dashboard/widget/system_privacy_dashboard_card.dart';
+import 'package:Privio/presentation/utils/app_bar.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:Privio/presentation/utils/base_screen.dart';
+import 'package:Privio/presentation/utils/custome_dotsloader.dart';
 
 class DashboardPermissionScreen extends StatefulWidget {
   const DashboardPermissionScreen({super.key});
@@ -125,66 +125,50 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
             ontap: () => context.pop(),
           ),
 
-          SizedBox(height: AppSize.height * 0.025),
-
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppSize.width * 0.05,
-            ),
-          ),
+          SizedBox(height: AppSize.height * 0.02),
 
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSize.width * 0.05,
-              ),
-              child: Column(
-                children: [
-                  SystemPrivacyDashboardCard(),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSize.width * 0.05,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-                  SizedBox(height: AppSize.height * 0.02),
+                    SystemPrivacyDashboardCard(),
 
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _loadingAlerts
-                              ? const Center(
-                            child: CustomDotsLoader(
-                              svgPath1:
-                              'assets/utils/Property 1=1 (1).svg',
-                              svgPath2:
-                              'assets/utils/Property 1=2 (1).svg',
-                              svgPath3:
-                              'assets/utils/Property 1=3 (1).svg',
-                              svgPath4:
-                              'assets/utils/Property 1=4 (1).svg',
-                            ),
-                          )
-                              : SafeAlertSectionWidget(
-                            accessibilityOn: _accessibilityOn,
-                            apps: _appsForAlerts,
-                          ),
+                    SizedBox(height: 16),
 
-                          SizedBox(height: AppSize.height * 0.022),
-
-                          SinceLastScanWidget(
-                            diff: _scanDiff,
-                            lastScanTime: _lastScanTime,
-                            scanning: _scanning,
-                            onRunScan: _runScan,
-                            selectedTab: _scanTab,
-                            onTabChange: (t) =>
-                                setState(() => _scanTab = t),
-                          ),
-
-                          SizedBox(height: AppSize.height * 0.03),
-                        ],
+                    _loadingAlerts
+                        ? const Center(
+                      child: CustomDotsLoader(
+                        svgPath1: 'assets/utils/Property 1=1 (1).svg',
+                        svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                        svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                        svgPath4: 'assets/utils/Property 1=4 (1).svg',
                       ),
+                    )
+                        : SafeAlertSectionWidget(
+                      accessibilityOn: _accessibilityOn,
+                      apps: _appsForAlerts,
                     ),
-                  ),
-                ],
+
+                    SizedBox(height: 20),
+
+                    SinceLastScanWidget(
+                      diff: _scanDiff,
+                      lastScanTime: _lastScanTime,
+                      scanning: _scanning,
+                      onRunScan: _runScan,
+                      selectedTab: _scanTab,
+                      onTabChange: (t) => setState(() => _scanTab = t),
+                    ),
+
+                    SizedBox(height: 30),
+                  ],
+                ),
               ),
             ),
           ),

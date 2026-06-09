@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:permissions_app/constant/app_color.dart';
-import 'package:permissions_app/constant/permissionConst.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
+import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/constant/permissionConst.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
 
 List<String> getDangerousPermissions(List<String> permissions) {
   return permissions

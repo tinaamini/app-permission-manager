@@ -1,16 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:permissions_app/constant/risk_level.dart';
-import 'package:permissions_app/constant/specialPermissionType.dart';
-import 'package:permissions_app/core/servises/app_permission_service.dart';
-import 'package:permissions_app/core/servises/app_special_permiision_service.dart';
-import 'package:permissions_app/core/utils/special_permission_risk_resolver.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
-import 'package:permissions_app/presentation/special_permissions/widget/helper_widgets.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
-import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
-import 'package:permissions_app/presentation/utils/empty_page_widget.dart';
+import 'package:Privio/constant/risk_level.dart';
+import 'package:Privio/constant/specialPermissionType.dart';
+import 'package:Privio/core/servises/app_permission_service.dart';
+import 'package:Privio/core/servises/app_special_permiision_service.dart';
+import 'package:Privio/core/utils/special_permission_risk_resolver.dart';
+import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/presentation/special_permissions/widget/helper_widgets.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:Privio/presentation/utils/custome_dotsloader.dart';
+import 'package:Privio/presentation/utils/empty_page_widget.dart';
 
 class NotificationAccessDetail extends StatelessWidget {
   const NotificationAccessDetail({super.key});

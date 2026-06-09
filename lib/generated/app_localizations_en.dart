@@ -30,7 +30,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashboard => 'Dashboard';
 
   @override
-  String get recentApps => 'Usage Time';
+  String get recentApps => 'Recent Apps';
 
   @override
   String get noRiskApps => 'No Risk Apps';
@@ -116,25 +116,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scanning => 'Scanning';
 
   @override
-  String get onboardingTitle1 => 'Complete Transparency';
+  String get onboardingTitle1 => 'Complete\n Transparency';
 
   @override
   String get onboardingDesc1 =>
-      'We scan every app on your device to reveal exactly what data they\'re accessing.';
+      'We scan every app on your device to \n reveal exactly what data they\'re accessing \n behind the scenes.';
 
   @override
-  String get onboardingTitle2 => 'Risk Intelligence';
+  String get onboardingTitle2 => 'Risk \n Intelligence';
 
   @override
   String get onboardingDesc2 =>
-      'Our system categorizes apps into risk levels to keep you safe.';
+      'Our system\n  categorizes apps into\n risk levels to keep you safe.';
 
   @override
-  String get onboardingTitle3 => 'Take Control';
+  String get onboardingTitle3 => 'Take \n Control';
+
+  @override
+  String get onboardingTitle4 => 'Choose Your\n Language';
 
   @override
   String get onboardingDesc3 =>
-      'Easily manage permissions and trust the apps you know.';
+      'Easily manage permissions \n and trust the apps you know.';
+
+  @override
+  String get onboardingDesc4 =>
+      'Select your preferred language to\n personalize your experience.';
 
   @override
   String get skip => 'Skip';
@@ -536,4 +543,76 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noAppsUseThisPermission => 'No apps use this permission';
+
+  @override
+  String lastUsed(String date, String duration) {
+    return 'Last used at $date · Used today $duration';
+  }
+
+  @override
+  String get permLocation => 'Location';
+
+  @override
+  String get permBackgroundLocation => 'Background location';
+
+  @override
+  String get permCamera => 'Camera';
+
+  @override
+  String get permMicrophone => 'Microphone';
+
+  @override
+  String get permContacts => 'Contacts';
+
+  @override
+  String get permSms => 'SMS';
+
+  @override
+  String get permCallLogs => 'Call logs';
+
+  @override
+  String get permPhone => 'Phone';
+
+  @override
+  String get permStorage => 'Storage';
+
+  @override
+  String get permCalendar => 'Calendar';
+
+  @override
+  String get permBluetooth => 'Bluetooth';
+
+  @override
+  String get permNotifications => 'Notifications';
+
+  @override
+  String get permSensors => 'Sensors';
+
+  @override
+  String permEnabled(String label) {
+    return '$label enabled';
+  }
+
+  @override
+  String permDisabled(String label) {
+    return '$label disabled';
+  }
+
+  @override
+  String get usageTime => 'Usage Time';
+
+  @override
+  String get noAppsUsedToday => 'No apps used today';
+
+  @override
+  String get todaySummary => 'Today Summary';
+
+  @override
+  String get appsUsedToday => 'Apps used today';
+
+  @override
+  String get highRiskAppsUsed => 'High risk apps used';
+
+  @override
+  String get totalUsage => 'Total usage';
 }

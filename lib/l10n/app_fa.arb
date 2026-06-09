@@ -206,7 +206,35 @@
               "minorRisksDetected": "چند ریسک جزئی شناسایی شد",
                 "allGood": "همه‌چیز خوب است",
                 "yourPrivacyLooksStrong": "حریم خصوصی شما در وضعیت مطلوبی قرار دارد",
-                "noAppsUseThisPermission": "هیچ برنامه‌ای از این مجوز استفاده نمی‌کند"
+                "noAppsUseThisPermission": "هیچ برنامه‌ای از این مجوز استفاده نمی‌کند",
+
+"onboardingTitle4": "زبان خود \nرا انتخاب کنید",
+"onboardingDesc4": "برای شخصی‌سازی تجربه کاربری خود،\n زبان مورد نظرتان را انتخاب کنید.",
+"lastUsed": "آخرین استفاده: {date} · مدت استفاده امروز: {duration}",
+
+"permLocation": "موقعیت مکانی",
+"permBackgroundLocation": "موقعیت در پس‌زمینه",
+"permCamera": "دوربین",
+"permMicrophone": "میکروفون",
+"permContacts": "مخاطبین",
+"permSms": "پیامک",
+"permCallLogs": "گزارش تماس",
+"permPhone": "تلفن",
+"permStorage": "حافظه",
+"permCalendar": "تقویم",
+"permBluetooth": "بلوتوث",
+"permNotifications": "اعلان‌ها",
+"permSensors": "حسگرها",
+"permEnabled": "{label} فعال",
+"permDisabled": "{label} غیرفعال",
+"recentApps": "برنامه‌های اخیر",
+"usageTime": "زمان استفاده",
+"noAppsUsedToday": "امروز هیچ برنامه‌ای استفاده نشده",
+"todaySummary": "خلاصه امروز",
+"appsUsedToday": "برنامه‌های استفاده شده امروز",
+"highRiskAppsUsed": "برنامه‌های پرخطر استفاده شده",
+"totalUsage": "کل زمان استفاده",
+"somethingWentWrong": "مشکلی پیش آمد"
 
 
 

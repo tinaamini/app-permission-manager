@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:permissions_app/core/models/scan_model.dart';
+import 'package:Privio/core/models/scan_model.dart';
 
 class SafeDashboardPlatform {
   static const MethodChannel _channel =

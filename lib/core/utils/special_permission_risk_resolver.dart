@@ -1,5 +1,5 @@
-import 'package:permissions_app/constant/risk_level.dart';
-import 'package:permissions_app/constant/specialPermissionType.dart';
+import 'package:Privio/constant/risk_level.dart';
+import 'package:Privio/constant/specialPermissionType.dart';
 
 class SpecialPermissionRiskResolver {
   const SpecialPermissionRiskResolver();

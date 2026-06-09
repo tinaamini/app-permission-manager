@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:hive/hive.dart';
-import 'package:permissions_app/core/models/scan_model.dart';
+import 'package:Privio/core/models/scan_model.dart';
 
 class ScanStorageHive {
   static const String _boxName = 'scan_box_v1';

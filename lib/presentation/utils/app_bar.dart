@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:permissions_app/constant/app_color.dart';
-import 'package:permissions_app/constant/app_style.dart';
-import 'package:permissions_app/generated/app_localizations.dart';  // ← اضافه کن
+import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/constant/app_style.dart';
+import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
+
+import 'btn_language_util.dart';
 
 class AppBarWidget extends StatelessWidget {
   final String text;
@@ -21,21 +24,22 @@ class AppBarWidget extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     bool _fa(BuildContext context) =>
-    Localizations.localeOf(context).languageCode == 'fa';
+        Localizations.localeOf(context).languageCode == 'fa';
 
     return Container(
       height: screenHeight * 0.08,
       color: AppColor.CartDark,
       padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           GestureDetector(
             onTap: ontap,
             child: Padding(
               padding: EdgeInsets.only(left: screenWidth * 0.02),
               child: AnimatedRotation(
-                turns: _fa(context) ? 0.5 : 0.0, // فارسی: 180 درجه، انگلیسی: 0
-                duration: const Duration(milliseconds: 300),
+                turns: _fa(context) ? 0.5 : 0.0,
+                duration: const Duration(milliseconds: 700),
                 child: SvgPicture.asset(
                   "assets/main/back_icon.svg",
                   width: screenWidth * 0.035,
@@ -44,7 +48,9 @@ class AppBarWidget extends StatelessWidget {
               ),
             ),
           ),
-
+          SizedBox(
+            width: AppSize.width * 0.12,
+          ),
           Expanded(
             child: Center(
               child: Text(
@@ -55,8 +61,7 @@ class AppBarWidget extends StatelessWidget {
               ),
             ),
           ),
-
-          const SizedBox(width: 38),
+          BtnLanguageUtil(),
         ],
       ),
     );

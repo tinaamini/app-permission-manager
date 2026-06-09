@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:permissions_app/constant/app_color.dart';
-import 'package:permissions_app/constant/app_style.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
+import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/constant/app_style.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
 import 'package:intl/intl.dart';
 class BtnGroupWidget extends StatelessWidget {
   final String image;

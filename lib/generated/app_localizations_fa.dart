@@ -30,7 +30,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get dashboard => 'داشبورد';
 
   @override
-  String get recentApps => 'زمان استفاده';
+  String get recentApps => 'برنامه‌های اخیر';
 
   @override
   String get noRiskApps => 'اپ‌های بدون ریسک';
@@ -135,8 +135,15 @@ class AppLocalizationsFa extends AppLocalizations {
   String get onboardingTitle3 => 'کنترل کامل';
 
   @override
+  String get onboardingTitle4 => 'زبان خود \nرا انتخاب کنید';
+
+  @override
   String get onboardingDesc3 =>
       'خودتان انتخاب کنید \nکدام اپ‌ها مورد اعتمادتان هستند.';
+
+  @override
+  String get onboardingDesc4 =>
+      'برای شخصی‌سازی تجربه کاربری خود،\n زبان مورد نظرتان را انتخاب کنید.';
 
   @override
   String get skip => 'رد کردن';
@@ -541,4 +548,76 @@ class AppLocalizationsFa extends AppLocalizations {
   @override
   String get noAppsUseThisPermission =>
       'هیچ برنامه‌ای از این مجوز استفاده نمی‌کند';
+
+  @override
+  String lastUsed(String date, String duration) {
+    return 'آخرین استفاده: $date · مدت استفاده امروز: $duration';
+  }
+
+  @override
+  String get permLocation => 'موقعیت مکانی';
+
+  @override
+  String get permBackgroundLocation => 'موقعیت در پس‌زمینه';
+
+  @override
+  String get permCamera => 'دوربین';
+
+  @override
+  String get permMicrophone => 'میکروفون';
+
+  @override
+  String get permContacts => 'مخاطبین';
+
+  @override
+  String get permSms => 'پیامک';
+
+  @override
+  String get permCallLogs => 'گزارش تماس';
+
+  @override
+  String get permPhone => 'تلفن';
+
+  @override
+  String get permStorage => 'حافظه';
+
+  @override
+  String get permCalendar => 'تقویم';
+
+  @override
+  String get permBluetooth => 'بلوتوث';
+
+  @override
+  String get permNotifications => 'اعلان‌ها';
+
+  @override
+  String get permSensors => 'حسگرها';
+
+  @override
+  String permEnabled(String label) {
+    return '$label فعال';
+  }
+
+  @override
+  String permDisabled(String label) {
+    return '$label غیرفعال';
+  }
+
+  @override
+  String get usageTime => 'زمان استفاده';
+
+  @override
+  String get noAppsUsedToday => 'امروز هیچ برنامه‌ای استفاده نشده';
+
+  @override
+  String get todaySummary => 'خلاصه امروز';
+
+  @override
+  String get appsUsedToday => 'برنامه‌های استفاده شده امروز';
+
+  @override
+  String get highRiskAppsUsed => 'برنامه‌های پرخطر استفاده شده';
+
+  @override
+  String get totalUsage => 'کل زمان استفاده';
 }

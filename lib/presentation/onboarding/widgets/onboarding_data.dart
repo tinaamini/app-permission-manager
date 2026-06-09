@@ -1,26 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:permissions_app/constant/app_color.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
+import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/generated/app_localizations.dart';
+
+import 'language_btn_onboarding.dart';
 
 class OnboardingData {
   final String title;
   final String description;
   final String svg;
   final Color color;
+  final Widget? bottomWidget;
 
   OnboardingData({
     required this.title,
     required this.description,
     required this.svg,
     required this.color,
+    this.bottomWidget,
   });
 }
 
-// لیست صفحات Onboarding با Localization
 List<OnboardingData> getOnboardingPages(BuildContext context) {
   final l10n = AppLocalizations.of(context)!;
 
   return [
+    OnboardingData(
+      title: l10n.onboardingTitle4,
+      description: l10n.onboardingDesc4,
+      svg: 'assets/utils/global.svg',
+      color: AppColor.yellow,
+      bottomWidget: LanguageBtnOnboarding(),
+    ),
+
     OnboardingData(
       title: l10n.onboardingTitle1,
       description: l10n.onboardingDesc1,

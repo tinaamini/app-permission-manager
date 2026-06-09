@@ -1,23 +1,23 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:permissions_app/constant/app_color.dart';
-import 'package:permissions_app/constant/app_style.dart';
-import 'package:permissions_app/constant/risk_level.dart';
-import 'package:permissions_app/core/servises/recent_apps_service.dart';
-import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
-import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
-import 'package:permissions_app/presentation/apps_permission/recently_apps/widgets/recent_item.dart';
-import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
-import 'package:permissions_app/presentation/utils/base_screen.dart';
-import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
-import 'package:permissions_app/presentation/utils/empty_page_widget.dart';
+import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/constant/app_style.dart';
+import 'package:Privio/constant/risk_level.dart';
+import 'package:Privio/core/servises/recent_apps_service.dart';
+import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
+import 'package:Privio/logic/app_permission/app_permission_state.dart';
+import 'package:Privio/presentation/apps_permission/recently_apps/widgets/recent_item.dart';
+import 'package:Privio/presentation/utils/app_bar.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:Privio/presentation/utils/base_screen.dart';
+import 'package:Privio/presentation/utils/custome_dotsloader.dart';
+import 'package:Privio/presentation/utils/empty_page_widget.dart';
 
 class RecentAppsScreen extends StatefulWidget {
   const RecentAppsScreen({super.key});
@@ -31,154 +31,147 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  BaseScreen(
+    final l10n = AppLocalizations.of(context)!;
+
+    return BaseScreen(
       child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
-            builder: (context, state) {
-              if (state is! AppPermissionLoaded) {
-                return  const  Center(
-                    child: CustomDotsLoader(
-                        svgPath1:
-                        'assets/utils/Property 1=1 (1).svg',
-                        svgPath2: 'assets/utils/Property 1=2 (1).svg',
-                        svgPath3: 'assets/utils/Property 1=3 (1).svg',
-                        svgPath4:
-                        'assets/utils/Property 1=4 (1).svg'));
+        builder: (context, state) {
+          if (state is! AppPermissionLoaded) {
+            return const Center(
+              child: CustomDotsLoader(
+                svgPath1: 'assets/utils/Property 1=1 (1).svg',
+                svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                svgPath4: 'assets/utils/Property 1=4 (1).svg',
+              ),
+            );
+          }
+
+          return FutureBuilder<List<dynamic>>(
+            future: _future,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CustomDotsLoader(
+                    svgPath1: 'assets/utils/Property 1=1 (1).svg',
+                    svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                    svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                    svgPath4: 'assets/utils/Property 1=4 (1).svg',
+                  ),
+                );
               }
 
-              return FutureBuilder<List<dynamic>>(
-                future: _future,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return  const  Center(
-                        child: CustomDotsLoader(
-                            svgPath1:
-                            'assets/utils/Property 1=1 (1).svg',
-                            svgPath2: 'assets/utils/Property 1=2 (1).svg',
-                            svgPath3: 'assets/utils/Property 1=3 (1).svg',
-                            svgPath4:
-                            'assets/utils/Property 1=4 (1).svg'));
-                  }
+              if (snapshot.hasError) {
+                return _errorState(snapshot.error, l10n);
+              }
 
-                  if (snapshot.hasError) {
-                    return _errorState(snapshot.error);
-                  }
+              final recentRaw = snapshot.data ?? [];
 
-                  final recentRaw = snapshot.data ?? [];
+              final items = recentRaw.map((recent) {
+                final pkg = recent['package'] as String?;
+                if (pkg == null) return null;
 
-                  final items = recentRaw
-                      .map((recent) {
-                    final pkg = recent['package'] as String?;
-                    if (pkg == null) return null;
+                final app = state.allApps.firstWhereOrNull(
+                      (a) => a.packageName == pkg,
+                );
+                if (app == null) return null;
 
-                    final app = state.allApps.firstWhereOrNull(
-                          (a) => a.packageName == pkg,
-                    );
-                    if (app == null) return null;
+                return _RecentItem(
+                  app: app,
+                  lastUsed: recent['lastTimeUsed'] ?? 0,
+                  foregroundTime: recent['foregroundTime'] ?? 0,
+                );
+              }).whereType<_RecentItem>().toList();
 
-                    return _RecentItem(
-                      app: app,
-                      lastUsed: recent['lastTimeUsed'] ?? 0,
-                      foregroundTime: recent['foregroundTime'] ?? 0,
-                    );
-                  })
-                      .whereType<_RecentItem>()
-                      .toList();
+              if (items.isEmpty) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppBarWidget(
+                      text: l10n.recentApps,
+                      ontap: () => context.pop(),
+                    ),
+                    Flexible(
+                      child: EmptyPageWidget(text: l10n.noAppsUsedToday),
+                    ),
+                  ],
+                );
+              }
 
-                  if (items.isEmpty) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppBarWidget(text: "RECENT APPS", ontap:(){
-                          context.pop();
-                        }, ),
-                        Flexible(child: EmptyPageWidget(text: 'No apps used today', )),
-                      ],
-                    );
-                  }
+              items.sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
 
-                  items.sort(
-                        (a, b) => b.lastUsed.compareTo(a.lastUsed),
-                  );
-
-                  return
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppBarWidget(text: "USAGE TIME ", ontap:(){
-                          context.pop();
-                        }, ),
-                        SizedBox(height: AppSize.height * 0.015),
-                        Padding(  padding: EdgeInsets.symmetric(horizontal:  AppSize.width * 0.04),
-                            child: _summaryCard(items)),
-
-                  SizedBox(height: AppSize.height * 0.03),                        Padding(
-                          padding:  EdgeInsets.only(   left: AppSize.width * 0.04,),
-                          child: Text("Recent apps",style: AppTextStyle.summary(context),),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppBarWidget(
+                    text: l10n.usageTime,
+                    ontap: () => context.pop(),
+                  ),
+                  SizedBox(height: AppSize.height * 0.015),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: AppSize.width * 0.04),
+                    child: _summaryCard(items, l10n),
+                  ),
+                  SizedBox(height: AppSize.height * 0.03),
+                  Padding(
+                    padding: EdgeInsets.only(left: AppSize.width * 0.04),
+                    child: Text(
+                      l10n.recentApps,
+                      style: AppTextStyle.summary(context),
+                    ),
+                  ),
+                  SizedBox(height: AppSize.height * 0.03),
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: items.length,
+                      separatorBuilder: (_, __) => Padding(
+                        padding: EdgeInsets.symmetric(horizontal: AppSize.width * 0.04),
+                        child: Divider(
+                          color: Colors.orange,
+                          height: AppSize.height * 0.04,
                         ),
-                        SizedBox(height: AppSize.height * 0.03),
-                        Expanded(
-                          child: ListView.separated(
-                            itemCount: items.length,
-                            separatorBuilder: (_, __) =>
-                                Padding(
-                                  padding:  EdgeInsets.symmetric(horizontal:AppSize.width * 0.04,),
-                                  child: Divider(color: Colors.orange, height:AppSize.height * 0.04,),
-                                ),
-                            itemBuilder: (context, index) {
-                              final item = items[index];
-                              return _recentItem(item);
-                            },
-                          ),
-                        ),
-                      ],
-
-                  );
-                },
+                      ),
+                      itemBuilder: (context, index) {
+                        return _recentItem(items[index]);
+                      },
+                    ),
+                  ),
+                ],
               );
             },
-
+          );
+        },
       ),
     );
   }
 
-  // ================= UI PARTS =================
-  Widget _summaryCard(List<_RecentItem> items) {
+  Widget _summaryCard(List<_RecentItem> items, AppLocalizations l10n) {
     final totalApps = items.length;
     final highRiskCount = items
         .where((e) => e.app.riskLevel == RiskLevel.highRisk)
         .length;
-
-    final totalTime = items.fold<int>(
-      0,
-          (sum, e) => sum + e.foregroundTime,
-    );
+    final totalTime = items.fold<int>(0, (sum, e) => sum + e.foregroundTime);
 
     return Container(
       padding: EdgeInsets.all(AppSize.width * 0.04),
       decoration: BoxDecoration(
         color: AppColor.CartDark,
-        borderRadius: BorderRadius.circular(
-          AppSize.width * 0.035,
-        ),
+        borderRadius: BorderRadius.circular(AppSize.width * 0.035),
         border: Border.all(color: Colors.white12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Today Summary',
-            style: AppTextStyle.summary(context),
-          ),
-
+          Text(l10n.todaySummary, style: AppTextStyle.summary(context)),
           SizedBox(height: AppSize.height * 0.01),
-
-          _summaryRow('Apps used today', '$totalApps'),
-          _summaryRow('High risk apps used', '$highRiskCount'),
-          _summaryRow('Total usage', formatDuration(totalTime)),
+          _summaryRow(l10n.appsUsedToday, '$totalApps'),
+          _summaryRow(l10n.highRiskAppsUsed, '$highRiskCount'),
+          _summaryRow(l10n.totalUsage, formatDuration(totalTime)),
         ],
       ),
     );
   }
+
   Widget _summaryRow(String label, String value) {
     return Padding(
       padding: EdgeInsets.only(top: AppSize.height * 0.008),
@@ -196,20 +189,15 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
               ),
             ),
           ),
-
-          Text(
-            value,
-            style: AppTextStyle.summaryValue(context),
-          ),
+          Text(value, style: AppTextStyle.summaryValue(context)),
         ],
       ),
     );
   }
+
   Widget _recentItem(_RecentItem item) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSize.width * 0.04,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: AppSize.width * 0.04),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -226,24 +214,22 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
             formData: formatTime(item.lastUsed),
             formatDuration: formatDuration(item.foregroundTime),
           ),
-
           SizedBox(height: AppSize.height * 0.008),
         ],
       ),
     );
   }
-  Widget _errorState(Object? error) {
+
+  Widget _errorState(Object? error, AppLocalizations l10n) {
     return Center(
       child: Text(
-        'Something went wrong\n$error',
+        l10n.somethingWentWrong,
         textAlign: TextAlign.center,
         style: const TextStyle(color: Colors.white54),
       ),
     );
   }
 }
-
-// ================= HELPERS =================
 
 class _RecentItem {
   final dynamic app;

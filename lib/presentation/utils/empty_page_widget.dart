@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:permissions_app/constant/app_style.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
+import 'package:Privio/constant/app_style.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
 
 class EmptyPageWidget extends StatelessWidget {
   final String text;

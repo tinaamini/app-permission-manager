@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
+import 'package:Privio/generated/app_localizations.dart';
 
 import 'device_risk_status.dart';
 

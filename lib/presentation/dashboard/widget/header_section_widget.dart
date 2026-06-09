@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
+import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
 
 class HeaderSection extends StatelessWidget {
   const HeaderSection({super.key});

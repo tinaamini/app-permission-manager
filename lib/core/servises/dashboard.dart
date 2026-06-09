@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
-import 'package:permissions_app/core/models/app_permission_item.dart';
+import 'package:Privio/core/models/app_permission_item.dart';
 
 import 'dashboard_permission_service.dart';
 

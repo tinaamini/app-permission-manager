@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:permissions_app/core/models/app_permission_item.dart';
-import 'package:permissions_app/core/servises/dashboard_permission_service.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
+import 'package:Privio/core/models/app_permission_item.dart';
+import 'package:Privio/core/servises/dashboard_permission_service.dart';
+import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
 
 enum AlertSeverity { info, warning, critical }
 

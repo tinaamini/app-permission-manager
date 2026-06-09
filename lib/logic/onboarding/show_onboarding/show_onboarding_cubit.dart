@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:permissions_app/core/utils/onboarding_storage.dart';
+import 'package:Privio/core/utils/onboarding_storage.dart';
 
 enum OnboardingStatus { unknown, show, done }
 

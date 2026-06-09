@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:permissions_app/constant/risk_level.dart';
-import 'package:permissions_app/core/servises/usage_access_service.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
-import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
-import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
-import 'package:permissions_app/presentation/apps_permission/recently_apps/widgets/usage_access_screen.dart';
-import 'package:permissions_app/presentation/apps_permission/widgets/btn_card.dart';
-import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
-import 'package:permissions_app/presentation/utils/base_screen.dart';
-import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
-import 'package:permissions_app/routs/rout_name.dart';
+import 'package:Privio/constant/risk_level.dart';
+import 'package:Privio/core/servises/usage_access_service.dart';
+import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
+import 'package:Privio/logic/app_permission/app_permission_state.dart';
+import 'package:Privio/presentation/apps_permission/recently_apps/widgets/usage_access_screen.dart';
+import 'package:Privio/presentation/apps_permission/widgets/btn_card.dart';
+import 'package:Privio/presentation/utils/app_bar.dart';
+import 'package:Privio/presentation/utils/base_screen.dart';
+import 'package:Privio/presentation/utils/custome_dotsloader.dart';
+import 'package:Privio/routs/rout_name.dart';
 import '../widgets/btn_permission_widget.dart';
 
 class AppPermissionScreen extends StatelessWidget {

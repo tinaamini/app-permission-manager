@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:permissions_app/constant/app_color.dart';
-import 'package:permissions_app/constant/app_style.dart';
-import 'package:permissions_app/core/models/scan_model.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
+import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/constant/app_style.dart';
+import 'package:Privio/core/models/scan_model.dart';
+import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
 
 enum ScanTab { newApps, changedPerms }
 

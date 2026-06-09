@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:permissions_app/constant/permission_group_type.dart';
-import 'package:permissions_app/core/servises/app_permission_service.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
-import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
-import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
-import 'package:permissions_app/presentation/apps_permission/widgets/question_dialog.dart';
-import 'package:permissions_app/presentation/group_permission/widget/permission_item.dart';
-import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
-import 'package:permissions_app/presentation/utils/base_screen.dart';
-import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
-import 'package:permissions_app/presentation/utils/empty_page_widget.dart';
+import 'package:Privio/constant/permission_group_type.dart';
+import 'package:Privio/core/servises/app_permission_service.dart';
+import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
+import 'package:Privio/logic/app_permission/app_permission_state.dart';
+import 'package:Privio/presentation/apps_permission/widgets/question_dialog.dart';
+import 'package:Privio/presentation/group_permission/widget/permission_item.dart';
+import 'package:Privio/presentation/utils/app_bar.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:Privio/presentation/utils/base_screen.dart';
+import 'package:Privio/presentation/utils/custome_dotsloader.dart';
+import 'package:Privio/presentation/utils/empty_page_widget.dart';
 
 class PermissionDetailScreen extends StatefulWidget {
   final PermissionGroupType groupType;

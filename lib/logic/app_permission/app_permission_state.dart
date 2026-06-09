@@ -1,4 +1,4 @@
-import 'package:permissions_app/core/models/app_permission_ui.dart';
+import 'package:Privio/core/models/app_permission_ui.dart';
 
 abstract class AppPermissionState {}
 

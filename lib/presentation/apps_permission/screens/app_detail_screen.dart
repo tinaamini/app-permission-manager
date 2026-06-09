@@ -2,26 +2,26 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
+import 'package:Privio/generated/app_localizations.dart';
 
-import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
-import 'package:permissions_app/logic/app_permission/app_permission_state.dart';
-import 'package:permissions_app/presentation/apps_permission/widgets/keep_btn.dart';
-import 'package:permissions_app/presentation/apps_permission/widgets/permission_tile.dart';
-import 'package:permissions_app/presentation/apps_permission/widgets/trust_btn.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
-import 'package:permissions_app/presentation/utils/base_screen.dart';
-import 'package:permissions_app/constant/app_color.dart';
-import 'package:permissions_app/constant/permissionConst.dart';
-import 'package:permissions_app/constant/risk_level.dart';
-import 'package:permissions_app/core/models/app_permission_ui.dart';
-import 'package:permissions_app/core/servises/app_permission_service.dart';
-import 'package:permissions_app/presentation/apps_permission/widgets/info_widget.dart';
-import 'package:permissions_app/presentation/apps_permission/widgets/question_dialog.dart';
-import 'package:permissions_app/presentation/apps_permission/widgets/risk_badge.dart';
-import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
-import 'package:permissions_app/presentation/utils/custome_dotsloader.dart';
-import 'package:permissions_app/presentation/utils/permission_ui_helper.dart';
+import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
+import 'package:Privio/logic/app_permission/app_permission_state.dart';
+import 'package:Privio/presentation/apps_permission/widgets/keep_btn.dart';
+import 'package:Privio/presentation/apps_permission/widgets/permission_tile.dart';
+import 'package:Privio/presentation/apps_permission/widgets/trust_btn.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:Privio/presentation/utils/base_screen.dart';
+import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/constant/permissionConst.dart';
+import 'package:Privio/constant/risk_level.dart';
+import 'package:Privio/core/models/app_permission_ui.dart';
+import 'package:Privio/core/servises/app_permission_service.dart';
+import 'package:Privio/presentation/apps_permission/widgets/info_widget.dart';
+import 'package:Privio/presentation/apps_permission/widgets/question_dialog.dart';
+import 'package:Privio/presentation/apps_permission/widgets/risk_badge.dart';
+import 'package:Privio/presentation/utils/app_bar.dart';
+import 'package:Privio/presentation/utils/custome_dotsloader.dart';
+import 'package:Privio/presentation/utils/permission_ui_helper.dart';
 
 class AppDetailScreen extends StatefulWidget {
   final AppPermissionUi app;
@@ -323,7 +323,11 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                   children:
                   PermissionConst.displayPermissions.entries.map((entry) {
                     final permissionKey = entry.key;
-                    final permissionName = entry.value;
+                    final lang = Localizations.localeOf(context).languageCode;
+                    final permissionName =
+                        PermissionConst.displayPermissions[permissionKey]?[lang] ??
+                            PermissionConst.displayPermissions[permissionKey]?['en'] ??
+                            permissionKey;;
 
                     final enabled = app.permissions.contains(permissionKey);
                     final isDangerous = PermissionConst.dangerousPermissions

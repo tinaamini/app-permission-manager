@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permissions_app/constant/specialPermissionType.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
-import 'package:permissions_app/presentation/home/widgets/app_bar.dart';
-import 'package:permissions_app/presentation/special_permissions/screen/usage_access_detail.dart';
-import 'package:permissions_app/presentation/utils/base_screen.dart';
+import 'package:Privio/constant/specialPermissionType.dart';
+import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/presentation/utils/app_bar.dart';
+import 'package:Privio/presentation/special_permissions/screen/usage_access_detail.dart';
+import 'package:Privio/presentation/utils/base_screen.dart';
 
 import 'buttry_optimization_detail.dart';
 import 'display_over_apps_detail.dart';

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:permissions_app/constant/app_color.dart';
-import 'package:permissions_app/constant/risk_level.dart';
-import 'package:permissions_app/logic/app_permission/app_permission_cubit.dart';
-import 'package:permissions_app/presentation/apps_permission/widgets/app_item_widget.dart';
-import 'package:permissions_app/presentation/apps_permission/widgets/kept_badge.dart';
-import 'package:permissions_app/presentation/apps_permission/widgets/risk_circle_widget.dart';
-import 'package:permissions_app/presentation/apps_permission/widgets/trusted_badge.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
-import 'package:permissions_app/presentation/utils/permission_ui_helper.dart';
-
+import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/constant/risk_level.dart';
+import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
+import 'package:Privio/presentation/apps_permission/widgets/app_item_widget.dart';
+import 'package:Privio/presentation/apps_permission/widgets/kept_badge.dart';
+import 'package:Privio/presentation/apps_permission/widgets/risk_circle_widget.dart';
+import 'package:Privio/presentation/apps_permission/widgets/trusted_badge.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:Privio/presentation/utils/permission_ui_helper.dart';
 
 class RecentItem extends StatelessWidget {
   final String appName;
@@ -17,8 +17,8 @@ class RecentItem extends StatelessWidget {
   final Widget icon;
   final List<String> permissions;
   final RiskLevel riskLevel;
-  final String formData;        // last used time (formatted)
-  final String formatDuration;  // used today duration (formatted)
+  final String formData;
+  final String formatDuration;
 
   const RecentItem({
     super.key,
@@ -35,6 +35,7 @@ class RecentItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final dangerousPermissions = getDangerousPermissions(permissions);
     final riskPercent = calculateRiskPercent(permissions);
+    final l10n = AppLocalizations.of(context)!;
 
     final isTrusted = context.select<AppPermissionCubit, bool>(
           (c) => c.isAppTrusted(packageName),
@@ -48,9 +49,7 @@ class RecentItem extends StatelessWidget {
       padding: EdgeInsets.all(AppSize.width * 0.03),
       decoration: BoxDecoration(
         color: AppColor.CartDark,
-        borderRadius: BorderRadius.circular(
-          AppSize.width * 0.03,
-        ),
+        borderRadius: BorderRadius.circular(AppSize.width * 0.03),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.5),
@@ -63,7 +62,6 @@ class RecentItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ===== Top Row =====
           Row(
             children: [
               SizedBox(
@@ -71,9 +69,7 @@ class RecentItem extends StatelessWidget {
                 height: AppSize.width * 0.11,
                 child: icon,
               ),
-
               SizedBox(width: AppSize.width * 0.03),
-
               Expanded(
                 child: Row(
                   children: [
@@ -82,10 +78,12 @@ class RecentItem extends StatelessWidget {
                         appName,
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: AppSize.width * 0.035,                          fontWeight: FontWeight.w600,
+                          fontSize: AppSize.width * 0.035,
+                          fontWeight: FontWeight.w600,
                         ),
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,                      ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     if (isTrusted)
                       const TrustedBadge()
@@ -94,151 +92,93 @@ class RecentItem extends StatelessWidget {
                   ],
                 ),
               ),
-
               RiskCircle(
                 percent: riskPercent,
                 riskLevel: riskLevel,
-                hasDangerousPermissions:
-                dangerousPermissions.isNotEmpty,
+                hasDangerousPermissions: dangerousPermissions.isNotEmpty,
               ),
             ],
           ),
 
-           SizedBox(width: AppSize.width * 0.02),
-          // ===== Usage Info =====
+          SizedBox(width: AppSize.width * 0.02),
+
           Text(
-            'Last used at $formData · Used today $formatDuration',
+            l10n.lastUsed(formData, formatDuration),
             style: TextStyle(
               color: Colors.white54,
-              fontSize: (AppSize.width * 0.03).clamp(10.0, 14.0),            ),
+              fontSize: (AppSize.width * 0.03).clamp(10.0, 14.0),
+            ),
           ),
 
           SizedBox(height: AppSize.height * 0.01),
-          // ===== Permission Availability =====
-          _permissionAvailability(),
+
+          _permissionAvailability(context, l10n),
         ],
       ),
     );
   }
 
-  // ================= Permission Availability =================
-  Widget _permissionAvailability() {
+  Widget _permissionAvailability(BuildContext context, AppLocalizations l10n) {
     return Wrap(
       spacing: 6,
       runSpacing: 6,
       children: [
-        // ===== Location =====
-        _permChip(
-          'Location',
-          permissions.contains('android.permission.ACCESS_FINE_LOCATION') ||
-              permissions.contains('android.permission.ACCESS_COARSE_LOCATION'),
-        ),
-
-        // ===== Background Location =====
-        _permChip(
-          'Background location',
-          permissions.contains('android.permission.ACCESS_BACKGROUND_LOCATION'),
-        ),
-
-        // ===== Camera =====
-        _permChip(
-          'Camera',
-          permissions.contains('android.permission.CAMERA'),
-        ),
-
-        // ===== Microphone =====
-        _permChip(
-          'Microphone',
-          permissions.contains('android.permission.RECORD_AUDIO'),
-        ),
-
-        // ===== Contacts =====
-        _permChip(
-          'Contacts',
-          permissions.contains('android.permission.READ_CONTACTS') ||
-              permissions.contains('android.permission.WRITE_CONTACTS'),
-        ),
-
-        // ===== SMS =====
-        _permChip(
-          'SMS',
-          permissions.contains('android.permission.READ_SMS') ||
-              permissions.contains('android.permission.SEND_SMS') ||
-              permissions.contains('android.permission.RECEIVE_SMS'),
-        ),
-
-        // ===== Call logs =====
-        _permChip(
-          'Call logs',
-          permissions.contains('android.permission.READ_CALL_LOG'),
-        ),
-
-        // ===== Phone =====
-        _permChip(
-          'Phone',
-          permissions.contains('android.permission.READ_PHONE_STATE') ||
-              permissions.contains('android.permission.CALL_PHONE'),
-        ),
-
-        // ===== Storage / Media =====
-        _permChip(
-          'Storage',
-          permissions.contains('android.permission.READ_EXTERNAL_STORAGE') ||
-              permissions.contains('android.permission.WRITE_EXTERNAL_STORAGE') ||
-              permissions.contains('android.permission.READ_MEDIA_IMAGES') ||
-              permissions.contains('android.permission.READ_MEDIA_VIDEO'),
-        ),
-
-        // ===== Calendar =====
-        _permChip(
-          'Calendar',
-          permissions.contains('android.permission.READ_CALENDAR') ||
-              permissions.contains('android.permission.WRITE_CALENDAR'),
-        ),
-
-        // ===== Bluetooth =====
-        _permChip(
-          'Bluetooth',
-          permissions.contains('android.permission.BLUETOOTH') ||
-              permissions.contains('android.permission.BLUETOOTH_CONNECT') ||
-              permissions.contains('android.permission.BLUETOOTH_SCAN'),
-        ),
-
-        // ===== Notifications =====
-        _permChip(
-          'Notifications',
-          permissions.contains('android.permission.POST_NOTIFICATIONS'),
-        ),
-
-        // ===== Sensors =====
-        _permChip(
-          'Sensors',
-          permissions.contains('android.permission.BODY_SENSORS'),
-        ),
+        _permChip(context, l10n.permLocation,
+            permissions.contains('android.permission.ACCESS_FINE_LOCATION') ||
+                permissions.contains('android.permission.ACCESS_COARSE_LOCATION')),
+        _permChip(context, l10n.permBackgroundLocation,
+            permissions.contains('android.permission.ACCESS_BACKGROUND_LOCATION')),
+        _permChip(context, l10n.permCamera,
+            permissions.contains('android.permission.CAMERA')),
+        _permChip(context, l10n.permMicrophone,
+            permissions.contains('android.permission.RECORD_AUDIO')),
+        _permChip(context, l10n.permContacts,
+            permissions.contains('android.permission.READ_CONTACTS') ||
+                permissions.contains('android.permission.WRITE_CONTACTS')),
+        _permChip(context, l10n.permSms,
+            permissions.contains('android.permission.READ_SMS') ||
+                permissions.contains('android.permission.SEND_SMS') ||
+                permissions.contains('android.permission.RECEIVE_SMS')),
+        _permChip(context, l10n.permCallLogs,
+            permissions.contains('android.permission.READ_CALL_LOG')),
+        _permChip(context, l10n.permPhone,
+            permissions.contains('android.permission.READ_PHONE_STATE') ||
+                permissions.contains('android.permission.CALL_PHONE')),
+        _permChip(context, l10n.permStorage,
+            permissions.contains('android.permission.READ_EXTERNAL_STORAGE') ||
+                permissions.contains('android.permission.WRITE_EXTERNAL_STORAGE') ||
+                permissions.contains('android.permission.READ_MEDIA_IMAGES') ||
+                permissions.contains('android.permission.READ_MEDIA_VIDEO')),
+        _permChip(context, l10n.permCalendar,
+            permissions.contains('android.permission.READ_CALENDAR') ||
+                permissions.contains('android.permission.WRITE_CALENDAR')),
+        _permChip(context, l10n.permBluetooth,
+            permissions.contains('android.permission.BLUETOOTH') ||
+                permissions.contains('android.permission.BLUETOOTH_CONNECT') ||
+                permissions.contains('android.permission.BLUETOOTH_SCAN')),
+        _permChip(context, l10n.permNotifications,
+            permissions.contains('android.permission.POST_NOTIFICATIONS')),
+        _permChip(context, l10n.permSensors,
+            permissions.contains('android.permission.BODY_SENSORS')),
       ],
     );
   }
 
-  Widget _permChip(String label, bool enabled) {
+  Widget _permChip(BuildContext context, String label, bool enabled) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSize.width * 0.025,
         vertical: AppSize.height * 0.005,
       ),
       decoration: BoxDecoration(
-        color: enabled
-            ? Colors.orange.withValues(alpha: 0.15)
-            : Colors.white12,
-        borderRadius: BorderRadius.circular(
-          AppSize.width * 0.05,
-        ),
+        color: enabled ? Colors.orange.withValues(alpha: 0.15) : Colors.white12,
+        borderRadius: BorderRadius.circular(AppSize.width * 0.05),
       ),
       child: Text(
-        enabled ? '$label enabled' : '$label disabled',
+        enabled ? l10n.permEnabled(label) : l10n.permDisabled(label),
         style: TextStyle(
-          color: enabled
-              ? Colors.orangeAccent
-              : Colors.white38,
+          color: enabled ? Colors.orangeAccent : Colors.white38,
           fontSize: AppSize.width * 0.025,
         ),
       ),

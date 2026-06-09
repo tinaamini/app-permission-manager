@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:permissions_app/constant/app_color.dart';
-import 'package:permissions_app/constant/app_style.dart';
+import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/constant/app_style.dart';
 
 class NextButton extends StatelessWidget {
   final VoidCallback onTap;
@@ -17,10 +17,11 @@ class NextButton extends StatelessWidget {
       onTap: onTap,
       child: Container( height: screenHeight * 0.06,
         decoration: BoxDecoration(
-          color: AppColor.blue1,
+
           borderRadius: BorderRadius.all(Radius.circular( screenWidth * 0.038,)),
+          border: Border.all(color: AppColor.blue1,width: 1)
         ),
-        child: Center(child: Text(text,style: AppTextStyle.nameApp(context),)),
+        child: Center(child: Text(text,style: AppTextStyle.nameApp(context).copyWith(color: AppColor.blue1),)),
       ),
     );
   }

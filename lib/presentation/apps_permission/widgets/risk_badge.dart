@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:permissions_app/constant/risk_level.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
+import 'package:Privio/constant/risk_level.dart';
+import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
 
 class RiskBadge extends StatelessWidget {
   final RiskLevel riskLevel;

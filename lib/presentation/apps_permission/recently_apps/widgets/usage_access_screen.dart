@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:permissions_app/constant/app_color.dart';
-import 'package:permissions_app/constant/app_style.dart';
-import 'package:permissions_app/core/servises/usage_access_service.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
+import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/constant/app_style.dart';
+import 'package:Privio/core/servises/usage_access_service.dart';
+import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
 
 class UsageAccessScreen extends StatefulWidget {
   const UsageAccessScreen({super.key});
@@ -65,25 +65,29 @@ class _UsageAccessScreenState extends State<UsageAccessScreen>
             width: AppSize.width*0.15,
             height: AppSize.height * 0.15,
             decoration: BoxDecoration(
-              color: Colors.blue.withValues(alpha: 0.15),
+              color: AppColor.CartDark,
               shape: BoxShape.circle,
+                border: Border.all(color: Colors.white12, width: 1.2),
+                boxShadow: [
+            BoxShadow(
+            color: Colors.blue.withValues(alpha: 0.35),
+        blurRadius: AppSize.width * 0.04,
+        offset: const Offset(0, 0),
+      ),]
             ),
+
             child: const Icon(
               Icons.data_usage,
               color: Colors.blue,
               size: 34,
             ),
           ),
-          SizedBox(height: AppSize.height * 0.03),
+          SizedBox(height: AppSize.height * 0.01),
 
           Text(
             l10n.enableUsageAccessMessage,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: AppSize.width * 0.03,
-              height: 1.5,
-            ),
+            style: AppTextStyle.usage(context)
           ),
 
           SizedBox(height: AppSize.height * 0.03),
@@ -105,7 +109,7 @@ class _UsageAccessScreenState extends State<UsageAccessScreen>
                   BoxShadow(
                     color: Colors.blue.withValues(alpha: 0.35),
                     blurRadius: AppSize.width * 0.03,
-                    offset: const Offset(0, 6),
+                    offset: const Offset(0, 1),
                   ),
                 ],
               ),

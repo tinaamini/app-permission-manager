@@ -1,4 +1,4 @@
-import 'package:permissions_app/constant/permissionConst.dart';
+import 'package:Privio/constant/permissionConst.dart';
 
 /// Returns risk percent between 0.0 and 1.0
 double calculateRiskPercent(List<String> permissions) {

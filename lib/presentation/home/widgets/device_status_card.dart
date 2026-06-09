@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:permissions_app/constant/app_style.dart';
-import 'package:permissions_app/logic/risk/device_risk_status.dart';
+import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/constant/app_style.dart';
+import 'package:Privio/logic/risk/device_risk_status.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
 
 class DeviceStatusCard extends StatelessWidget {
   final DeviceRiskStatus status;
+
   const DeviceStatusCard({super.key, required this.status});
 
   @override
@@ -29,36 +32,41 @@ class DeviceStatusCard extends StatelessWidget {
               width: screenWidth * 0.24,
               height: screenHeight * 0.11,
             ),
-            SizedBox(  height: screenHeight * (16 / 812),
+            SizedBox(
+              height: screenHeight * (16 / 812),
             ),
-
             Container(
-              padding: EdgeInsets.symmetric(  horizontal: screenWidth * 0.035,
-                vertical: screenHeight * 0.012,),
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.035,
+                vertical: screenHeight * 0.012,
+              ),
               decoration: BoxDecoration(
                 color: status.color.withAlpha(26),
                 border: Border.all(width: 1.w, color: status.color),
                 borderRadius: BorderRadius.circular(
                   (screenWidth + screenHeight) * 0.04,
-                ),              ),
+                ),
+              ),
               child: Text(
                 status.subtitle,
-                style: AppTextStyle.system(context).copyWith(color: status.color),
+                style:
+                    AppTextStyle.system(context).copyWith(color: status.color),
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-
             SizedBox(
               height: screenHeight * 0.02,
             ),
-            Text(
-              status.title,
-              style: AppTextStyle.titleSecure(context),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            Container(height: AppSize.height* 0.07,
+              child: Text(
+                status.title,
+                style: AppTextStyle.titleSecure(context),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),

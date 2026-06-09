@@ -143,7 +143,7 @@ abstract class AppLocalizations {
   /// No description provided for @recentApps.
   ///
   /// In en, this message translates to:
-  /// **'Usage Time'**
+  /// **'Recent Apps'**
   String get recentApps;
 
   /// No description provided for @noRiskApps.
@@ -311,38 +311,50 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingTitle1.
   ///
   /// In en, this message translates to:
-  /// **'Complete Transparency'**
+  /// **'Complete\n Transparency'**
   String get onboardingTitle1;
 
   /// No description provided for @onboardingDesc1.
   ///
   /// In en, this message translates to:
-  /// **'We scan every app on your device to reveal exactly what data they\'re accessing.'**
+  /// **'We scan every app on your device to \n reveal exactly what data they\'re accessing \n behind the scenes.'**
   String get onboardingDesc1;
 
   /// No description provided for @onboardingTitle2.
   ///
   /// In en, this message translates to:
-  /// **'Risk Intelligence'**
+  /// **'Risk \n Intelligence'**
   String get onboardingTitle2;
 
   /// No description provided for @onboardingDesc2.
   ///
   /// In en, this message translates to:
-  /// **'Our system categorizes apps into risk levels to keep you safe.'**
+  /// **'Our system\n  categorizes apps into\n risk levels to keep you safe.'**
   String get onboardingDesc2;
 
   /// No description provided for @onboardingTitle3.
   ///
   /// In en, this message translates to:
-  /// **'Take Control'**
+  /// **'Take \n Control'**
   String get onboardingTitle3;
+
+  /// No description provided for @onboardingTitle4.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Your\n Language'**
+  String get onboardingTitle4;
 
   /// No description provided for @onboardingDesc3.
   ///
   /// In en, this message translates to:
-  /// **'Easily manage permissions and trust the apps you know.'**
+  /// **'Easily manage permissions \n and trust the apps you know.'**
   String get onboardingDesc3;
+
+  /// No description provided for @onboardingDesc4.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your preferred language to\n personalize your experience.'**
+  String get onboardingDesc4;
 
   /// No description provided for @skip.
   ///
@@ -1081,6 +1093,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No apps use this permission'**
   String get noAppsUseThisPermission;
+
+  /// No description provided for @lastUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Last used at {date} · Used today {duration}'**
+  String lastUsed(String date, String duration);
+
+  /// No description provided for @permLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get permLocation;
+
+  /// No description provided for @permBackgroundLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Background location'**
+  String get permBackgroundLocation;
+
+  /// No description provided for @permCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get permCamera;
+
+  /// No description provided for @permMicrophone.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone'**
+  String get permMicrophone;
+
+  /// No description provided for @permContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Contacts'**
+  String get permContacts;
+
+  /// No description provided for @permSms.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS'**
+  String get permSms;
+
+  /// No description provided for @permCallLogs.
+  ///
+  /// In en, this message translates to:
+  /// **'Call logs'**
+  String get permCallLogs;
+
+  /// No description provided for @permPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get permPhone;
+
+  /// No description provided for @permStorage.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage'**
+  String get permStorage;
+
+  /// No description provided for @permCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar'**
+  String get permCalendar;
+
+  /// No description provided for @permBluetooth.
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth'**
+  String get permBluetooth;
+
+  /// No description provided for @permNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get permNotifications;
+
+  /// No description provided for @permSensors.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensors'**
+  String get permSensors;
+
+  /// No description provided for @permEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'{label} enabled'**
+  String permEnabled(String label);
+
+  /// No description provided for @permDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'{label} disabled'**
+  String permDisabled(String label);
+
+  /// No description provided for @usageTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage Time'**
+  String get usageTime;
+
+  /// No description provided for @noAppsUsedToday.
+  ///
+  /// In en, this message translates to:
+  /// **'No apps used today'**
+  String get noAppsUsedToday;
+
+  /// No description provided for @todaySummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Today Summary'**
+  String get todaySummary;
+
+  /// No description provided for @appsUsedToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Apps used today'**
+  String get appsUsedToday;
+
+  /// No description provided for @highRiskAppsUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'High risk apps used'**
+  String get highRiskAppsUsed;
+
+  /// No description provided for @totalUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Total usage'**
+  String get totalUsage;
 }
 
 class _AppLocalizationsDelegate

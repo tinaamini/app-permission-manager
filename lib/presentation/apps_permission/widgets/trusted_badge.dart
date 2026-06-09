@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:permissions_app/generated/app_localizations.dart';
+import 'package:Privio/generated/app_localizations.dart';
 
 class TrustedBadge extends StatelessWidget {
   const TrustedBadge({super.key});

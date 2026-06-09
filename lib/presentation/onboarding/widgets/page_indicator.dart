@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:permissions_app/constant/app_color.dart';
+import 'package:Privio/constant/app_color.dart';
 
 class PageIndicator extends StatelessWidget {
   final int currentIndex;

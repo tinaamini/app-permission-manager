@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:permissions_app/presentation/utils/app_size.dart';
+import 'package:Privio/presentation/utils/app_size.dart';
 
 import 'app_color.dart';
 
 class AppTextStyle {
   static String _font(BuildContext context) {
     final lang = Localizations.localeOf(context).languageCode;
-    return lang == 'fa' ? 'BYekan+' : 'Inter';
+    return lang == 'fa' ? 'Shabnam' : 'Inter';
   }
   static bool _fa(BuildContext context) =>
       Localizations.localeOf(context).languageCode == 'fa';
@@ -109,7 +109,7 @@ class AppTextStyle {
 
   static TextStyle usage(BuildContext context) => TextStyle(
       fontFamily: _font(context),
-      fontSize: 12.sp,
+      fontSize: 13.sp,
       fontWeight: FontWeight.w400,
       color: AppColor.white,
       height: 1.4);
@@ -130,7 +130,7 @@ class AppTextStyle {
 
   static TextStyle groupPermission(BuildContext context) => TextStyle(
       fontFamily: _font(context),
-      fontSize: 11.sp,
+      fontSize: 15.sp,
       fontWeight: FontWeight.w500,
       color: AppColor.white,
       height: 1.4);

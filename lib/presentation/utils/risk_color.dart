@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:permissions_app/constant/risk_level.dart';
+import 'package:Privio/constant/risk_level.dart';
 
 Color riskColor(int percent) {
   if (percent == 0) {
