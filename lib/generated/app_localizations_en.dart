@@ -33,6 +33,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recentApps => 'Recent Apps';
 
   @override
+  String get lastScann => 'Last Scan';
+
+  @override
+  String get notScannedYet => 'Not scanned yet';
+
+  @override
+  String get justNow => 'Just now';
+
+  @override
+  String minutesAgo(int count) {
+    return '$count minutes ago';
+  }
+
+  @override
+  String hoursAgo(int count) {
+    return '$count hours ago';
+  }
+
+  @override
+  String daysAgo(int count) {
+    return '$count days ago';
+  }
+
+  @override
+  String monthsAgo(int count) {
+    return '$count months ago';
+  }
+
+  @override
+  String yearsAgo(int count) {
+    return '$count years ago';
+  }
+
+  @override
   String get noRiskApps => 'No Risk Apps';
 
   @override

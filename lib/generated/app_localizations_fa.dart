@@ -33,6 +33,40 @@ class AppLocalizationsFa extends AppLocalizations {
   String get recentApps => 'برنامه‌های اخیر';
 
   @override
+  String get lastScann => 'آخرین اسکن';
+
+  @override
+  String get notScannedYet => 'هنوز اسکن نشده';
+
+  @override
+  String get justNow => 'چند ثانیه پیش';
+
+  @override
+  String minutesAgo(int count) {
+    return '$count دقیقه پیش';
+  }
+
+  @override
+  String hoursAgo(int count) {
+    return '$count ساعت پیش';
+  }
+
+  @override
+  String daysAgo(int count) {
+    return '$count روز پیش';
+  }
+
+  @override
+  String monthsAgo(int count) {
+    return '$count ماه پیش';
+  }
+
+  @override
+  String yearsAgo(int count) {
+    return '$count سال پیش';
+  }
+
+  @override
   String get noRiskApps => 'اپ‌های بدون ریسک';
 
   @override

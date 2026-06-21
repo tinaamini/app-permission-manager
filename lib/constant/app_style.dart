@@ -45,7 +45,7 @@ class AppTextStyle {
 
   static TextStyle btnHome(BuildContext context) => TextStyle(
       fontFamily: _font(context),
-      fontSize: 14.sp,
+      fontSize: 16.sp,
       fontWeight: FontWeight.w400,
       color: AppColor.white);
 
@@ -92,9 +92,14 @@ class AppTextStyle {
 
   static TextStyle titleSecure(BuildContext context) => TextStyle(
       fontFamily: _font(context),
-      fontSize: 22.sp,
+      fontSize: _fa(context) ? 15.sp: 22.sp,
       fontWeight: FontWeight.w700,
-      color: AppColor.CartDarkCount);
+      color: AppColor.white);
+  static TextStyle lastScan(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
+      fontSize: 14.sp,
+      fontWeight: FontWeight.w500,
+      color: AppColor.CartDarkBorder);
 
   static TextStyle system(BuildContext context) => TextStyle(
       fontFamily: _font(context),

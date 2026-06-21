@@ -9,6 +9,55 @@
   "specialPermission": "Special Permissions",
   "dashboard": "Dashboard",
   "recentApps": "Usage Time",
+  "lastScann": "Last Scan",
+   "notScannedYet": "Not scanned yet",
+    "justNow": "Just now",
+
+     "minutesAgo": "{count} minutes ago",
+     "@minutesAgo": {
+       "placeholders": {
+         "count": {
+           "type": "int"
+         }
+       }
+     },
+
+     "hoursAgo": "{count} hours ago",
+     "@hoursAgo": {
+       "placeholders": {
+         "count": {
+           "type": "int"
+         }
+       }
+     },
+
+     "daysAgo": "{count} days ago",
+     "@daysAgo": {
+       "placeholders": {
+         "count": {
+           "type": "int"
+         }
+       }
+     },
+
+     "monthsAgo": "{count} months ago",
+     "@monthsAgo": {
+       "placeholders": {
+         "count": {
+           "type": "int"
+         }
+       }
+     },
+
+     "yearsAgo": "{count} years ago",
+     "@yearsAgo": {
+       "placeholders": {
+         "count": {
+           "type": "int"
+         }
+       }
+     },
+
 
   "noRiskApps": "No Risk Apps",
   "lowRiskApps": "Low Risk Apps",

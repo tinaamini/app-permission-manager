@@ -1,3 +1,4 @@
+import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,6 +12,7 @@ import 'package:Privio/presentation/onboarding/widgets/onboarding_data.dart';
 import 'package:Privio/presentation/onboarding/widgets/onboarding_page.dart';
 import 'package:Privio/presentation/onboarding/widgets/page_indicator.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -50,11 +52,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final pages = getOnboardingPages(context);
+    final isDark = context.watch<ThemeCubit>().state == ThemeMode.dark;
 
     return BlocProvider(
       create: (_) => OnboardingCubit(),
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: isDark ? Colors.black : Colors.white,
         body: SafeArea(
           child: BlocBuilder<OnboardingCubit, int>(
             builder: (context, currentPage) {
@@ -80,6 +83,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
 
                   // ===== SKIP BUTTON =====
+
+                  Positioned(
+                    top: 30.h,
+                    left: 25.w,
+                    child: GestureDetector(
+                        onTap: () {
+                          context.read<ThemeCubit>().toggle();
+                        },
+                        child: isDark
+                            ? SvgPicture.asset("assets/utils/sun.svg")
+                            : SvgPicture.asset("assets/utils/moon.svg")),
+                  ),
                   Positioned(
                     top: 10.h,
                     right: 10.w,
@@ -99,7 +114,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                   // ===== INDICATOR =====
                   Positioned(
-                    bottom:AppSize.height * 0.12 ,
+                    bottom: AppSize.height * 0.12,
                     child: PageIndicator(
                       currentIndex: currentPage,
                       length: pages.length,
@@ -107,10 +122,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
 
                   // ===== NEXT BUTTON =====
-                  Positioned(bottom:AppSize.height * 0.03 ,
+                  Positioned(
+                    bottom: AppSize.height * 0.03,
                     child: SizedBox(
-                      height: AppSize.height * 0.08,
-
+                      height: AppSize.height * 0.06,
                       width: 0.8.sw,
                       child: NextButton(
                         onTap: () => _nextPage(

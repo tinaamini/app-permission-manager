@@ -1,4 +1,5 @@
 
+import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -16,6 +17,7 @@ import 'logic/locale/locale_cubit.dart';
 import 'logic/onboarding/onboarding_cubit.dart';
 import 'logic/onboarding/show_onboarding/show_onboarding_cubit.dart';
 import 'logic/special_permission/special_permission_cubit.dart';
+import 'logic/utils/scan/scan_cubit.dart';
 
 Future<void> main() async {
   await _precacheSvgs();
@@ -70,6 +72,12 @@ class MainApp extends StatelessWidget {
         BlocProvider<LocaleCubit>(
           create: (_) => LocaleCubit(),
         ),
+        BlocProvider<ThemeCubit>(
+          create: (_) => ThemeCubit(),
+        ),
+        BlocProvider(
+          create: (_) => ScanCubit()..loadLastScan(),
+        )
       ],
       child: _AppBootstrap(router: router),
     );

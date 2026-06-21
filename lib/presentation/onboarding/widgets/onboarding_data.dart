@@ -1,6 +1,8 @@
+import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/generated/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'language_btn_onboarding.dart';
 
@@ -22,13 +24,14 @@ class OnboardingData {
 
 List<OnboardingData> getOnboardingPages(BuildContext context) {
   final l10n = AppLocalizations.of(context)!;
+  final isDark = context.watch<ThemeCubit>().state == ThemeMode.dark;
 
   return [
     OnboardingData(
       title: l10n.onboardingTitle4,
       description: l10n.onboardingDesc4,
       svg: 'assets/utils/global.svg',
-      color: AppColor.yellow,
+      color:isDark? AppColor.yellow:AppColor.shadowSvgPageOne,
       bottomWidget: LanguageBtnOnboarding(),
     ),
 

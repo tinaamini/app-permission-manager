@@ -1,3 +1,4 @@
+import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +25,7 @@ class AppPermissionScreen extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final l10n = AppLocalizations.of(context)!;
+    final isDark = context.watch<ThemeCubit>().state == ThemeMode.dark;
 
 
     return BlocBuilder<AppPermissionCubit, AppPermissionState>(
@@ -69,7 +71,7 @@ class AppPermissionScreen extends StatelessWidget {
                                     extra: RiskLevel.noRisk,
                                   );
                                 },
-                                image: 'assets/app_permission/noRisk.svg',
+                                image: isDark?'assets/app_permission/noRisk.svg':"assets/app_permission/Frame 8.svg",
                                 text: l10n.noRisk,
                                 integer: state.noRisk.length.toString(),
                                 color: Colors.blue,
@@ -86,7 +88,7 @@ class AppPermissionScreen extends StatelessWidget {
                                     extra: RiskLevel.lowRisk,
                                   );
                                 },
-                                image: 'assets/app_permission/lowRisk.svg',
+                                image: isDark?'assets/app_permission/lowRisk.svg':"assets/app_permission/Frame 8 (1).svg",
                                 text: l10n.lowRisk,
                                 integer: state.lowRisk.length.toString(),
                                 color: Colors.green,
@@ -108,7 +110,7 @@ class AppPermissionScreen extends StatelessWidget {
                                     extra: RiskLevel.mediumRisk,
                                   );
                                 },
-                                image: 'assets/app_permission/mediumRisk.svg',
+                                image:isDark? 'assets/app_permission/mediumRisk.svg':"assets/app_permission/Frame 8 (2).svg",
                                 text: l10n.mediumRisk,
                                 integer: state.mediumRisk.length.toString(),
                                 color: Colors.orange,
@@ -125,7 +127,7 @@ class AppPermissionScreen extends StatelessWidget {
                                     extra: RiskLevel.highRisk,
                                   );
                                 },
-                                image: 'assets/app_permission/highRisk.svg',
+                                image: isDark ?'assets/app_permission/highRisk.svg':"assets/app_permission/Frame 8 (3).svg",
                                 text: l10n.highRisk,
                                 integer: state.highRisk.length.toString(),
                                 color: Colors.red,

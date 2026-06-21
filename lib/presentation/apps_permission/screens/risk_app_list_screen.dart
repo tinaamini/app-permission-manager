@@ -1,12 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-
-import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/constant/risk_level.dart';
 import 'package:Privio/core/models/app_permission_ui.dart';
 import 'package:Privio/generated/app_localizations.dart';
@@ -18,6 +11,10 @@ import 'package:Privio/presentation/utils/app_size.dart';
 import 'package:Privio/presentation/utils/base_screen.dart';
 import 'package:Privio/presentation/utils/empty_page_widget.dart';
 import 'package:Privio/routs/rout_name.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../utils/custome_dotsloader.dart';
 

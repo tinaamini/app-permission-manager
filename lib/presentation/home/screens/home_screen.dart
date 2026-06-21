@@ -1,5 +1,7 @@
+import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:Privio/core/servises/installed_apps_service.dart';
 import 'package:Privio/generated/app_localizations.dart';
@@ -30,6 +32,7 @@ class HomeScreen extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
+    final isDark = context.watch<ThemeCubit>().state == ThemeMode.dark;
 
         return BaseScreen(
           child: Padding(
@@ -38,9 +41,22 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Padding(
                   padding:  EdgeInsets.only(top:AppSize.height *0.03
-                      ,left: AppSize.width * 0.6
+                      ,
                   ),
-                  child: BtnLanguageUtil(),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      BtnLanguageUtil(),
+
+                      GestureDetector(
+                        onTap: (){
+                          context.read<ThemeCubit>().toggle();
+                        },
+                        child: isDark
+                            ? SvgPicture.asset("assets/utils/sun.svg")
+                            : SvgPicture.asset("assets/utils/moon.svg"),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: AppSize.height * 0.08),
         

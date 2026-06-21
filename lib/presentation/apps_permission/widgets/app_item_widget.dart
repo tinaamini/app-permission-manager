@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/constant/permissionConst.dart';
 import 'package:Privio/constant/risk_level.dart';
 import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
+import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:Privio/presentation/apps_permission/widgets/risk_circle_widget.dart';
 import 'package:Privio/presentation/apps_permission/widgets/trusted_badge.dart';
 import 'package:Privio/presentation/utils/permission_ui_helper.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'kept_badge.dart';
 
@@ -36,6 +37,7 @@ class AppItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final isDark = context.watch<ThemeCubit>().state == ThemeMode.dark;
 
     final dangerousPermissions = getDangerousPermissions(permissions);
     final riskPercent = calculateRiskPercent(permissions);
@@ -53,7 +55,7 @@ class AppItem extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         border: Border.all(width: 1,color: AppColor.CartDarkBorder),
-        color: AppColor.CartDark,
+        color: isDark? AppColor.CartDark:AppColor.btnOnboardingLight,
         borderRadius: BorderRadius.circular(
           screenWidth * 0.06,
         ),

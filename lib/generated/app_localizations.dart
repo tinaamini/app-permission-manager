@@ -146,6 +146,54 @@ abstract class AppLocalizations {
   /// **'Recent Apps'**
   String get recentApps;
 
+  /// No description provided for @lastScann.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Scan'**
+  String get lastScann;
+
+  /// No description provided for @notScannedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not scanned yet'**
+  String get notScannedYet;
+
+  /// No description provided for @justNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get justNow;
+
+  /// No description provided for @minutesAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} minutes ago'**
+  String minutesAgo(int count);
+
+  /// No description provided for @hoursAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} hours ago'**
+  String hoursAgo(int count);
+
+  /// No description provided for @daysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days ago'**
+  String daysAgo(int count);
+
+  /// No description provided for @monthsAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} months ago'**
+  String monthsAgo(int count);
+
+  /// No description provided for @yearsAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} years ago'**
+  String yearsAgo(int count);
+
   /// No description provided for @noRiskApps.
   ///
   /// In en, this message translates to:

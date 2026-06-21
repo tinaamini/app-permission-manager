@@ -1,3 +1,5 @@
+import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,11 +15,12 @@ class LanguageBtnOnboarding extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return    SizedBox(
       height: AppSize.height * 0.278,
       width: AppSize.width * 0.8,
 
-      child: Column(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           languageButton(
               context,
@@ -28,7 +31,7 @@ class LanguageBtnOnboarding extends StatelessWidget {
                 context.read<LocaleCubit>().toggle();
               }
           ),
-          SizedBox(height: AppSize.height * 0.01,),
+          SizedBox(height: AppSize.height * 0.02,),
           languageButton(
               context,
               index: 1,
@@ -50,9 +53,13 @@ class LanguageBtnOnboarding extends StatelessWidget {
     required String text,
     required VoidCallback onTap,
   }) {
+    final isDark = context.watch<ThemeCubit>().state == ThemeMode.dark;
+
     return BlocBuilder<BtnLanguageCubit, int>(
+
       builder: (context, selectedIndex) {
         final isSelected = index == selectedIndex;
+        final locale=context.watch<LocaleCubit>().state;
 
         return GestureDetector(
           onTap: onTap,
@@ -60,31 +67,39 @@ class LanguageBtnOnboarding extends StatelessWidget {
             width: AppSize.width * 0.9,
             height: AppSize.height * 0.07,
             decoration: BoxDecoration(
-              color: AppColor.CartDark,
+              color:isDark? AppColor.btnOnboardingDark:AppColor.btnOnboardingLight,
               borderRadius: BorderRadius.circular(AppSize.width * 0.06),
               border: Border.all(
-                color: isSelected ? AppColor.yellow : AppColor.CartDark,
+                color: isSelected ?AppColor.boxSh : AppColor.CartDark,
                 width: 1,
               ),
-            ),
+              boxShadow: [
+                BoxShadow(
+                  color:isSelected ?AppColor.boxSh: AppColor.CartDark ,
+                  blurRadius: 15,
+                  spreadRadius: 2,
+                  offset: Offset.zero,
+                ),
+              ],            ),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSize.width * 0.05),
-              child: Row(mainAxisAlignment: MainAxisAlignment.end,
+              padding: EdgeInsets.only(left:locale  == Locale('en')? AppSize.width * 0.08:AppSize.width * 0.5),
+              child: Row(mainAxisAlignment: locale  == Locale('en')? MainAxisAlignment.start: MainAxisAlignment.end,
                 children: [
-
-                  Text(text, style: AppTextStyle.onboardingDescription(context),
-                  ),
-                  SizedBox(width: AppSize.width * 0.04,),
                   Container(
                     width: AppSize.width * 0.06,
                     height: AppSize.height * 0.06,
                     decoration: BoxDecoration(
-                      color: isSelected ? AppColor.yellow : AppColor.CartDark,
+                      color: isSelected ? AppColor.boxSh: (isDark ?AppColor.CartDark:AppColor.boxSh.withAlpha(400)),
                       shape: BoxShape.circle,
                     ),
-                    child: isSelected ? Icon(Icons.check, color: AppColor.BcGround,
+                    child: isSelected ? Icon(Icons.check, color: isDark? AppColor.btnOnboardingLight:AppColor.btnOnboardingDark,
                       size: AppSize.width * 0.04,) : SizedBox.shrink(),
                   ),
+                  SizedBox(width: AppSize.width * 0.04,),
+                  Text(text, style: AppTextStyle.onboardingDescription(context),
+                  ),
+
+
                 ],
               ),
             ),

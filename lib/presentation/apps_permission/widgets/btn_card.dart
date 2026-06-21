@@ -1,5 +1,7 @@
+import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/constant/app_style.dart';
@@ -14,6 +16,7 @@ class BtnCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final isDark = context.watch<ThemeCubit>().state == ThemeMode.dark;
 
     return GestureDetector(
       onTap: ontap,
@@ -27,9 +30,9 @@ class BtnCard extends StatelessWidget {
           vertical: screenHeight * 0.02,
         ),
         decoration: BoxDecoration(
-          color: AppColor.CartDark,
+          color:isDark? AppColor.CartDark:AppColor.btnHomeLight,
           borderRadius: BorderRadius.circular(screenWidth * 0.06),
-          border: Border.all(width: 1,color: AppColor.CartDarkBorder),
+          border: Border.all(width: 1,color:isDark? AppColor.CartDarkBorder:AppColor.borderLight),
 
         ),
         child: Padding(
@@ -41,7 +44,8 @@ class BtnCard extends StatelessWidget {
                 height: screenWidth * 0.12,),
               SizedBox(width: screenWidth * 0.025),
 
-                  Expanded(child: Text(text,style: AppTextStyle.btnHome(context),)),
+                  Expanded(child: Text(text,style: AppTextStyle.btnHome(context).copyWith(color:isDark?AppColor.white:AppColor.black),)),
+
 
             ],
           ),

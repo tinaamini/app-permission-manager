@@ -9,6 +9,49 @@
   "specialPermission": "مجوزهای ویژه",
   "dashboard": "داشبورد",
   "recentApps": "زمان استفاده",
+  "lastScann": "آخرین اسکن",
+  "notScannedYet": "هنوز اسکن نشده",
+    "justNow": "چند ثانیه پیش",
+    "minutesAgo": "{count} دقیقه پیش",
+    "@minutesAgo": {
+      "placeholders": {
+        "count": {
+          "type": "int"
+        }
+      }
+    },
+    "hoursAgo": "{count} ساعت پیش",
+    "@hoursAgo": {
+      "placeholders": {
+        "count": {
+          "type": "int"
+        }
+      }
+    },
+    "daysAgo": "{count} روز پیش",
+    "@daysAgo": {
+      "placeholders": {
+        "count": {
+          "type": "int"
+        }
+      }
+    },
+    "monthsAgo": "{count} ماه پیش",
+    "@monthsAgo": {
+      "placeholders": {
+        "count": {
+          "type": "int"
+        }
+      }
+    },
+    "yearsAgo": "{count} سال پیش",
+    "@yearsAgo": {
+      "placeholders": {
+        "count": {
+          "type": "int"
+        }
+      }
+    },
 
   "noRiskApps": "اپ‌های بدون ریسک",
   "lowRiskApps": "اپ‌های کم‌ریسک",

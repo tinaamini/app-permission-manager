@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/constant/app_style.dart';
-import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'btn_language_util.dart';
 
@@ -19,16 +20,16 @@ class AppBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
 
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     bool _fa(BuildContext context) =>
         Localizations.localeOf(context).languageCode == 'fa';
+    final isDark = context.watch<ThemeCubit>().state == ThemeMode.dark;
 
     return Container(
       height: screenHeight * 0.08,
-      color: AppColor.CartDark,
+      color: isDark ?AppColor.CartDark:AppColor.btnHomeLight,
       padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -55,7 +56,7 @@ class AppBarWidget extends StatelessWidget {
             child: Center(
               child: Text(
                 text,
-                style: AppTextStyle.nameApp(context),
+                style: AppTextStyle.nameApp(context).copyWith(color: isDark?AppColor.white:AppColor.black),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

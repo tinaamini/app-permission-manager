@@ -1,5 +1,7 @@
+import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'app_size.dart';
 
@@ -11,12 +13,13 @@ class BaseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppSize.init(context);
+    final isDark = context.watch<ThemeCubit>().state == ThemeMode.dark;
 
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration:  BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/main/bg.png'),
+            image: isDark ?AssetImage('assets/main/bg.png'): AssetImage('assets/main/bgLight.png'),
             fit: BoxFit.cover,
           ),
         ),

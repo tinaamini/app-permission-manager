@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -61,6 +62,7 @@ class _AppDetailScreenState extends State<AppDetailScreen>
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final l10n = AppLocalizations.of(context)!;
+    final isDark = context.watch<ThemeCubit>().state == ThemeMode.dark;
 
     return BaseScreen(
       child: BlocConsumer<AppPermissionCubit, AppPermissionState>(
@@ -171,7 +173,7 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: Colors.white,
+                    color:isDark? Colors.white:AppColor.black,
                     fontSize: (AppSize.width * 0.045).clamp(14.0, 20.0),
                     fontWeight: FontWeight.bold,
                   ),
