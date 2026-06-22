@@ -1,5 +1,7 @@
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:Privio/generated/app_localizations.dart';
@@ -65,7 +67,7 @@ class KeepAppsScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        SvgPicture.asset("assets/app_permission/tick-square.svg"),
+                        SvgPicture.asset(context.isDark ?"assets/app_permission/tick-square.svg":"assets/app_permission/tick-square2.svg",width: 30.w,height: 30.h,),
                         SizedBox(width: screenWidth * 0.02),
                         Text(l10n.reviewedList, style: AppTextStyle.greenFont(context)),
                       ],
@@ -76,7 +78,7 @@ class KeepAppsScreen extends StatelessWidget {
                     Text(
                       l10n.reviewedListDesc,
                       style: AppTextStyle.trustDescription(context).copyWith(
-                        color: AppColor.green2,
+                        color:context.isDark? AppColor.green2: AppColor.green4,
                       ),
                     ),
 
@@ -126,11 +128,11 @@ class KeepAppsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: AppColor.CartDarkBorder,
+        backgroundColor:context.isDark? AppColor.CartDarkBorder:AppColor.white,
         title: Text(l10n.removeFromKeep, style: AppTextStyle.greenFont(context)),
         content: Text(
           l10n.removeFromKeepDesc,
-          style: AppTextStyle.trustDescription(context).copyWith(color: AppColor.green2),
+          style: AppTextStyle.trustDescription(context).copyWith(color:context.isDark? AppColor.green2:AppColor.green4),
         ),
         actions: [
           TextButton(

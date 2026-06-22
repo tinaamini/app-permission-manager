@@ -35,7 +35,7 @@ class BtnPermissionWidget extends StatelessWidget {
           padding: EdgeInsets.all(screenWidth * 0.03),
           decoration: BoxDecoration(
             // color: Colors.red,
-            color:isDark? AppColor.CartDark:AppColor.btnHomeLight,
+            color:isDark? AppColor.CartDark:AppColor.btnLight,
             borderRadius: BorderRadius.circular(screenWidth * 0.03),
             border: Border.all(width: 1, color: color),
           ),

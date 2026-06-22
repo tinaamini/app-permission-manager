@@ -1,7 +1,10 @@
+import 'package:Privio/core/extensions/context_extension.dart';
+import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/generated/app_localizations.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TrustBtn extends StatelessWidget {
   final bool isTrusted;
@@ -31,23 +34,17 @@ class TrustBtn extends StatelessWidget {
         decoration: BoxDecoration(
           color: isTrusted
               ? Colors.blueAccent.withValues(alpha: 0.15)
-              : AppColor.CartDark,
+              : (context.isDark ?AppColor.CartDark:AppColor.btnLight),
           borderRadius: BorderRadius.circular(
             AppSize.width * 0.04,
           ),
           border: Border.all(
             color: isTrusted
                 ? Colors.blueAccent
-                : Colors.white12,
+                : (context.isDark ?Colors.white12:AppColor.borderLight),
             width: 1.2,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.35),
-              blurRadius: AppSize.width * 0.03,
-              offset: const Offset(0, 6),
-            ),
-          ],
+
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +66,7 @@ class TrustBtn extends StatelessWidget {
                     : Icons.verified_outlined,
                 color: isTrusted
                     ? Colors.blueAccent
-                    : Colors.white70,
+                    : (context.isDark?Colors.white70:AppColor.CartDarkBorder),
                 size: AppSize.width * 0.055,
               ),
 
@@ -89,7 +86,7 @@ class TrustBtn extends StatelessWidget {
                       ? Colors.white
                       : (isTrusted
                       ? Colors.blueAccent
-                      : Colors.white),
+                      : (context.isDark?Colors.white70:AppColor.CartDarkBorder)),
                   fontSize: AppSize.width * 0.035,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.2,

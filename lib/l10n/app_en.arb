@@ -153,7 +153,7 @@
 "keepApps": "KEEP APPS",
 "keepAppsWarning": "Removing an app from this list will return it to the \"Risk Apps\" scan result if it requests sensitive permissions in the future.",
 "removeFromKeepDesc": "This app will no longer be trusted and will be analyzed again for potential risks.",
-"reviewedList": "REVIEWED LIST",
+"reviewedList": "REVIEWED KIST",
 "markedAsSafe": "Marked as Safe",
 "reviewedListDesc": "These are apps you have manually reviewed. They will no longer trigger risk warnings unless their behavior changes significantly.",
 "removeFromKeep": "Remove from Keep",

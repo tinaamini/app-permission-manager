@@ -216,7 +216,7 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
                                 borderRadius: BorderRadius.circular(AppSize.width * 0.02),
                                 border: Border.all(
                                   width: 1,
-                                  color: AppColor.warningborder,
+                                  color: AppColor.warningBorder,
                                 ),
                               ),
                               child: Stack(

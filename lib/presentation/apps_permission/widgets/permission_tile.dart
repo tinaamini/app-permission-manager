@@ -1,3 +1,4 @@
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
@@ -21,25 +22,19 @@ class PermissionSwitchTile extends StatelessWidget {
     final Color activeColor = isDangerous ? Colors.red : Colors.orange;
 
     return Container(
-      margin: EdgeInsets.only(        bottom: AppSize.height * 0.012,
+      margin: EdgeInsets.only(
+        bottom: AppSize.height * 0.012,
       ),
       padding: EdgeInsets.symmetric(
         horizontal: AppSize.width * 0.035,
         vertical: AppSize.height * 0.012,
       ),
       decoration: BoxDecoration(
-        color: AppColor.CartDark,
+        color: context.isDark?AppColor.CartDark:AppColor.btnLight,
         borderRadius: BorderRadius.circular(
           AppSize.width * 0.035,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.5),
-            blurRadius: AppSize.width * 0.03,
-            spreadRadius: 1,
-            offset: const Offset(0, 6),
-          ),
-        ],
+
       ),
       child: Row(
         children: [
@@ -49,7 +44,7 @@ class PermissionSwitchTile extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Colors.white,
+                color: context.isDark? Colors.white:AppColor.black,
                 fontSize: AppSize.width * 0.035,
                 fontWeight: FontWeight.w500,
               ),
@@ -62,7 +57,7 @@ class PermissionSwitchTile extends StatelessWidget {
               value: enabled,
               onChanged: (_) => onTap(),
               activeColor: activeColor,
-              inactiveThumbColor: Colors.white30,
+              inactiveThumbColor: context.isDark? Colors.white30:AppColor.blurStyle,
               inactiveTrackColor: Colors.white12,
             ),
           ),

@@ -30,7 +30,7 @@ class BtnCard extends StatelessWidget {
           vertical: screenHeight * 0.02,
         ),
         decoration: BoxDecoration(
-          color:isDark? AppColor.CartDark:AppColor.btnHomeLight,
+          color:isDark? AppColor.CartDark:AppColor.btnLight,
           borderRadius: BorderRadius.circular(screenWidth * 0.06),
           border: Border.all(width: 1,color:isDark? AppColor.CartDarkBorder:AppColor.borderLight),
 

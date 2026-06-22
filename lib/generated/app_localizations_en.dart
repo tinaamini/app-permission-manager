@@ -304,7 +304,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'This app will no longer be trusted and will be analyzed again for potential risks.';
 
   @override
-  String get reviewedList => 'REVIEWED LIST';
+  String get reviewedList => 'REVIEWED KIST';
 
   @override
   String get markedAsSafe => 'Marked as Safe';

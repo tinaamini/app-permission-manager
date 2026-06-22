@@ -1,3 +1,4 @@
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/generated/app_localizations.dart';
@@ -26,26 +27,21 @@ class KeepAppButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: isKept
               ? Colors.green.withValues(alpha: 0.15)
-              : AppColor.CartDark,
+              : (context.isDark ? AppColor.CartDark : AppColor.btnLight),
           borderRadius: BorderRadius.circular(AppSize.width * 0.04),
           border: Border.all(
-            color: isKept ? Colors.green : Colors.white12,
+            color: isKept
+                ? Colors.green
+                : (context.isDark ? Colors.white12 : AppColor.borderLight),
             width: 1.2,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.35),
-              blurRadius: AppSize.width * 0.03,
-              offset: const Offset(0, 6),
-            ),
-          ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               isKept ? Icons.verified_rounded : Icons.push_pin_outlined,
-              color: isKept ? Colors.green : Colors.white70,
+              color: isKept ? Colors.green :  (context.isDark?Colors.white70:AppColor.CartDarkBorder),
               size: AppSize.width * 0.055,
             ),
             SizedBox(width: AppSize.width * 0.025),
@@ -53,7 +49,11 @@ class KeepAppButton extends StatelessWidget {
               child: Text(
                 isKept ? l10n.appIsKept : l10n.keepApp,
                 style: TextStyle(
-                  color: isKept ? Colors.green : Colors.white,
+                  color: isKept
+                      ? Colors.green
+                      : (context.isDark
+                          ? Colors.white70
+                          : AppColor.CartDarkBorder),
                   fontSize: AppSize.width * 0.035,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.2,

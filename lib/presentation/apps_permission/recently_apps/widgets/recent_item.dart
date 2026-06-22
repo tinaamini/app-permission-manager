@@ -1,3 +1,5 @@
+import 'package:Privio/constant/app_style.dart';
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Privio/constant/app_color.dart';
@@ -10,6 +12,7 @@ import 'package:Privio/presentation/apps_permission/widgets/risk_circle_widget.d
 import 'package:Privio/presentation/apps_permission/widgets/trusted_badge.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
 import 'package:Privio/presentation/utils/permission_ui_helper.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RecentItem extends StatelessWidget {
   final String appName;
@@ -48,16 +51,10 @@ class RecentItem extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppSize.width * 0.03),
       decoration: BoxDecoration(
-        color: AppColor.CartDark,
+        color: context.isDark?AppColor.CartDark:AppColor.btnLight,
         borderRadius: BorderRadius.circular(AppSize.width * 0.03),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.5),
-            blurRadius: AppSize.width * 0.03,
-            spreadRadius: 1,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        border: Border.all(width: context.isDark ?0:1, color: AppColor.borderLight)
+
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,19 +73,21 @@ class RecentItem extends StatelessWidget {
                     Expanded(
                       child: Text(
                         appName,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: AppSize.width * 0.035,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style:AppTextStyle.appName(context),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     if (isTrusted)
-                      const TrustedBadge()
+                      Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                        child: const TrustedBadge(),
+                      )
                     else if (isKept)
-                      const KeptBadge(),
+                      Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: 20.w),
+                        child: const KeptBadge(),
+                      ),
                   ],
                 ),
               ),
@@ -104,10 +103,7 @@ class RecentItem extends StatelessWidget {
 
           Text(
             l10n.lastUsed(formData, formatDuration),
-            style: TextStyle(
-              color: Colors.white54,
-              fontSize: (AppSize.width * 0.03).clamp(10.0, 14.0),
-            ),
+            style:AppTextStyle.summaryRow(context)
           ),
 
           SizedBox(height: AppSize.height * 0.01),
@@ -172,13 +168,13 @@ class RecentItem extends StatelessWidget {
         vertical: AppSize.height * 0.005,
       ),
       decoration: BoxDecoration(
-        color: enabled ? Colors.orange.withValues(alpha: 0.15) : Colors.white12,
+        color: enabled ? Colors.orange.withValues(alpha: 0.15) : (context.isDark ?Colors.white12:AppColor.btnLight),
         borderRadius: BorderRadius.circular(AppSize.width * 0.05),
       ),
       child: Text(
         enabled ? l10n.permEnabled(label) : l10n.permDisabled(label),
         style: TextStyle(
-          color: enabled ? Colors.orangeAccent : Colors.white38,
+          color: enabled ? Colors.orangeAccent : (context.isDark?Colors.white38:AppColor.blurStyle),
           fontSize: AppSize.width * 0.025,
         ),
       ),

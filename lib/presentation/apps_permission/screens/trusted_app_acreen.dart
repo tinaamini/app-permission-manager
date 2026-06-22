@@ -1,3 +1,4 @@
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -66,7 +67,7 @@ class TrustedAppsScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        SvgPicture.asset("assets/app_permission/shield-tick.svg"),
+                        SvgPicture.asset("assets/app_permission/shield-tick.svg",width: 30.w,height: 30.h,),
                         SizedBox(width: screenWidth * 0.02),
                         Text(l10n.whiteList, style: AppTextStyle.blueFont(context)),
                       ],
@@ -101,7 +102,7 @@ class TrustedAppsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: AppColor.CartDarkBorder,
+        backgroundColor:context.isDark? AppColor.CartDarkBorder:AppColor.white,
         title: Text(l10n.removeTrust, style: AppTextStyle.blueFont(context)),
         content: Text(
           l10n.removeTrustDesc,

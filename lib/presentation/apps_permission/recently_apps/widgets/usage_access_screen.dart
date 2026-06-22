@@ -1,9 +1,11 @@
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/constant/app_style.dart';
 import 'package:Privio/core/servises/usage_access_service.dart';
 import 'package:Privio/generated/app_localizations.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class UsageAccessScreen extends StatefulWidget {
   const UsageAccessScreen({super.key});
@@ -48,7 +50,7 @@ class _UsageAccessScreenState extends State<UsageAccessScreen>
     return Container(
       padding: EdgeInsets.all(   AppSize.width * 0.05,),
       decoration: BoxDecoration(
-        color: AppColor.BcGround,
+        color: context.isDark ?AppColor.bcGround:AppColor.btnLight2,
         borderRadius: BorderRadius.circular(   AppSize.width * 0.05,),
         boxShadow: [
           BoxShadow(
@@ -65,7 +67,7 @@ class _UsageAccessScreenState extends State<UsageAccessScreen>
             width: AppSize.width*0.15,
             height: AppSize.height * 0.15,
             decoration: BoxDecoration(
-              color: AppColor.CartDark,
+              color:context.isDark? AppColor.CartDark:AppColor.white,
               shape: BoxShape.circle,
                 border: Border.all(color: Colors.white12, width: 1.2),
                 boxShadow: [
@@ -82,7 +84,6 @@ class _UsageAccessScreenState extends State<UsageAccessScreen>
               size: 34,
             ),
           ),
-          SizedBox(height: AppSize.height * 0.01),
 
           Text(
             l10n.enableUsageAccessMessage,
@@ -101,7 +102,7 @@ class _UsageAccessScreenState extends State<UsageAccessScreen>
               width: AppSize.width * 0.5,
               height: AppSize.height * 0.06,
               decoration: BoxDecoration(
-                color: AppColor.CartDark,
+                color: context.isDark? AppColor.CartDark:AppColor.white,
                 borderRadius: BorderRadius.circular(                  AppSize.width * 0.04,
                 ),
                 border: Border.all(color: Colors.white12, width: 1.2),
@@ -114,10 +115,13 @@ class _UsageAccessScreenState extends State<UsageAccessScreen>
                 ],
               ),
               child: Center(
-                child: Text(
-                  l10n.openUsageAccessSettings,
-                  style: AppTextStyle.usage(context),
-                  textAlign: TextAlign.center,
+                child: Padding(
+                  padding:  EdgeInsets.symmetric(horizontal: 10.w),
+                  child: Text(
+                    l10n.openUsageAccessSettings,
+                    style: AppTextStyle.btnUsage(context),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
             ),

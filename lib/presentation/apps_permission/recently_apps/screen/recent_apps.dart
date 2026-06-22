@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -114,7 +115,7 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
                   ),
                   SizedBox(height: AppSize.height * 0.03),
                   Padding(
-                    padding: EdgeInsets.only(left: AppSize.width * 0.04),
+                    padding: EdgeInsets.symmetric(horizontal: AppSize.width * 0.04),
                     child: Text(
                       l10n.recentApps,
                       style: AppTextStyle.summary(context),
@@ -155,7 +156,7 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
     return Container(
       padding: EdgeInsets.all(AppSize.width * 0.04),
       decoration: BoxDecoration(
-        color: AppColor.CartDark,
+        color:context.isDark? AppColor.CartDark:AppColor.btnLight,
         borderRadius: BorderRadius.circular(AppSize.width * 0.035),
         border: Border.all(color: Colors.white12),
       ),
@@ -183,10 +184,7 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
               label,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Colors.white54,
-                fontSize: AppSize.width * 0.03,
-              ),
+              style: AppTextStyle.summaryRow(context)
             ),
           ),
           Text(value, style: AppTextStyle.summaryValue(context)),

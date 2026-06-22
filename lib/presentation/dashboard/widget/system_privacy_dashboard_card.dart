@@ -1,3 +1,4 @@
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Privio/constant/app_color.dart';
@@ -16,9 +17,12 @@ class SystemPrivacyDashboardCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppSize.width * 0.035),
       decoration: BoxDecoration(
-        color: AppColor.CartDark,
+        color: context.isDark ? AppColor.CartDark : AppColor.btnLight,
         borderRadius: BorderRadius.circular(AppSize.width * 0.03),
-        border: Border.all(color: AppColor.CartDarkBorder),
+        border: Border.all(
+            color: context.isDark
+                ? AppColor.CartDarkBorder
+                : AppColor.borderLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,15 +42,14 @@ class SystemPrivacyDashboardCard extends StatelessWidget {
           SizedBox(height: AppSize.height * 0.012),
           Text(
             l10n.systemPrivacyDashboardDesc,
-            style: AppTextStyle.trustDescription(context).copyWith(color: AppColor.green2),
+            style: AppTextStyle.lastScan(context).copyWith(
+                color: context.isDark ? AppColor.green2 : AppColor.green4),
           ),
           SizedBox(height: AppSize.height * 0.015),
-
           Row(
             children: [
               Expanded(
                 child: _ActionBtn(
-                  color: AppColor.green1,
                   text: l10n.openPrivacy,
                   onTap: () => SystemSettingsPlatform.openPrivacySettings(),
                 ),
@@ -54,23 +57,17 @@ class SystemPrivacyDashboardCard extends StatelessWidget {
               SizedBox(width: AppSize.width * 0.025),
               Expanded(
                 child: _ActionBtn(
-                  color: AppColor.green1,
                   text: l10n.permissionManager,
                   onTap: () => SystemSettingsPlatform.openPermissionManager(),
                 ),
               ),
             ],
           ),
-
           SizedBox(height: AppSize.height * 0.015),
-          Text(
-            l10n.ifItDoesntOpen,
-            style: TextStyle(
-              color: AppColor.green2,
-              fontSize: AppSize.width * 0.028,
-              height: 1.35,
-            ),
-          ),
+          Text(l10n.ifItDoesntOpen,
+              style: AppTextStyle.dashboardTitle(context).copyWith(
+                color: context.isDark ? AppColor.green2 : AppColor.green4,
+              )),
         ],
       ),
     );
@@ -80,12 +77,10 @@ class SystemPrivacyDashboardCard extends StatelessWidget {
 class _ActionBtn extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
-  final Color color;
 
   const _ActionBtn({
     required this.text,
     required this.onTap,
-    required this.color,
   });
 
   @override
@@ -96,19 +91,18 @@ class _ActionBtn extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: AppSize.height * 0.012),
         decoration: BoxDecoration(
-          color: AppColor.CartDark,
-          border: Border.all(width: 1, color: color),
+          color: context.isDark ? AppColor.CartDark : AppColor.btnLight,
+          border: Border.all(
+            width: 1,
+            color: context.isDark ? AppColor.green1 : AppColor.green3,
+          ),
           borderRadius: BorderRadius.circular(AppSize.width * 0.025),
         ),
         child: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.w700,
-              fontSize: AppSize.width * 0.03,
-            ),
-          ),
+          child: Text(text,
+              style: AppTextStyle.lastScan(context).copyWith(
+                color: context.isDark ? AppColor.green1 : AppColor.green3,
+              )),
         ),
       ),
     );

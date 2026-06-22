@@ -1,4 +1,5 @@
 import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/constant/app_style.dart';
 import 'package:Privio/constant/permissionConst.dart';
 import 'package:Privio/constant/risk_level.dart';
 import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
@@ -42,11 +43,11 @@ class AppItem extends StatelessWidget {
     final dangerousPermissions = getDangerousPermissions(permissions);
     final riskPercent = calculateRiskPercent(permissions);
     final isTrusted = context.select<AppPermissionCubit, bool>(
-          (c) => c.isAppTrusted(packageName),
+      (c) => c.isAppTrusted(packageName),
     );
 
     final isKept = context.select<AppPermissionCubit, bool>(
-          (cubit) => cubit.isAppKept(packageName),
+      (cubit) => cubit.isAppKept(packageName),
     );
 
     return Container(
@@ -54,19 +55,13 @@ class AppItem extends StatelessWidget {
         screenWidth * 0.03,
       ),
       decoration: BoxDecoration(
-        border: Border.all(width: 1,color: AppColor.CartDarkBorder),
-        color: isDark? AppColor.CartDark:AppColor.btnOnboardingLight,
+        border: Border.all(
+            width: 1,
+            color: isDark ? AppColor.CartDarkBorder : AppColor.borderLight),
+        color: isDark ? AppColor.CartDark : AppColor.btnLight,
         borderRadius: BorderRadius.circular(
           screenWidth * 0.06,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.5),
-            blurRadius: screenWidth * 0.03,
-            spreadRadius: 1,
-            offset: const Offset(0, 6),
-          ),
-        ],
       ),
       child: Row(
         children: [
@@ -87,22 +82,21 @@ class AppItem extends StatelessWidget {
                 Expanded(
                   child: Text(
                     appName,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                    style:AppTextStyle.appName(context))
                 ),
                 if (isTrusted)
-                  const TrustedBadge()
+                  Padding(
+                    padding:  EdgeInsets.symmetric(horizontal: 22.w),
+                    child: const TrustedBadge(),
+                  )
                 else if (isKept)
-                  const KeptBadge(),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12.w),
+                    child: const KeptBadge(),
+                  ),
               ],
             ),
           ),
-
           RiskCircle(
             percent: riskPercent,
             riskLevel: riskLevel,

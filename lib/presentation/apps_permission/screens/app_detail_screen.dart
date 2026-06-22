@@ -1,28 +1,29 @@
 import 'dart:convert';
-import 'package:Privio/logic/utils/theme/theme_cubit.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:Privio/generated/app_localizations.dart';
 
-import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
-import 'package:Privio/logic/app_permission/app_permission_state.dart';
-import 'package:Privio/presentation/apps_permission/widgets/keep_btn.dart';
-import 'package:Privio/presentation/apps_permission/widgets/permission_tile.dart';
-import 'package:Privio/presentation/apps_permission/widgets/trust_btn.dart';
-import 'package:Privio/presentation/utils/app_size.dart';
-import 'package:Privio/presentation/utils/base_screen.dart';
 import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/constant/app_style.dart';
 import 'package:Privio/constant/permissionConst.dart';
 import 'package:Privio/constant/risk_level.dart';
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:Privio/core/models/app_permission_ui.dart';
 import 'package:Privio/core/servises/app_permission_service.dart';
+import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
+import 'package:Privio/logic/app_permission/app_permission_state.dart';
 import 'package:Privio/presentation/apps_permission/widgets/info_widget.dart';
+import 'package:Privio/presentation/apps_permission/widgets/keep_btn.dart';
+import 'package:Privio/presentation/apps_permission/widgets/permission_tile.dart';
 import 'package:Privio/presentation/apps_permission/widgets/question_dialog.dart';
 import 'package:Privio/presentation/apps_permission/widgets/risk_badge.dart';
+import 'package:Privio/presentation/apps_permission/widgets/trust_btn.dart';
 import 'package:Privio/presentation/utils/app_bar.dart';
+import 'package:Privio/presentation/utils/base_screen.dart';
 import 'package:Privio/presentation/utils/custome_dotsloader.dart';
 import 'package:Privio/presentation/utils/permission_ui_helper.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class AppDetailScreen extends StatefulWidget {
   final AppPermissionUi app;
@@ -62,12 +63,11 @@ class _AppDetailScreenState extends State<AppDetailScreen>
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final l10n = AppLocalizations.of(context)!;
-    final isDark = context.watch<ThemeCubit>().state == ThemeMode.dark;
 
     return BaseScreen(
       child: BlocConsumer<AppPermissionCubit, AppPermissionState>(
         listenWhen: (_, current) =>
-        current is AppTrustedSuccess ||
+            current is AppTrustedSuccess ||
             current is AppUntrustedSuccess ||
             current is AppKeptSuccess ||
             current is AppUnkeptSuccess,
@@ -106,7 +106,7 @@ class _AppDetailScreenState extends State<AppDetailScreen>
           }
         },
         buildWhen: (previous, current) =>
-        current is AppPermissionLoaded || current is AppTrusting,
+            current is AppPermissionLoaded || current is AppTrusting,
         builder: (context, state) {
           if (state is! AppPermissionLoaded && state is! AppTrusting) {
             return const Center(
@@ -129,17 +129,17 @@ class _AppDetailScreenState extends State<AppDetailScreen>
             ...loaded.mediumRisk,
             ...loaded.highRisk,
           ].firstWhere(
-                (a) => a.packageName == widget.app.packageName,
+            (a) => a.packageName == widget.app.packageName,
             orElse: () => widget.app,
           );
 
           final percent = calculateRiskPercent(app.permissions);
 
           final isKept = context.select<AppPermissionCubit, bool>(
-                (c) => c.isAppKept(widget.app.packageName),
+            (c) => c.isAppKept(widget.app.packageName),
           );
           final isTrust = context.select<AppPermissionCubit, bool>(
-                (c) => c.isAppTrusted(widget.app.packageName),
+            (c) => c.isAppTrusted(widget.app.packageName),
           );
 
           final bool isTrusting = state is AppTrusting
@@ -167,17 +167,11 @@ class _AppDetailScreenState extends State<AppDetailScreen>
               // App name
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                child: Text(
-                  app.appName,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color:isDark? Colors.white:AppColor.black,
-                    fontSize: (AppSize.width * 0.045).clamp(14.0, 20.0),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: Text(app.appName,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyle.appName(context)),
               ),
 
               SizedBox(height: screenHeight * 0.01),
@@ -187,28 +181,21 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                 child: isTrust
                     ? Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * 0.035,
-                    vertical: screenHeight * 0.012,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.withAlpha(38),
-                    borderRadius:
-                    BorderRadius.circular(screenWidth * 0.05),
-                  ),
-                  child: Text(
-                    l10n.trustedAppsExcluded,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: AppSize.width * 0.03,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.2,
-                    ),
-                  ),
-                )
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.035,
+                          vertical: screenHeight * 0.012,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withAlpha(38),
+                          borderRadius:
+                              BorderRadius.circular(screenWidth * 0.05),
+                        ),
+                        child: Text(l10n.trustedAppsExcluded,
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyle.trusted(context)),
+                      )
                     : RiskBadge(riskLevel: app.riskLevel),
               ),
 
@@ -226,11 +213,11 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                         onTap: () {
                           isTrust
                               ? context
-                              .read<AppPermissionCubit>()
-                              .untrustApp(app.packageName)
+                                  .read<AppPermissionCubit>()
+                                  .untrustApp(app.packageName)
                               : context
-                              .read<AppPermissionCubit>()
-                              .trustApp(app.packageName);
+                                  .read<AppPermissionCubit>()
+                                  .trustApp(app.packageName);
                         },
                       ),
                     ),
@@ -242,11 +229,11 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                           if (isTrust) return;
                           isKept
                               ? context
-                              .read<AppPermissionCubit>()
-                              .unkeepApp(app.packageName)
+                                  .read<AppPermissionCubit>()
+                                  .unkeepApp(app.packageName)
                               : context
-                              .read<AppPermissionCubit>()
-                              .keepApp(widget.app.packageName);
+                                  .read<AppPermissionCubit>()
+                                  .keepApp(widget.app.packageName);
                         },
                       ),
                     ),
@@ -263,17 +250,14 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                   children: [
                     Expanded(
                       child: Text(
-                        l10n.riskPercent(
-                            (percent * 100).round()),
+                        l10n.riskPercent((percent * 100).round()),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: isTrust
-                              ? Colors.blue
-                              : _riskColor(app.riskLevel),
-                          fontSize: AppSize.width * 0.05,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: AppTextStyle.trusted(context).copyWith(
+                            color: isTrust
+                                ? Colors.blue
+                                : _riskColor(app.riskLevel),
+                            fontSize: 20.sp),
                       ),
                     ),
                     GestureDetector(
@@ -283,7 +267,7 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                           builder: (_) => Dialog(
                             shape: RoundedRectangleBorder(
                               borderRadius:
-                              BorderRadius.circular(screenWidth * 0.05),
+                                  BorderRadius.circular(screenWidth * 0.05),
                             ),
                             child: InfoWidget(),
                           ),
@@ -294,20 +278,13 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                         height: screenWidth * 0.075,
                         decoration: BoxDecoration(
                           borderRadius:
-                          BorderRadius.circular(screenWidth * 0.0625),
+                              BorderRadius.circular(screenWidth * 0.0625),
                           color: AppColor.CartDark,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.5),
-                              blurRadius: screenWidth * 0.015,
-                              spreadRadius: 1,
-                              offset: const Offset(0, 6),
-                            ),
-                          ],
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.info_outline,
-                          color: Colors.white70,
+                          color:
+                              context.isDark ? Colors.white70 : AppColor.black,
                         ),
                       ),
                     ),
@@ -320,16 +297,17 @@ class _AppDetailScreenState extends State<AppDetailScreen>
               // Permissions list
               Expanded(
                 child: ListView(
-                  padding:
-                  EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                   children:
-                  PermissionConst.displayPermissions.entries.map((entry) {
+                      PermissionConst.displayPermissions.entries.map((entry) {
                     final permissionKey = entry.key;
                     final lang = Localizations.localeOf(context).languageCode;
-                    final permissionName =
-                        PermissionConst.displayPermissions[permissionKey]?[lang] ??
-                            PermissionConst.displayPermissions[permissionKey]?['en'] ??
-                            permissionKey;;
+                    final permissionName = PermissionConst
+                            .displayPermissions[permissionKey]?[lang] ??
+                        PermissionConst.displayPermissions[permissionKey]
+                            ?['en'] ??
+                        permissionKey;
+                    ;
 
                     final enabled = app.permissions.contains(permissionKey);
                     final isDangerous = PermissionConst.dangerousPermissions

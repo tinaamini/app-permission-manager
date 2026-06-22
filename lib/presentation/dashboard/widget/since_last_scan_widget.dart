@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Privio/constant/app_color.dart';
@@ -51,9 +52,9 @@ class SinceLastScanWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppSize.width * 0.035),
       decoration: BoxDecoration(
-        color: AppColor.CartDark,
+        color: context.isDark ?AppColor.CartDark:AppColor.btnLight,
         borderRadius: BorderRadius.circular(AppSize.width * 0.04),
-        border: Border.all(color: Colors.white.withAlpha(20)),
+        border: Border.all(color: context.isDark ? Colors.white.withAlpha(20):AppColor.borderLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +79,7 @@ class SinceLastScanWidget extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     border: Border.all(width: 1, color: AppColor.blue1),
-                    color: AppColor.CartDark,
+                    color: context.isDark ? AppColor.CartDark:AppColor.btnLight,
                     borderRadius: BorderRadius.circular(AppSize.width * 0.025),
                   ),
                   child: Row(
@@ -111,8 +112,7 @@ class SinceLastScanWidget extends StatelessWidget {
           ),
           SizedBox(height: AppSize.height * 0.01),
           Text(lastText,
-              style: TextStyle(
-                  color: AppColor.blue2, fontSize: AppSize.width * 0.028)),
+              style: AppTextStyle.lastScan(context).copyWith(color: AppColor.blue1)),
           SizedBox(height: AppSize.height * 0.015),
 
           Row(
@@ -195,7 +195,7 @@ class SinceLastScanWidget extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: AppSize.height * 0.015),
         decoration: BoxDecoration(
-          color: AppColor.CartDark,
+          color: context.isDark ? AppColor.CartDark:AppColor.btnLight,
           borderRadius: BorderRadius.circular(AppSize.width * 0.025),
           border: Border.all(
             color: selected ? AppColor.blue1 : Colors.transparent,
@@ -204,8 +204,8 @@ class SinceLastScanWidget extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style: AppTextStyle.system(context).copyWith(
-              color: selected ? AppColor.blue1 : AppColor.BorderCard,
+            style: AppTextStyle.lastScan(context).copyWith(
+              color: selected ? AppColor.blue1 :( context.isDark ? AppColor.borderCard:AppColor.textLight),
             ),
           ),
         ),

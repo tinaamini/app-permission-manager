@@ -653,7 +653,7 @@ abstract class AppLocalizations {
   /// No description provided for @reviewedList.
   ///
   /// In en, this message translates to:
-  /// **'REVIEWED LIST'**
+  /// **'REVIEWED KIST'**
   String get reviewedList;
 
   /// No description provided for @markedAsSafe.

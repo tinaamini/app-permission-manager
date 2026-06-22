@@ -1,3 +1,4 @@
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/constant/app_style.dart';
@@ -29,16 +30,9 @@ class BtnGroupWidget extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(AppSize.width * 0.03),
         decoration: BoxDecoration(
-          color: AppColor.CartDark,
+          color: context.isDark?AppColor.CartDark:AppColor.btnLight,
           borderRadius: BorderRadius.circular(AppSize.width * 0.03),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(128),
-              blurRadius: 12,
-              spreadRadius: 1,
-              offset: const Offset(0, 6),
-            ),
-          ],
+border: Border.all(width: context.isDark?0:1, color: AppColor.borderLight)
         ),
         child: Stack(
           clipBehavior: Clip.none,
@@ -62,7 +56,7 @@ class BtnGroupWidget extends StatelessWidget {
                 width: AppSize.width * 0.075,
                 height: AppSize.width * 0.075,
                 decoration: BoxDecoration(
-                  color: AppColor.CartDark,
+                  color:context.isDark? AppColor.CartDark:AppColor.btnCount,
                   borderRadius: BorderRadius.circular(AppSize.width * 0.02),
                 ),
                 child: Center(

@@ -4,6 +4,7 @@ import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'btn_language_util.dart';
@@ -29,7 +30,7 @@ class AppBarWidget extends StatelessWidget {
 
     return Container(
       height: screenHeight * 0.08,
-      color: isDark ?AppColor.CartDark:AppColor.btnHomeLight,
+      color: isDark ?AppColor.CartDark:AppColor.btnLight,
       padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -62,7 +63,10 @@ class AppBarWidget extends StatelessWidget {
               ),
             ),
           ),
-          BtnLanguageUtil(),
+          Padding(
+            padding:  EdgeInsets.symmetric(horizontal: 10.w),
+            child: BtnLanguageUtil(),
+          ),
         ],
       ),
     );

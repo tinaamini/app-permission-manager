@@ -1,3 +1,5 @@
+import 'package:Privio/constant/app_style.dart';
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/constant/permissionConst.dart';
@@ -36,17 +38,10 @@ class PermissionItem extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppSize.width * 0.03),
       decoration: BoxDecoration(
-        color: AppColor.CartDark,
+        color: context.isDark?AppColor.CartDark:AppColor.btnLight,
         borderRadius: BorderRadius.circular(AppSize.width * 0.06),
-        border: Border.all(width: 1, color: AppColor.CartDarkBorder),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(128),
-            blurRadius: 12,
-            spreadRadius: 1,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        border: Border.all(width: 1, color: context.isDark?AppColor.CartDarkBorder:AppColor.borderLight),
+
       ),
       child: Row(
         children: [
@@ -63,13 +58,7 @@ class PermissionItem extends StatelessWidget {
                 Expanded(
                   child: Text(
                     appName,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: AppSize.width * 0.035,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                    style:AppTextStyle.appName(context))
                 ),
                 Switch(
                   value: enabled,

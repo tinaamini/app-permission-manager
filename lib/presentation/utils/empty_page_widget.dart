@@ -1,3 +1,4 @@
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:Privio/constant/app_style.dart';
@@ -23,7 +24,7 @@ class EmptyPageWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
-              "assets/utils/emoji-sad.svg",
+             context.isDark? "assets/utils/emoji-sad.svg": "assets/utils/emoji-sad2.svg",
               width: AppSize.width * 0.25,
               height: AppSize.width * 0.25,
             ),

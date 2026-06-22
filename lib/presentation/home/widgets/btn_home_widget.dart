@@ -37,11 +37,11 @@ class BtnHomeWidget extends StatelessWidget {
           vertical: screenHeight * 0.017,
         ),
         decoration: BoxDecoration(
-          color:isDark? AppColor.CartDark:AppColor.btnHomeLight,
+          color:isDark? AppColor.CartDark:AppColor.btnLight,
           borderRadius: BorderRadius.circular(24.r),
           border: Border.all(
             width: 1,
-            color:isDark? AppColor.CartDarkBorder:AppColor.CartLightBorder,
+            color:isDark? AppColor.CartDarkBorder:AppColor.borderLight,
           ),
         ),
         child: Column(
@@ -66,7 +66,7 @@ class BtnHomeWidget extends StatelessWidget {
 
             Text(
               textCount,
-              style: AppTextStyle.cartDarkCount(context).copyWith(color: isDark?AppColor.CartDarkCount:AppColor.CartLightBorder),
+              style: AppTextStyle.cartDarkCount(context).copyWith(color: isDark?AppColor.CartDarkCount:AppColor.textLight),
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

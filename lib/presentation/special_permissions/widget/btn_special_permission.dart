@@ -1,3 +1,4 @@
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/constant/app_style.dart';
@@ -31,16 +32,9 @@ class BtnSpecialPermission extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(AppSize.width * 0.025),
         decoration: BoxDecoration(
-          color: AppColor.CartDark,
+          color:context.isDark? AppColor.CartDark:AppColor.btnLight,
           borderRadius: BorderRadius.circular(AppSize.width * 0.03),
-          border: Border.all(width: 1, color: AppColor.CartDarkBorder),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(89),
-              blurRadius: 10,
-              offset: const Offset(0, 6),
-            ),
-          ],
+          border: Border.all(width: 1, color: context.isDark? AppColor.CartDarkBorder:AppColor.borderLight),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,

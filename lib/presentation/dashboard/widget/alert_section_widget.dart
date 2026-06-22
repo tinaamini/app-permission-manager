@@ -1,3 +1,6 @@
+import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/constant/app_style.dart';
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/core/models/app_permission_item.dart';
 import 'package:Privio/core/servises/dashboard_permission_service.dart';
@@ -72,11 +75,7 @@ class SafeAlertSectionWidget extends StatelessWidget {
       children: [
         Text(
           l10n.alerts,
-          style: TextStyle(
-            fontSize: AppSize.width * 0.04,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-          ),
+          style:AppTextStyle.trusted(context).copyWith(color:context.isDark? AppColor.white:AppColor.textLight)
         ),
         SizedBox(height: AppSize.height * 0.015),
         ...alerts.map((a) => _AlertCard(alert: a)),
@@ -125,7 +124,6 @@ class _AlertCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       margin: EdgeInsets.only(bottom: AppSize.height * 0.015),
@@ -145,11 +143,7 @@ class _AlertCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   alert.title,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: AppSize.width * 0.035,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: AppTextStyle.nameApp(context)
                 ),
               ),
               Container(
@@ -163,12 +157,11 @@ class _AlertCard extends StatelessWidget {
                 ),
                 child: Text(
                   _badgeText,
-                  style: TextStyle(
-                    color: _accent,
-                    fontSize: AppSize.width * 0.025,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.6,
-                  ),
+                  style: AppTextStyle.lastScan(context).copyWith(
+                    color: _accent
+                  )
+
+
                 ),
               ),
             ],
@@ -177,7 +170,7 @@ class _AlertCard extends StatelessWidget {
           Text(
             alert.description,
             style: TextStyle(
-              color: Colors.white70,
+              color:context.isDark? Colors.white70: AppColor.textLight,
               fontSize: AppSize.width * 0.03,
               height: 1.35,
             ),
@@ -217,7 +210,7 @@ class _EmptyAlertsState extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppSize.width * 0.035),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color:context.isDark? Colors.white.withValues(alpha: 0.05):AppColor.btnLight,
         borderRadius: BorderRadius.circular(AppSize.width * 0.03),
       ),
       child: Row(
@@ -231,11 +224,10 @@ class _EmptyAlertsState extends StatelessWidget {
           Expanded(
             child: Text(
               l10n.noSensitiveConfigurationsDetected,
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: AppSize.width * 0.03,
-                fontWeight: FontWeight.w600,
-              ),
+              style: AppTextStyle.lastScan(context).copyWith(
+                color:context.isDark? AppColor.white:AppColor.textLight,
+              )
+
             ),
           ),
         ],

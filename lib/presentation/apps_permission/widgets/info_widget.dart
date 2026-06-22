@@ -1,3 +1,4 @@
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/generated/app_localizations.dart';
@@ -21,15 +22,9 @@ class InfoWidget extends StatelessWidget {
           vertical: AppSize.height * 0.02,
         ),
         decoration: BoxDecoration(
-          color: AppColor.BcGround,
+          color:context.isDark? AppColor.bcGround:AppColor.btnLight,
           borderRadius: BorderRadius.circular(AppSize.width * 0.05),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.6),
-              blurRadius: AppSize.width * 0.05,
-              offset: const Offset(0, 10),
-            ),
-          ],
+
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -53,7 +48,7 @@ class InfoWidget extends StatelessWidget {
               Text(
                 l10n.securityOverview,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: context.isDark?Colors.white:AppColor.black,
                   fontSize: AppSize.width * 0.04,
                   fontWeight: FontWeight.bold,
                 ),
@@ -64,7 +59,7 @@ class InfoWidget extends StatelessWidget {
                 l10n.securityOverviewDesc,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.white70,
+                  color: context.isDark?Colors.white70:AppColor.btnOnboardingDark,
                   fontSize: AppSize.width * 0.03,
                   height: 1.5,
                 ),
@@ -96,7 +91,7 @@ class InfoWidget extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(AppSize.width * 0.035),
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.25),
+                  color: Colors.black.withValues(alpha:context.isDark? 0.25:0.1),
                   borderRadius: BorderRadius.circular(AppSize.width * 0.035),
                 ),
                 child: Row(
@@ -112,7 +107,7 @@ class InfoWidget extends StatelessWidget {
                       child: Text(
                         l10n.reduceRiskTip,
                         style: TextStyle(
-                          color: Colors.white70,
+                          color:context.isDark? Colors.white70:AppColor.btnOnboardingDark,
                           fontSize: AppSize.width * 0.03,
                           height: 1.4,
                         ),
@@ -167,7 +162,7 @@ class _RiskLevelItem extends StatelessWidget {
                 Text(
                   description,
                   style: TextStyle(
-                    color: Colors.white60,
+                    color:context.isDark? Colors.white60:AppColor.btnOnboardingDark,
                     fontSize: AppSize.width * 0.028,
                   ),
                 ),

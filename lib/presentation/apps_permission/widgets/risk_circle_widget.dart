@@ -1,6 +1,8 @@
+import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/constant/risk_level.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RiskCircle extends StatelessWidget {
   final double percent;
@@ -31,8 +33,9 @@ class RiskCircle extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
+    final isDark = context.watch<ThemeCubit>().state == ThemeMode.dark;
     return Container(
+
       width:  screenWidth * 0.09,
       height: screenHeight * 0.07,
       decoration: BoxDecoration(
@@ -52,7 +55,7 @@ class RiskCircle extends StatelessWidget {
           CircularProgressIndicator(
             value: percent,
             strokeWidth: screenWidth * 0.01,
-            backgroundColor: Colors.white12,
+            backgroundColor:isDark? Colors.white12:Colors.grey[300],
             valueColor: AlwaysStoppedAnimation(_color()),
           ),
           if (hasDangerousPermissions)
