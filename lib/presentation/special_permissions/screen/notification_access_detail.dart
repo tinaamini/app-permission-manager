@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/constant/app_style.dart';
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/constant/risk_level.dart';
 import 'package:Privio/constant/specialPermissionType.dart';
@@ -11,9 +14,40 @@ import 'package:Privio/presentation/special_permissions/widget/helper_widgets.da
 import 'package:Privio/presentation/utils/app_size.dart';
 import 'package:Privio/presentation/utils/custome_dotsloader.dart';
 import 'package:Privio/presentation/utils/empty_page_widget.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class NotificationAccessDetail extends StatelessWidget {
+class NotificationAccessDetail extends StatefulWidget {
   const NotificationAccessDetail({super.key});
+
+  @override
+  State<NotificationAccessDetail> createState() =>
+      _NotificationAccessDetailState();
+}
+
+class _NotificationAccessDetailState extends State<NotificationAccessDetail>
+    with WidgetsBindingObserver {
+  Key _refreshKey = UniqueKey();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      setState(() {
+        _refreshKey = UniqueKey();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +56,7 @@ class NotificationAccessDetail extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(AppSize.width * 0.04),
       child: FutureBuilder<List<Map<String, dynamic>>>(
+        key: _refreshKey,
         future: AppSpecialPermissionPlatform().getNotificationAccessApps(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -45,75 +80,88 @@ class NotificationAccessDetail extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              sectionTitle(l10n.whatIsNotificationAccess,context),
-              paragraph(l10n.notificationAccessDesc,context),
+              sectionTitle(l10n.whatIsNotificationAccess, context),
+              paragraph(l10n.notificationAccessDesc, context),
               SizedBox(height: AppSize.height * 0.02),
-
-              riskBadge(level: level,context),
-
+              riskBadge(level: level, context),
               SizedBox(height: AppSize.height * 0.03),
               actionButton(
+                context: context,
                 text: l10n.openNotificationAccessSettings,
                 onTap: () {
-                  AppSpecialPermissionPlatform().openNotificationAccessSettings();
+                  AppSpecialPermissionPlatform()
+                      .openNotificationAccessSettings();
                 },
               ),
-
               SizedBox(height: AppSize.height * 0.04),
-              sectionTitle(l10n.appsWithNotificationAccess,context),
+              sectionTitle(l10n.appsWithNotificationAccess, context),
               SizedBox(height: AppSize.height * 0.015),
-
               Expanded(
                 child: apps.isEmpty
-                    ? Center(
-                  child: EmptyPageWidget(
-                    text: l10n.noAppsWithNotificationAccess,
-                  ),
-                )
-                    : ListView.separated(
-                  itemCount: apps.length,
-                  separatorBuilder: (_, __) =>
-                  const Divider(color: Colors.white12),
-                  itemBuilder: (context, index) {
-                    final app = apps[index];
-                    return ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: app['icon'] != null
-                          ? Image.memory(
-                        base64Decode(app['icon']),
-                        width: AppSize.width * 0.1,
-                        height: AppSize.width * 0.1,
-                      )
-                          : const Icon(
-                        Icons.notifications,
-                        color: Colors.white54,
+                    ? Padding(
+                      padding:  EdgeInsets.symmetric(horizontal: 30.w),
+                      child: EmptyPageWidget(
+                        text: l10n.noAppsWithNotificationAccess,
                       ),
-                      title: Text(
-                        app['name'] ?? '',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: AppSize.width * 0.035,
+                    )
+                    : Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        child: ListView.separated(
+                          itemCount: apps.length,
+                          separatorBuilder: (_, __) => Divider(
+                              color: context.isDark
+                                  ? Colors.white12
+                                  : AppColor.textLight),
+                          itemBuilder: (context, index) {
+                            final app = apps[index];
+                            return ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: app['icon'] != null
+                                  ? Image.memory(
+                                      base64Decode(app['icon']),
+                                      width: AppSize.width * 0.1,
+                                      height: AppSize.width * 0.1,
+                                    )
+                                  : Icon(
+                                      Icons.notifications,
+                                      color: (context.isDark
+                                          ? Colors.white54
+                                          : AppColor.textLight),
+                                    ),
+                              title: Padding(
+                                padding: EdgeInsets.only(top: 20.h),
+                                child: Text(app['name'] ?? '',
+                                    style: AppTextStyle.appName(context)),
+                              ),
+                              subtitle: Text(
+                                app['package'] ?? '',
+                                style: AppTextStyle.lastScan(context).copyWith(
+                                  color: context.isDark
+                                      ? Colors.white54
+                                      : AppColor.textLight,
+                                  fontSize: AppSize.width * 0.03,
+                                ),
+                              ),
+                              trailing: Padding(
+                                padding: EdgeInsets.only(top: 25.h),
+                                child: Icon(
+                                  Icons.open_in_new,
+                                  color: context.isDark
+                                      ? Colors.white54
+                                      : AppColor.textLight,
+                                  size: 24,
+                                ),
+                              ),
+                              onTap: () {
+                                AppSpecialPermissionPlatform()
+                                    .openAppNotificationSettings(
+                                  app['component'] ?? app['package'],
+                                );
+                              },
+                            );
+                          },
                         ),
                       ),
-                      subtitle: Text(
-                        app['package'] ?? '',
-                        style: TextStyle(
-                          color: Colors.white54,
-                          fontSize: AppSize.width * 0.03,
-                        ),
-                      ),
-                      trailing: const Icon(
-                        Icons.open_in_new,
-                        color: Colors.white54,
-                        size: 20,
-                      ),
-                      onTap: () {
-                        AppPermissionPlatform()
-                            .openAppSettings(app['package']);
-                      },
-                    );
-                  },
-                ),
               ),
             ],
           );
