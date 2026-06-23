@@ -29,7 +29,7 @@ class AppBarWidget extends StatelessWidget {
     final isDark = context.watch<ThemeCubit>().state == ThemeMode.dark;
 
     return Container(
-      height: screenHeight * 0.08,
+      height: screenHeight * 0.09,
       color: isDark ?AppColor.CartDark:AppColor.btnLight,
       padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
       child: Row(

@@ -656,6 +656,18 @@ abstract class AppLocalizations {
   /// **'REVIEWED KIST'**
   String get reviewedList;
 
+  /// No description provided for @appsWithOverlayPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Apps with Display Over Other Apps'**
+  String get appsWithOverlayPermission;
+
+  /// No description provided for @noAppsWithOverlayPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'No apps have display over other apps permission'**
+  String get noAppsWithOverlayPermission;
+
   /// No description provided for @markedAsSafe.
   ///
   /// In en, this message translates to:

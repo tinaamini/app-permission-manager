@@ -308,6 +308,14 @@ class AppLocalizationsFa extends AppLocalizations {
   String get reviewedList => 'لیست بررسی‌شده';
 
   @override
+  String get appsWithOverlayPermission =>
+      'اپ‌های دارای مجوز نمایش روی سایر برنامه‌ها';
+
+  @override
+  String get noAppsWithOverlayPermission =>
+      'No apps have display over other apps permission';
+
+  @override
   String get markedAsSafe => 'علامت‌گذاری شده به‌عنوان ایمن';
 
   @override

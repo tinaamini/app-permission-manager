@@ -307,6 +307,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reviewedList => 'REVIEWED KIST';
 
   @override
+  String get appsWithOverlayPermission => 'Apps with Display Over Other Apps';
+
+  @override
+  String get noAppsWithOverlayPermission =>
+      'No apps have display over other apps permission';
+
+  @override
   String get markedAsSafe => 'Marked as Safe';
 
   @override

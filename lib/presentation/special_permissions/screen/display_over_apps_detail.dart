@@ -131,8 +131,21 @@ class _DisplayOverAppsDetailState extends State<DisplayOverAppsDetail>
                             fontSize: AppSize.width * 0.03,
                           ),
                         ),
+                        trailing: Padding(
+                          padding: EdgeInsets.only(top: 25.h),
+                          child: Icon(
+                            Icons.open_in_new,
+                            color: context.isDark
+                                ? Colors.white54
+                                : AppColor.textLight,
+                            size: 24,
+                          ),
+                        ),
+                        onTap: () {
+                            AppSpecialPermissionPlatform()
+                                .openAppOverlaySettings(app['package']);  // ← این
 
-
+                        },
                       );
                     },
                   ),

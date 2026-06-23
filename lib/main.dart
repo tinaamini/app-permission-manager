@@ -28,6 +28,7 @@ Future<void> main() async {
   await Hive.initFlutter();
   await Hive.openBox('app_preferences');
   await Hive.openBox('app_settings');
+  final themeBox = await Hive.openBox('theme');
 
   final storage = OnboardingStorage();
 
@@ -39,7 +40,10 @@ Future<void> main() async {
   runApp( MainApp(
     router: router,
     storage: storage,
-    onboardingShowCubit: onboardingShowCubit,));
+    onboardingShowCubit: onboardingShowCubit,
+    themeBox: themeBox,
+
+  ));
 }
 
 
@@ -47,16 +51,19 @@ class MainApp extends StatelessWidget {
   final GoRouter router;
   final OnboardingStorage storage;
   final OnboardingShowCubit onboardingShowCubit;
+  final Box themeBox;
 
   const MainApp({
     super.key,
     required this.router,
     required this.storage,
     required this.onboardingShowCubit,
+    required this.themeBox,
   });
 
   @override
   Widget build(BuildContext context) {
+
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: onboardingShowCubit),
@@ -73,7 +80,7 @@ class MainApp extends StatelessWidget {
           create: (_) => LocaleCubit(),
         ),
         BlocProvider<ThemeCubit>(
-          create: (_) => ThemeCubit(),
+          create: (_) => ThemeCubit(themeBox),
         ),
         BlocProvider(
           create: (_) => ScanCubit()..loadLastScan(),

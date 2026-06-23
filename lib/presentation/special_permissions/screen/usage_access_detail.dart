@@ -21,12 +21,14 @@ class UsageAccessDetail extends StatefulWidget {
   State<UsageAccessDetail> createState() => _UsageAccessDetailState();
 }
 
-class _UsageAccessDetailState extends State<UsageAccessDetail>    with WidgetsBindingObserver{
+class _UsageAccessDetailState extends State<UsageAccessDetail>
+    with WidgetsBindingObserver {
   RiskLevel _levelFromCount(int count) {
     if (count == 0) return RiskLevel.noRisk;
     if (count <= 2) return RiskLevel.mediumRisk;
     return RiskLevel.highRisk;
   }
+
   Key _refreshKey = UniqueKey();
 
   @override
@@ -65,7 +67,6 @@ class _UsageAccessDetailState extends State<UsageAccessDetail>    with WidgetsBi
           Expanded(
             child: FutureBuilder<List<Map<String, dynamic>>>(
               key: _refreshKey,
-
               future: AppSpecialPermissionPlatform().getUsageAccessApps(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -91,13 +92,18 @@ class _UsageAccessDetailState extends State<UsageAccessDetail>    with WidgetsBi
                     SizedBox(height: AppSize.height * 0.015),
                     Expanded(
                       child: apps.isEmpty
-                          ? EmptyPageWidget(
-                            text: l10n.noUsageAccessApps,
+                          ? Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 40.w),
+                            child: EmptyPageWidget(
+                              text: l10n.noAppsWithNotificationAccess,
+                            ),
                           )
                           : ListView.separated(
                               itemCount: apps.length,
-                              separatorBuilder: (_, __) =>
-                                  const Divider(color: Colors.white12),
+                              separatorBuilder: (_, __) => Divider(
+                                  color: context.isDark
+                                      ? Colors.white12
+                                      : AppColor.textLight),
                               itemBuilder: (context, index) {
                                 final app = apps[index];
                                 return ListTile(
@@ -130,7 +136,8 @@ class _UsageAccessDetailState extends State<UsageAccessDetail>    with WidgetsBi
                                     size: 30,
                                   ),
                                   onTap: () {
-                                    AppPermissionPlatform().openUsageAccessSettings();
+                                    AppPermissionPlatform()
+                                        .openUsageAccessSettings();
                                   },
                                 );
                               },

@@ -16,7 +16,7 @@ class AppTextStyle {
 
   static TextStyle nameApp(BuildContext context) => TextStyle(
       fontFamily: _font(context),
-      fontSize: _fa(context) ? 18.sp : 16.sp,
+      fontSize:  16.sp,
       fontWeight: FontWeight.w400,
       color: AppColor.white);
 
@@ -162,8 +162,8 @@ class AppTextStyle {
 
   static TextStyle warning(BuildContext context) => TextStyle(
       fontFamily: _font(context),
-      fontSize: 9.sp,
-      fontWeight: FontWeight.w600,
+      fontSize: 10.sp,
+      fontWeight: FontWeight.w700,
       color: AppColor.warningBorder,
       height: 1.4);
 

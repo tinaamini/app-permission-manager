@@ -236,6 +236,24 @@ class MainActivity : FlutterActivity() {
                             result.success(false)
                         }
                     }
+                    "openAppOverlaySettings" -> {
+                        val pkg = call.argument<String>("packageName")
+                        if (pkg.isNullOrBlank()) {
+                            result.error("NO_PACKAGE", "packageName missing", null)
+                        } else {
+                            try {
+                                val intent = Intent(
+                                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                    Uri.parse("package:$pkg")
+                                )
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(intent)
+                                result.success(true)
+                            } catch (e: Exception) {
+                                result.error("OVERLAY_ERROR", e.message, null)
+                            }
+                        }
+                    }
 
                     "openNotificationAccessSettings" -> {
                         try {
@@ -436,22 +454,21 @@ class MainActivity : FlutterActivity() {
     // ===================== Core helpers =====================
     private fun getOverlayApps(): List<Map<String, Any>> {
         val pm = packageManager
+        val appOps = getSystemService(Context.APP_OPS_SERVICE) as android.app.AppOpsManager
         val installed = pm.getInstalledApplications(0)
         val apps = mutableListOf<Map<String, Any>>()
 
         for (app in installed) {
             if ((app.flags and ApplicationInfo.FLAG_SYSTEM) != 0) continue
+
             try {
-                // چک می‌کنه این اپ خاص overlay داره یا نه
-                val intent = Intent(
-                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:${app.packageName}")
+                val mode = appOps.checkOpNoThrow(
+                    android.app.AppOpsManager.OPSTR_SYSTEM_ALERT_WINDOW,
+                    app.uid,
+                    app.packageName
                 )
-                // تنها روش دقیق چک کردن overlay برای هر اپ
-                val hasOverlay = Settings.canDrawOverlays(
-                    applicationContext.createPackageContext(app.packageName, 0)
-                )
-                if (!hasOverlay) continue
+
+                if (mode != android.app.AppOpsManager.MODE_ALLOWED) continue
 
                 val appName = pm.getApplicationLabel(app).toString()
                 val iconB64 = getAppIconBase64(app.packageName, 64)
@@ -465,6 +482,7 @@ class MainActivity : FlutterActivity() {
                 )
             } catch (_: Exception) {}
         }
+
         return apps
     }
 

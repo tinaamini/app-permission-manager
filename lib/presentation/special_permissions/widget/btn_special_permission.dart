@@ -32,9 +32,13 @@ class BtnSpecialPermission extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(AppSize.width * 0.025),
         decoration: BoxDecoration(
-          color:context.isDark? AppColor.CartDark:AppColor.btnLight,
+          color: context.isDark ? AppColor.CartDark : AppColor.btnLight,
           borderRadius: BorderRadius.circular(AppSize.width * 0.03),
-          border: Border.all(width: 1, color: context.isDark? AppColor.CartDarkBorder:AppColor.borderLight),
+          border: Border.all(
+              width: 1,
+              color: context.isDark
+                  ? AppColor.CartDarkBorder
+                  : AppColor.borderLight),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -45,9 +49,7 @@ class BtnSpecialPermission extends StatelessWidget {
               height: AppSize.width * 0.175,
               fit: BoxFit.cover,
             ),
-
             SizedBox(width: AppSize.width * 0.03),
-
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,9 +71,7 @@ class BtnSpecialPermission extends StatelessWidget {
                 ],
               ),
             ),
-
             SizedBox(width: AppSize.width * 0.03),
-
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -91,8 +91,7 @@ class BtnSpecialPermission extends StatelessWidget {
   Widget _riskBadge(BuildContext context) {
     late final Color color;
     late final String label;
-    final l10n=AppLocalizations.of(context)!;
-
+    final l10n = AppLocalizations.of(context)!;
 
     switch (riskLevel) {
       case RiskLevel.highRisk:
@@ -135,7 +134,7 @@ class BtnSpecialPermission extends StatelessWidget {
   }
 
   Widget _statusText(BuildContext context) {
-    final l10n=AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context)!;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -145,14 +144,18 @@ class BtnSpecialPermission extends StatelessWidget {
           height: AppSize.width * 0.015,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: enabled ? Colors.greenAccent : Colors.grey,
+            color: enabled
+                ? Colors.redAccent
+                : (context.isDark ? Colors.grey : AppColor.textLight),
           ),
         ),
         SizedBox(width: AppSize.width * 0.015),
         Text(
           enabled ? l10n.enabled : l10n.disabled,
           style: AppTextStyle.specialPermissiontitle(context).copyWith(
-            color: enabled ? AppColor.summary : AppColor.white1,
+            color: enabled
+                ? AppColor.summary
+                : (context.isDark ? AppColor.white1 : AppColor.textLight),
             fontSize: AppSize.width * 0.03,
           ),
         ),
