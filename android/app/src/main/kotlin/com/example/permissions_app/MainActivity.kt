@@ -1,4 +1,3 @@
-
 package com.example.permissions_app
 
 import android.content.Context
@@ -26,7 +25,6 @@ class MainActivity : FlutterActivity() {
     private val DASHBOARD_CHANNEL = "permissions/safe_dashboard"
     private val SYSTEM_SETTINGS_CHANNEL = "system_settings"
 
-    // ✅ برای اجرای کارهای سنگین خارج از UI thread
     private val ioExecutor = Executors.newSingleThreadExecutor()
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -37,7 +35,6 @@ class MainActivity : FlutterActivity() {
             .setMethodCallHandler { call, result ->
                 when (call.method) {
 
-                    // ✅ NEW: سریع (بدون permissions و icon)
                     "getInstalledAppsLite" -> {
                         ioExecutor.execute {
                             try {
@@ -49,7 +46,6 @@ class MainActivity : FlutterActivity() {
                         }
                     }
 
-                    // ✅ NEW: permissions فقط برای یک اپ
                     "getAppPermissions" -> {
                         val pkg = call.argument<String>("packageName")
                         if (pkg.isNullOrBlank()) {
@@ -66,7 +62,6 @@ class MainActivity : FlutterActivity() {
                         }
                     }
 
-                    // ✅ NEW: icon فقط برای یک اپ (lazy) با سایز کوچک
                     "getAppIcon" -> {
                         val pkg = call.argument<String>("packageName")
                         val size = call.argument<Int>("size") ?: 64
@@ -84,7 +79,6 @@ class MainActivity : FlutterActivity() {
                         }
                     }
 
-                    // (Legacy) سنگین: name + package + icon(base64) + granted permissions
                     "getInstalledAppsList" -> {
                         ioExecutor.execute {
                             try {
@@ -129,7 +123,6 @@ class MainActivity : FlutterActivity() {
                             result.error("USAGE_ACCESS_ERROR", e.message, null)
                         }
                     }
-
 
                     else -> result.notImplemented()
                 }
@@ -190,21 +183,10 @@ class MainActivity : FlutterActivity() {
                 }
             }
 
-        // ===================== app_permission_channel (Special permissions) =====================
+        // ===================== app_permission_channel =====================
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SPECIAL_PERMISSION_CHANNEL)
             .setMethodCallHandler { call, result ->
                 when (call.method) {
-
-//                    "openUsageAccessSettings" -> {
-//                        try {
-//                            val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
-//                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                            startActivity(intent)
-//                            result.success(true)
-//                        } catch (e: Exception) {
-//                            result.error("USAGE_ACCESS_ERROR", e.message, null)
-//                        }
-//                    }
 
                     "checkUsageAccess" -> {
                         try {
@@ -282,11 +264,33 @@ class MainActivity : FlutterActivity() {
                                 runOnUiThread { result.success(data) }
                             } catch (e: Exception) {
                                 runOnUiThread {
-                                    result.error(
-                                        "NOTIFICATION_LIST_ERROR",
-                                        e.message,
-                                        null
-                                    )
+                                    result.error("NOTIFICATION_LIST_ERROR", e.message, null)
+                                }
+                            }
+                        }
+                    }
+
+                    "openAppNotificationSettings" -> {
+                        val pkg = call.argument<String>("packageName")
+                        if (pkg.isNullOrBlank()) {
+                            result.error("NO_PACKAGE", "packageName missing", null)
+                        } else {
+                            try {
+                                val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_DETAIL_SETTINGS).apply {
+                                    putExtra(Settings.EXTRA_NOTIFICATION_LISTENER_COMPONENT_NAME, pkg)
+                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                }
+                                startActivity(intent)
+                                result.success(true)
+                            } catch (e: Exception) {
+                                try {
+                                    val fallback = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS).apply {
+                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    }
+                                    startActivity(fallback)
+                                    result.success(true)
+                                } catch (e2: Exception) {
+                                    result.error("NOTIFICATION_SETTINGS_ERROR", e2.message, null)
                                 }
                             }
                         }
@@ -294,8 +298,7 @@ class MainActivity : FlutterActivity() {
 
                     "openBatteryOptimizationSettings" -> {
                         try {
-                            val intent =
-                                Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+                            val intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             startActivity(intent)
                             result.success(true)
@@ -306,8 +309,7 @@ class MainActivity : FlutterActivity() {
 
                     "checkBatteryOptimization" -> {
                         try {
-                            val pm =
-                                getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+                            val pm = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
                             val ignoring = pm.isIgnoringBatteryOptimizations(packageName)
                             result.success(ignoring)
                         } catch (_: Exception) {
@@ -346,6 +348,7 @@ class MainActivity : FlutterActivity() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, DASHBOARD_CHANNEL)
             .setMethodCallHandler { call, result ->
                 when (call.method) {
+
                     "isAccessibilityEnabled" -> {
                         val enabled = AccessibilityUtils.isAnyAccessibilityServiceEnabled(this)
                         result.success(enabled)
@@ -407,10 +410,9 @@ class MainActivity : FlutterActivity() {
 
                     "openPermissionManager" -> {
                         try {
-                            val intent =
-                                Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS).apply {
-                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                }
+                            val intent = Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS).apply {
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            }
                             startActivity(intent)
                             result.success(true)
                         } catch (e: Exception) {
@@ -445,7 +447,6 @@ class MainActivity : FlutterActivity() {
         return count
     }
 
-    // ✅ FAST: no permissions, no icon
     private fun getInstalledAppsLite(): List<Map<String, Any>> {
         val pm: PackageManager = applicationContext.packageManager
         val installed = pm.getInstalledApplications(0)
@@ -460,7 +461,6 @@ class MainActivity : FlutterActivity() {
         return apps
     }
 
-    // ✅ Lazy: permissions for one package
     private fun getGrantedPermissionsForPackage(pkg: String): List<String> {
         val pm = applicationContext.packageManager
         val granted = mutableListOf<String>()
@@ -478,7 +478,6 @@ class MainActivity : FlutterActivity() {
         return granted
     }
 
-    // ✅ Lazy: icon for one package (small)
     private fun getAppIconBase64(pkg: String, size: Int): String {
         val pm = applicationContext.packageManager
         val appInfo = pm.getApplicationInfo(pkg, 0)
@@ -490,11 +489,10 @@ class MainActivity : FlutterActivity() {
         drawable.draw(canvas)
 
         val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream) // سبک‌تر از 100
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
         return Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
     }
 
-    // (Legacy) سنگین — اگر هنوز نیاز داری نگهش دار
     private fun getInstalledAppsListHeavy(): List<Map<String, Any>> {
         val pm: PackageManager = applicationContext.packageManager
         val packages = pm.getInstalledPackages(PackageManager.GET_PERMISSIONS)
@@ -519,7 +517,6 @@ class MainActivity : FlutterActivity() {
             }
 
             try {
-                // ⚠️ این قسمت سنگینه: icon + PNG + base64
                 val drawable = pm.getApplicationIcon(appInfo)
                 val width = if (drawable.intrinsicWidth > 0) drawable.intrinsicWidth else 96
                 val height = if (drawable.intrinsicHeight > 0) drawable.intrinsicHeight else 96
@@ -541,9 +538,7 @@ class MainActivity : FlutterActivity() {
                         "permissions" to grantedPermissions
                     )
                 )
-            } catch (_: Exception) {
-                // ignore icon errors
-            }
+            } catch (_: Exception) {}
         }
 
         return apps
@@ -587,7 +582,6 @@ class MainActivity : FlutterActivity() {
     private fun getUsageAccessApps(): List<Map<String, Any>> {
         val pm = packageManager
         val appOps = getSystemService(Context.APP_OPS_SERVICE) as android.app.AppOpsManager
-
         val installed = pm.getInstalledApplications(0)
         val apps = mutableListOf<Map<String, Any>>()
 
@@ -601,9 +595,7 @@ class MainActivity : FlutterActivity() {
                     app.packageName
                 )
 
-                val hasPermission = mode == android.app.AppOpsManager.MODE_ALLOWED
-
-                if (!hasPermission) continue
+                if (mode != android.app.AppOpsManager.MODE_ALLOWED) continue
 
                 val appName = pm.getApplicationLabel(app).toString()
                 val iconB64 = getAppIconBase64(app.packageName, 64)
@@ -616,7 +608,6 @@ class MainActivity : FlutterActivity() {
                         "hasPermission" to true
                     )
                 )
-
             } catch (_: Exception) {}
         }
 
@@ -631,10 +622,15 @@ class MainActivity : FlutterActivity() {
 
         val pm = packageManager
         val apps = mutableListOf<Map<String, Any>>()
+        val seenPackages = mutableSetOf<String>()
 
         enabledListeners.split(":").forEach { flat ->
+            if (flat.isBlank()) return@forEach
             val cn = android.content.ComponentName.unflattenFromString(flat) ?: return@forEach
             val pkg = cn.packageName
+
+            if (pkg in seenPackages) return@forEach
+            seenPackages.add(pkg)
 
             try {
                 val appInfo = pm.getApplicationInfo(pkg, 0)
@@ -643,9 +639,15 @@ class MainActivity : FlutterActivity() {
                 val appName = pm.getApplicationLabel(appInfo).toString()
                 val iconB64 = getAppIconBase64(pkg, 64)
 
-                apps.add(mapOf("package" to pkg, "name" to appName, "icon" to iconB64))
-            } catch (_: Exception) {
-            }
+                apps.add(
+                    mapOf(
+                        "package" to pkg,
+                        "name" to appName,
+                        "icon" to iconB64,
+                        "component" to flat
+                    )
+                )
+            } catch (_: Exception) {}
         }
 
         return apps
@@ -664,8 +666,7 @@ class MainActivity : FlutterActivity() {
                 val appInfo = pm.getApplicationInfo(pkg, 0)
                 val isSystem = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
                 if (!isSystem) return true
-            } catch (_: Exception) {
-            }
+            } catch (_: Exception) {}
         }
         return false
     }
