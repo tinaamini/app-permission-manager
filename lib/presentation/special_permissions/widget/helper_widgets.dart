@@ -5,25 +5,30 @@ import 'package:Privio/constant/app_style.dart';
 import 'package:Privio/constant/risk_level.dart';
 import 'package:Privio/generated/app_localizations.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-Widget sectionTitle(String text,BuildContext context) {
+Widget sectionTitle(String text, BuildContext context) {
   return Text(text, style: AppTextStyle.trustTitle(context));
 }
 
-Widget paragraph(String text,BuildContext context) {
+Widget paragraph(String text, BuildContext context) {
   return Padding(
     padding: EdgeInsets.only(top: AppSize.height * 0.01),
     child: Text(
       text,
-      style: AppTextStyle.trustDescription(context).copyWith(color:context.isDark? AppColor.green2:AppColor.green4),
+      style: AppTextStyle.trustDescription(context)
+          .copyWith(color: context.isDark ? AppColor.green2 : AppColor.green4),
     ),
   );
 }
 
-Widget riskBadge(BuildContext context,{required RiskLevel level,}) {
+Widget riskBadge(
+  BuildContext context, {
+  required RiskLevel level,
+}) {
   late Color color;
   late String label;
-  final l10n=AppLocalizations.of(context)!;
+  final l10n = AppLocalizations.of(context)!;
 
   switch (level) {
     case RiskLevel.highRisk:
@@ -53,10 +58,8 @@ Widget riskBadge(BuildContext context,{required RiskLevel level,}) {
       color: color.withAlpha(38),
       borderRadius: BorderRadius.circular(AppSize.width * 0.05),
     ),
-    child: Text(
-      label,
-      style: AppTextStyle.lastScan(context).copyWith(color: color)
-    ),
+    child: Text(label,
+        style: AppTextStyle.lastScan(context).copyWith(color: color)),
   );
 }
 
@@ -65,23 +68,27 @@ Widget actionButton({
   required String text,
   required VoidCallback onTap,
 }) {
-  return SizedBox(
-    width: double.infinity,
-    child: ElevatedButton(
-      onPressed: onTap,
-      style: ElevatedButton.styleFrom(
-        backgroundColor:context.isDark? AppColor.CartDark:AppColor.btnLight,
-        padding: EdgeInsets.symmetric(vertical: AppSize.height * 0.018),
-        shape: RoundedRectangleBorder(
+  return GestureDetector(
+    onTap: onTap,
+    child: Padding(
+      padding: EdgeInsets.symmetric(vertical: AppSize.height * 0.018,horizontal: 20.w),
+      child: Container(
+        width: double.infinity,
+        height: 70.h,
+        decoration: BoxDecoration(
+          color: context.isDark ? AppColor.CartDark : AppColor.btnLight,
           borderRadius: BorderRadius.circular(AppSize.width * 0.03),
+          border: Border.all(width: 1.w , color: context.isDark ? AppColor.CartDark : AppColor.borderLight, )
         ),
-      ),
-      child: Text(
-        text,
-        style: AppTextStyle.appName(context),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        textAlign: TextAlign.center,
+        child: Center(
+          child: Text(
+            text,
+            style: AppTextStyle.appName(context),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+          ),
+        ),
       ),
     ),
   );

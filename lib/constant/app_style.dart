@@ -46,7 +46,7 @@ class AppTextStyle {
 
   static TextStyle btnHome(BuildContext context) => TextStyle(
       fontFamily: _font(context),
-      fontSize: 16.sp,
+      fontSize: 12.sp,
       fontWeight: FontWeight.w400,
       color: AppColor.white);
 

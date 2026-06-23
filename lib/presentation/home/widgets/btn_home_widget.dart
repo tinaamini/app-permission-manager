@@ -30,18 +30,17 @@ class BtnHomeWidget extends StatelessWidget {
     return GestureDetector(
       onTap: ontap,
       child: Container(
-
-
+        width: screenWidth * 0.42, // عرض ثابت برای هر کارت
         padding: EdgeInsets.symmetric(
           horizontal: screenWidth * 0.05,
           vertical: screenHeight * 0.017,
         ),
         decoration: BoxDecoration(
-          color:isDark? AppColor.CartDark:AppColor.btnLight,
+          color: isDark ? AppColor.CartDark : AppColor.btnLight,
           borderRadius: BorderRadius.circular(24.r),
           border: Border.all(
             width: 1,
-            color:isDark? AppColor.CartDarkBorder:AppColor.borderLight,
+            color: isDark ? AppColor.CartDarkBorder : AppColor.borderLight,
           ),
         ),
         child: Column(
@@ -53,20 +52,20 @@ class BtnHomeWidget extends StatelessWidget {
               height: screenHeight * 0.054,
             ),
             SizedBox(height: screenHeight * 0.008),
-
             Text(
               text,
-              style: AppTextStyle.btnHome(context).copyWith(color: isDark ? AppColor.white :AppColor.black),
+              style: AppTextStyle.btnHome(context).copyWith(
+                color: isDark ? AppColor.white : AppColor.black,
+              ),
               textAlign: TextAlign.center,
-              maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-
             SizedBox(height: screenHeight * 0.005),
-
             Text(
               textCount,
-              style: AppTextStyle.cartDarkCount(context).copyWith(color: isDark?AppColor.CartDarkCount:AppColor.textLight),
+              style: AppTextStyle.cartDarkCount(context).copyWith(
+                color: isDark ? AppColor.CartDarkCount : AppColor.textLight,
+              ),
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
