@@ -350,6 +350,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get untrust => 'Untrust';
 
   @override
+  String get appsWithBatteryOptimization => 'Apps with Unrestricted Battery';
+
+  @override
+  String get noAppsWithBatteryOptimization =>
+      'No apps have unrestricted battery access';
+
+  @override
+  String get appsWithDoNotDisturb => 'Apps with Do Not Disturb Access';
+
+  @override
+  String get noAppsWithDoNotDisturb => 'No apps have Do Not Disturb access';
+
+  @override
   String get securityOverview => 'Security Overview';
 
   @override

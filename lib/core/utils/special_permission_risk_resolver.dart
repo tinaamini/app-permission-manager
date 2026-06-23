@@ -20,8 +20,12 @@ class SpecialPermissionRiskResolver {
         if (count <= 2) return RiskLevel.mediumRisk;
         return RiskLevel.highRisk;
 
-      default:
+      case SpecialPermissionType.batteryOptimization:
+        if (count <= 3) return RiskLevel.lowRisk;
         return RiskLevel.mediumRisk;
+
+      case SpecialPermissionType.doNotDisturb:
+        return RiskLevel.lowRisk;
     }
   }
 

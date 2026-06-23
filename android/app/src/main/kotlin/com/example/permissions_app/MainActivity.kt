@@ -187,7 +187,6 @@ class MainActivity : FlutterActivity() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SPECIAL_PERMISSION_CHANNEL)
             .setMethodCallHandler { call, result ->
                 when (call.method) {
-
                     "checkUsageAccess" -> {
                         try {
                             val appOps =
@@ -236,6 +235,7 @@ class MainActivity : FlutterActivity() {
                             result.success(false)
                         }
                     }
+
                     "openAppOverlaySettings" -> {
                         val pkg = call.argument<String>("packageName")
                         if (pkg.isNullOrBlank()) {
@@ -335,6 +335,35 @@ class MainActivity : FlutterActivity() {
                         }
                     }
 
+                    "getBatteryOptimizationApps" -> {
+                        ioExecutor.execute {
+                            try {
+                                val data = getBatteryOptimizationApps()
+                                runOnUiThread { result.success(data) }
+                            } catch (e: Exception) {
+                                runOnUiThread { result.error("BATTERY_LIST_ERROR", e.message, null) }
+                            }
+                        }
+                    }
+
+                    "openAppBatteryOptimizationSettings" -> {
+                        val pkg = call.argument<String>("packageName")
+                        if (pkg.isNullOrBlank()) {
+                            result.error("NO_PACKAGE", "packageName missing", null)
+                        } else {
+                            try {
+                                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                    data = Uri.parse("package:$pkg")
+                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                }
+                                startActivity(intent)
+                                result.success(true)
+                            } catch (e: Exception) {
+                                result.error("BATTERY_OPT_ERROR", e.message, null)
+                            }
+                        }
+                    }
+
                     "openDoNotDisturbSettings" -> {
                         try {
                             val intent = Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
@@ -355,6 +384,17 @@ class MainActivity : FlutterActivity() {
                             result.success(enabled)
                         } catch (_: Exception) {
                             result.success(false)
+                        }
+                    }
+
+                    "getDoNotDisturbApps" -> {
+                        ioExecutor.execute {
+                            try {
+                                val data = getDoNotDisturbApps()
+                                runOnUiThread { result.success(data) }
+                            } catch (e: Exception) {
+                                runOnUiThread { result.error("DND_LIST_ERROR", e.message, null) }
+                            }
                         }
                     }
 
@@ -662,6 +702,55 @@ class MainActivity : FlutterActivity() {
             } catch (_: Exception) {}
         }
 
+        return apps
+    }
+
+    private fun getBatteryOptimizationApps(): List<Map<String, Any>> {
+        val pm = packageManager
+        val powerManager = getSystemService(Context.POWER_SERVICE) as android.os.PowerManager
+        val installed = pm.getInstalledApplications(0)
+        val apps = mutableListOf<Map<String, Any>>()
+
+        for (app in installed) {
+            if ((app.flags and ApplicationInfo.FLAG_SYSTEM) != 0) continue
+            try {
+                if (!powerManager.isIgnoringBatteryOptimizations(app.packageName)) continue
+                val appName = pm.getApplicationLabel(app).toString()
+                val iconB64 = getAppIconBase64(app.packageName, 64)
+                apps.add(mapOf("package" to app.packageName, "name" to appName, "icon" to iconB64))
+            } catch (_: Exception) {}
+        }
+        return apps
+    }
+
+    private fun getDoNotDisturbApps(): List<Map<String, Any>> {
+        val pm = packageManager
+        val appOps = getSystemService(Context.APP_OPS_SERVICE) as android.app.AppOpsManager
+        val installed = pm.getInstalledApplications(0)
+        val apps = mutableListOf<Map<String, Any>>()
+
+        for (app in installed) {
+            if ((app.flags and ApplicationInfo.FLAG_SYSTEM) != 0) continue
+            try {
+                val mode = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                    appOps.unsafeCheckOpNoThrow(
+                        "android:access_notifications",
+                        app.uid,
+                        app.packageName
+                    )
+                } else {
+                    appOps.checkOpNoThrow(
+                        "android:access_notifications",
+                        app.uid,
+                        app.packageName
+                    )
+                }
+                if (mode != android.app.AppOpsManager.MODE_ALLOWED) continue
+                val appName = pm.getApplicationLabel(app).toString()
+                val iconB64 = getAppIconBase64(app.packageName, 64)
+                apps.add(mapOf("package" to app.packageName, "name" to appName, "icon" to iconB64))
+            } catch (_: Exception) {}
+        }
         return apps
     }
 

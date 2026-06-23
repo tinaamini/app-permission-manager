@@ -160,21 +160,22 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
                           },
                         ),
                         SizedBox(height: AppSize.height * 0.025),
-                        FutureBuilder<bool>(
+                        // Battery
+                        FutureBuilder<List<Map<String, dynamic>>>(
                           future: AppSpecialPermissionPlatform()
-                              .isIgnoringBatteryOptimizations(),
+                              .getBatteryOptimizationApps(),
                           builder: (context, snapshot) {
-                            final enabled = snapshot.data ?? false;
+                            final apps = snapshot.data ?? [];
                             return BtnSpecialPermission(
                               image: 'assets/special_permission/Battery.png',
                               title: l10n.unrestrictedBatteryTitle,
                               text: l10n.unrestrictedBatteryDesc,
                               riskLevel:
-                                  SpecialPermissionRiskResolver.fromEnabled(
+                                  SpecialPermissionRiskResolver.fromCount(
                                 type: SpecialPermissionType.batteryOptimization,
-                                enabled: enabled,
+                                count: apps.length,
                               ),
-                              enabled: enabled,
+                              enabled: apps.isNotEmpty,
                               ontap: () => context.pushNamed(
                                 RouteName.specialPermissionDetail,
                                 extra:
@@ -184,21 +185,22 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
                           },
                         ),
                         SizedBox(height: AppSize.height * 0.025),
-                        FutureBuilder<bool>(
+
+                        FutureBuilder<List<Map<String, dynamic>>>(
                           future: AppSpecialPermissionPlatform()
-                              .isDoNotDisturbEnabled(),
+                              .getDoNotDisturbApps(),
                           builder: (context, snapshot) {
-                            final enabled = snapshot.data ?? false;
+                            final apps = snapshot.data ?? [];
                             return BtnSpecialPermission(
                               image: 'assets/special_permission/Disturb.png',
                               title: l10n.doNotDisturb,
                               text: l10n.doNotDisturbPermission,
                               riskLevel:
-                                  SpecialPermissionRiskResolver.fromEnabled(
+                                  SpecialPermissionRiskResolver.fromCount(
                                 type: SpecialPermissionType.doNotDisturb,
-                                enabled: enabled,
+                                count: apps.length,
                               ),
-                              enabled: enabled,
+                              enabled: apps.isNotEmpty,
                               ontap: () => context.pushNamed(
                                 RouteName.specialPermissionDetail,
                                 extra: SpecialPermissionType.doNotDisturb,

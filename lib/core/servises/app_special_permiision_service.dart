@@ -123,6 +123,22 @@ class AppSpecialPermissionPlatform {
     }
   }
 
+  Future<List<Map<String, dynamic>>> getBatteryOptimizationApps() async {
+    try {
+      final List result = await _channel.invokeMethod('getBatteryOptimizationApps');
+      return result.map((e) => Map<String, dynamic>.from(e)).toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
+  Future<void> openAppBatteryOptimizationSettings(String packageName) async {
+    try {
+      await _channel.invokeMethod('openAppBatteryOptimizationSettings', {'packageName': packageName});
+    } catch (_) {}
+  }
+
+
   // ===== Do Not Disturb =====
   Future<void> openDoNotDisturbSettings() async {
     try {
@@ -139,4 +155,17 @@ class AppSpecialPermissionPlatform {
       return false;
     }
   }
+
+  Future<List<Map<String, dynamic>>> getDoNotDisturbApps() async {
+    try {
+      final List result = await _channel.invokeMethod('getDoNotDisturbApps');
+      return result.map((e) => Map<String, dynamic>.from(e)).toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
+
+
+
 }

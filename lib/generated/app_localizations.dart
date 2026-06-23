@@ -734,6 +734,30 @@ abstract class AppLocalizations {
   /// **'Untrust'**
   String get untrust;
 
+  /// No description provided for @appsWithBatteryOptimization.
+  ///
+  /// In en, this message translates to:
+  /// **'Apps with Unrestricted Battery'**
+  String get appsWithBatteryOptimization;
+
+  /// No description provided for @noAppsWithBatteryOptimization.
+  ///
+  /// In en, this message translates to:
+  /// **'No apps have unrestricted battery access'**
+  String get noAppsWithBatteryOptimization;
+
+  /// No description provided for @appsWithDoNotDisturb.
+  ///
+  /// In en, this message translates to:
+  /// **'Apps with Do Not Disturb Access'**
+  String get appsWithDoNotDisturb;
+
+  /// No description provided for @noAppsWithDoNotDisturb.
+  ///
+  /// In en, this message translates to:
+  /// **'No apps have Do Not Disturb access'**
+  String get noAppsWithDoNotDisturb;
+
   /// No description provided for @securityOverview.
   ///
   /// In en, this message translates to:

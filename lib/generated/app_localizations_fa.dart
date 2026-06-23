@@ -352,6 +352,20 @@ class AppLocalizationsFa extends AppLocalizations {
   String get untrust => 'سلب اعتماد';
 
   @override
+  String get appsWithBatteryOptimization =>
+      'اپ‌های دارای دسترسی نامحدود به باتری';
+
+  @override
+  String get noAppsWithBatteryOptimization =>
+      'هیچ اپی دسترسی نامحدود به باتری ندارد';
+
+  @override
+  String get appsWithDoNotDisturb => 'برنامه‌های دارای دسترسی مزاحم نشو';
+
+  @override
+  String get noAppsWithDoNotDisturb => 'هیچ برنامه‌ای دسترسی مزاحم نشو ندارد';
+
+  @override
   String get securityOverview => 'مرور امنیتی';
 
   @override
