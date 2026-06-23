@@ -313,7 +313,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get noAppsWithOverlayPermission =>
-      'No apps have display over other apps permission';
+      'هیچ اپی مجوز نمایش روی سایر برنامه‌ها را ندارد';
 
   @override
   String get markedAsSafe => 'علامت‌گذاری شده به‌عنوان ایمن';

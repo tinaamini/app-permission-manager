@@ -77,7 +77,13 @@ class _BatteryOptimizationDetailState extends State<BatteryOptimizationDetail>
             count: apps.length,
           );
 
-          return Column(
+          return  apps.isEmpty
+              ? Center(
+            child: EmptyPageWidget(
+              text: l10n.noAppsWithBatteryOptimization,
+            ),
+          )
+              : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               sectionTitle(l10n.batteryOptimization, context),
@@ -85,24 +91,18 @@ class _BatteryOptimizationDetailState extends State<BatteryOptimizationDetail>
               SizedBox(height: AppSize.height * 0.02),
               riskBadge(level: level, context),
               SizedBox(height: AppSize.height * 0.03),
-              actionButton(
-                context: context,
-                text: l10n.openBatteryOptimizationSettings,
-                onTap: () {
-                  AppSpecialPermissionPlatform().openBatteryOptimizationSettings();
-                },
-              ),
+              // actionButton(
+              //   context: context,
+              //   text: l10n.openBatteryOptimizationSettings,
+              //   onTap: () {
+              //     AppSpecialPermissionPlatform().openBatteryOptimizationSettings();
+              //   },
+              // ),
               SizedBox(height: AppSize.height * 0.04),
               sectionTitle(l10n.appsWithBatteryOptimization, context),
               SizedBox(height: AppSize.height * 0.015),
               Expanded(
-                child: apps.isEmpty
-                    ? Center(
-                  child: EmptyPageWidget(
-                    text: l10n.noAppsWithBatteryOptimization,
-                  ),
-                )
-                    : Padding(
+                child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.w),
                   child: ListView.separated(
                     itemCount: apps.length,

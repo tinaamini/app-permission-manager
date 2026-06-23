@@ -77,7 +77,13 @@ class _NotificationAccessDetailState extends State<NotificationAccessDetail>
             count: apps.length,
           );
 
-          return Column(
+          return apps.isEmpty
+              ? Center(
+            child: EmptyPageWidget(
+              text: l10n.noAppsWithOverlayPermission,
+            ),
+          )
+              :Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               sectionTitle(l10n.whatIsNotificationAccess, context),
@@ -97,14 +103,7 @@ class _NotificationAccessDetailState extends State<NotificationAccessDetail>
               sectionTitle(l10n.appsWithNotificationAccess, context),
               SizedBox(height: AppSize.height * 0.015),
               Expanded(
-                child: apps.isEmpty
-                    ? Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 30.w),
-                      child: EmptyPageWidget(
-                        text: l10n.noAppsWithNotificationAccess,
-                      ),
-                    )
-                    : Padding(
+                child:  Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10.w),
                         child: ListView.separated(
                           itemCount: apps.length,

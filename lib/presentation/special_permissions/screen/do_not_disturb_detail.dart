@@ -76,7 +76,13 @@ class _DoNotDisturbDetailState extends State<DoNotDisturbDetail>
             count: apps.length,
           );
 
-          return Column(
+          return  apps.isEmpty
+              ? Center(
+            child: EmptyPageWidget(
+              text: l10n.noAppsWithDoNotDisturb,
+            ),
+          )
+              :Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               sectionTitle(l10n.doNotDisturb, context),
@@ -92,62 +98,56 @@ class _DoNotDisturbDetailState extends State<DoNotDisturbDetail>
                 },
               ),
               SizedBox(height: AppSize.height * 0.04),
-              sectionTitle(l10n.appsWithDoNotDisturb, context),
-              SizedBox(height: AppSize.height * 0.015),
-              Expanded(
-                child: apps.isEmpty
-                    ? Center(
-                  child: EmptyPageWidget(
-                    text: l10n.noAppsWithDoNotDisturb,
-                  ),
-                )
-                    : Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w),
-                  child: ListView.separated(
-                    itemCount: apps.length,
-                    separatorBuilder: (_, __) => Divider(
-                      color: context.isDark
-                          ? Colors.white12
-                          : AppColor.textLight,
-                    ),
-                    itemBuilder: (context, index) {
-                      final app = apps[index];
-                      return ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: app['icon'] != null
-                            ? Image.memory(
-                          base64Decode(app['icon']),
-                          width: AppSize.width * 0.1,
-                          height: AppSize.width * 0.1,
-                        )
-                            : Icon(
-                          Icons.do_not_disturb_on,
-                          color: context.isDark
-                              ? Colors.white54
-                              : AppColor.textLight,
-                        ),
-                        title: Padding(
-                          padding: EdgeInsets.only(top: 20.h),
-                          child: Text(
-                            app['name'] ?? '',
-                            style: AppTextStyle.appName(context),
-                          ),
-                        ),
-                        subtitle: Text(
-                          app['package'] ?? '',
-                          style: AppTextStyle.lastScan(context).copyWith(
-                            color: context.isDark
-                                ? Colors.white54
-                                : AppColor.textLight,
-                            fontSize: AppSize.width * 0.03,
-                          ),
-                        ),
-
-                      );
-                    },
-                  ),
-                ),
-              ),
+              // sectionTitle(l10n.appsWithDoNotDisturb, context),
+              // SizedBox(height: AppSize.height * 0.015),
+              // Expanded(
+              //   child: Padding(
+              //     padding: EdgeInsets.symmetric(horizontal: 10.w),
+              //     child: ListView.separated(
+              //       itemCount: apps.length,
+              //       separatorBuilder: (_, __) => Divider(
+              //         color: context.isDark
+              //             ? Colors.white12
+              //             : AppColor.textLight,
+              //       ),
+              //       itemBuilder: (context, index) {
+              //         final app = apps[index];
+              //         return ListTile(
+              //           contentPadding: EdgeInsets.zero,
+              //           leading: app['icon'] != null
+              //               ? Image.memory(
+              //             base64Decode(app['icon']),
+              //             width: AppSize.width * 0.1,
+              //             height: AppSize.width * 0.1,
+              //           )
+              //               : Icon(
+              //             Icons.do_not_disturb_on,
+              //             color: context.isDark
+              //                 ? Colors.white54
+              //                 : AppColor.textLight,
+              //           ),
+              //           title: Padding(
+              //             padding: EdgeInsets.only(top: 20.h),
+              //             child: Text(
+              //               app['name'] ?? '',
+              //               style: AppTextStyle.appName(context),
+              //             ),
+              //           ),
+              //           subtitle: Text(
+              //             app['package'] ?? '',
+              //             style: AppTextStyle.lastScan(context).copyWith(
+              //               color: context.isDark
+              //                   ? Colors.white54
+              //                   : AppColor.textLight,
+              //               fontSize: AppSize.width * 0.03,
+              //             ),
+              //           ),
+              //
+              //         );
+              //       },
+              //     ),
+              //   ),
+              // ),
             ],
           );
         },

@@ -8,6 +8,7 @@ import 'package:Privio/core/servises/app_special_permiision_service.dart';
 import 'package:Privio/generated/app_localizations.dart';
 import 'package:Privio/presentation/special_permissions/widget/helper_widgets.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:Privio/presentation/utils/custome_dotsloader.dart';
 import 'package:Privio/presentation/utils/empty_page_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -60,12 +61,24 @@ class _DisplayOverAppsDetailState extends State<DisplayOverAppsDetail>
         future: AppSpecialPermissionPlatform().getOverlayApps(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+            return const Center(
+              child: CustomDotsLoader(
+                svgPath1: 'assets/utils/Property 1=1 (1).svg',
+                svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                svgPath4: 'assets/utils/Property 1=4 (1).svg',
+              ),
+            );          }
 
           final apps = snapshot.data ?? [];
 
-          return Column(
+          return apps.isEmpty
+              ? Center(
+            child: EmptyPageWidget(
+              text: l10n.noAppsWithOverlayPermission,
+            ),
+          )
+              :Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               sectionTitle(l10n.displayOverOtherApps, context),
@@ -73,24 +86,18 @@ class _DisplayOverAppsDetailState extends State<DisplayOverAppsDetail>
               SizedBox(height: AppSize.height * 0.02),
               riskBadge(level: _overlayLevel(apps.length), context),
               SizedBox(height: AppSize.height * 0.03),
-              actionButton(
-                context: context,
-                text: l10n.openDisplayOverAppsSettings,
-                onTap: () {
-                  AppSpecialPermissionPlatform().openOverlaySettings();
-                },
-              ),
+              // actionButton(
+              //   context: context,
+              //   text: l10n.openDisplayOverAppsSettings,
+              //   onTap: () {
+              //     AppSpecialPermissionPlatform().openOverlaySettings();
+              //   },
+              // ),
               SizedBox(height: AppSize.height * 0.04),
               sectionTitle(l10n.appsWithOverlayPermission, context),
               SizedBox(height: AppSize.height * 0.015),
               Expanded(
-                child: apps.isEmpty
-                    ? Center(
-                  child: EmptyPageWidget(
-                    text: l10n.appsWithOverlayPermission,
-                  ),
-                )
-                    : Padding(
+                child:  Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.w),
                   child: ListView.separated(
                     itemCount: apps.length,
@@ -134,7 +141,7 @@ class _DisplayOverAppsDetailState extends State<DisplayOverAppsDetail>
                         trailing: Padding(
                           padding: EdgeInsets.only(top: 25.h),
                           child: Icon(
-                            Icons.open_in_new,
+                            Icons.settings_outlined,
                             color: context.isDark
                                 ? Colors.white54
                                 : AppColor.textLight,

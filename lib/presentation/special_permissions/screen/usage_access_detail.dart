@@ -61,9 +61,7 @@ class _UsageAccessDetailState extends State<UsageAccessDetail>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          sectionTitle(l10n.usageAccessTitle2, context),
-          paragraph(l10n.usageAccessDesc, context),
-          SizedBox(height: AppSize.height * 0.02),
+
           Expanded(
             child: FutureBuilder<List<Map<String, dynamic>>>(
               key: _refreshKey,
@@ -83,22 +81,22 @@ class _UsageAccessDetailState extends State<UsageAccessDetail>
                 final apps = snapshot.data ?? [];
                 final level = _levelFromCount(apps.length);
 
-                return Column(
+                return apps.isEmpty
+                    ? EmptyPageWidget(
+                      text: l10n.noAppsWithNotificationAccess,
+                    )
+                    :Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    sectionTitle(l10n.usageAccessTitle2, context),
+                    paragraph(l10n.usageAccessDesc, context),
+                    SizedBox(height: AppSize.height * 0.02),
                     riskBadge(level: level, context),
                     SizedBox(height: AppSize.height * 0.03),
                     sectionTitle(l10n.appsWithUsageAccessTitle, context),
                     SizedBox(height: AppSize.height * 0.015),
                     Expanded(
-                      child: apps.isEmpty
-                          ? Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 40.w),
-                            child: EmptyPageWidget(
-                              text: l10n.noAppsWithNotificationAccess,
-                            ),
-                          )
-                          : ListView.separated(
+                      child:  ListView.separated(
                               itemCount: apps.length,
                               separatorBuilder: (_, __) => Divider(
                                   color: context.isDark
