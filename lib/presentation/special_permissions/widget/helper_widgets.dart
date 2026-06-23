@@ -1,3 +1,4 @@
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/constant/app_style.dart';
@@ -14,7 +15,7 @@ Widget paragraph(String text,BuildContext context) {
     padding: EdgeInsets.only(top: AppSize.height * 0.01),
     child: Text(
       text,
-      style: AppTextStyle.trustDescription(context).copyWith(color: AppColor.green2),
+      style: AppTextStyle.trustDescription(context).copyWith(color:context.isDark? AppColor.green2:AppColor.green4),
     ),
   );
 }
@@ -54,16 +55,13 @@ Widget riskBadge(BuildContext context,{required RiskLevel level,}) {
     ),
     child: Text(
       label,
-      style: TextStyle(
-        color: color,
-        fontWeight: FontWeight.bold,
-        fontSize: AppSize.width * 0.03,
-      ),
+      style: AppTextStyle.lastScan(context).copyWith(color: color)
     ),
   );
 }
 
 Widget actionButton({
+  required BuildContext context,
   required String text,
   required VoidCallback onTap,
 }) {
@@ -72,7 +70,7 @@ Widget actionButton({
     child: ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColor.CartDark,
+        backgroundColor:context.isDark? AppColor.CartDark:AppColor.btnLight,
         padding: EdgeInsets.symmetric(vertical: AppSize.height * 0.018),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSize.width * 0.03),
@@ -80,11 +78,7 @@ Widget actionButton({
       ),
       child: Text(
         text,
-        style: TextStyle(
-          fontSize: AppSize.width * 0.035,
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
-        ),
+        style: AppTextStyle.appName(context),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         textAlign: TextAlign.center,

@@ -11,6 +11,7 @@ class AppSpecialPermissionPlatform {
     } catch (_) {}
   }
 
+
   Future<bool> checkUsageAccess() async {
     try {
       final bool? result =
@@ -42,6 +43,15 @@ class AppSpecialPermissionPlatform {
     } catch (_) {}
   }
 
+  Future<List<Map<String, dynamic>>> getOverlayApps() async {
+    try {
+      final List result = await _channel.invokeMethod('getOverlayApps');
+      return result.map((e) => Map<String, dynamic>.from(e)).toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
   Future<bool> checkOverlayPermission() async {
     try {
       final bool? result =
@@ -50,6 +60,12 @@ class AppSpecialPermissionPlatform {
     } catch (_) {
       return false;
     }
+  }
+
+  Future<void> openAppOverlaySettings(String packageName) async {
+    try {
+      await _channel.invokeMethod('openAppOverlaySettings', {'packageName': packageName});
+    } catch (_) {}
   }
 
   // ===== Notification Access =====
@@ -80,6 +96,13 @@ class AppSpecialPermissionPlatform {
     } catch (_) {
       return [];
     }
+  }
+
+  Future<void> openAppNotificationSettings(String packageName) async {
+    await _channel.invokeMethod(
+      'openAppNotificationSettings',
+      {'packageName': packageName},
+    );
   }
 
 

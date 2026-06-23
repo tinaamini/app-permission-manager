@@ -16,6 +16,10 @@ class SpecialPermissionRiskResolver {
         if (count <= 2) return RiskLevel.mediumRisk;
         return RiskLevel.highRisk;
 
+      case SpecialPermissionType.displayOverApps:
+        if (count <= 2) return RiskLevel.mediumRisk;
+        return RiskLevel.highRisk;
+
       default:
         return RiskLevel.mediumRisk;
     }
