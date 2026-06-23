@@ -203,13 +203,13 @@ class MainActivity : FlutterActivity() {
                         }
                     }
 
-                    "getUsageAccessApps" -> {
+                    "getOverlayApps" -> {
                         ioExecutor.execute {
                             try {
-                                val data = getUsageAccessApps()
+                                val data = getOverlayApps()
                                 runOnUiThread { result.success(data) }
                             } catch (e: Exception) {
-                                runOnUiThread { result.error("USAGE_LIST_ERROR", e.message, null) }
+                                runOnUiThread { result.error("OVERLAY_LIST_ERROR", e.message, null) }
                             }
                         }
                     }
@@ -434,6 +434,39 @@ class MainActivity : FlutterActivity() {
     }
 
     // ===================== Core helpers =====================
+    private fun getOverlayApps(): List<Map<String, Any>> {
+        val pm = packageManager
+        val installed = pm.getInstalledApplications(0)
+        val apps = mutableListOf<Map<String, Any>>()
+
+        for (app in installed) {
+            if ((app.flags and ApplicationInfo.FLAG_SYSTEM) != 0) continue
+            try {
+                // چک می‌کنه این اپ خاص overlay داره یا نه
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:${app.packageName}")
+                )
+                // تنها روش دقیق چک کردن overlay برای هر اپ
+                val hasOverlay = Settings.canDrawOverlays(
+                    applicationContext.createPackageContext(app.packageName, 0)
+                )
+                if (!hasOverlay) continue
+
+                val appName = pm.getApplicationLabel(app).toString()
+                val iconB64 = getAppIconBase64(app.packageName, 64)
+
+                apps.add(
+                    mapOf(
+                        "package" to app.packageName,
+                        "name" to appName,
+                        "icon" to iconB64
+                    )
+                )
+            } catch (_: Exception) {}
+        }
+        return apps
+    }
 
     private fun getInstalledAppsCount(): Int {
         val pm = applicationContext.packageManager

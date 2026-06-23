@@ -1,17 +1,52 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/constant/app_style.dart';
 import 'package:Privio/constant/risk_level.dart';
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:Privio/core/servises/app_special_permiision_service.dart';
 import 'package:Privio/generated/app_localizations.dart';
 import 'package:Privio/presentation/special_permissions/widget/helper_widgets.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:Privio/presentation/utils/empty_page_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class DisplayOverAppsDetail extends StatelessWidget {
+class DisplayOverAppsDetail extends StatefulWidget {
   const DisplayOverAppsDetail({super.key});
 
-  RiskLevel _overlayLevel(bool enabled) {
-    return enabled ? RiskLevel.mediumRisk : RiskLevel.noRisk;
+  @override
+  State<DisplayOverAppsDetail> createState() => _DisplayOverAppsDetailState();
+}
+
+class _DisplayOverAppsDetailState extends State<DisplayOverAppsDetail>
+    with WidgetsBindingObserver {
+
+  Key _refreshKey = UniqueKey();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      setState(() {
+        _refreshKey = UniqueKey();
+      });
+    }
+  }
+
+  RiskLevel _overlayLevel(int count) {
+    return count > 0 ? RiskLevel.mediumRisk : RiskLevel.noRisk;
   }
 
   @override
@@ -20,57 +55,92 @@ class DisplayOverAppsDetail extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.all(AppSize.width * 0.04),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          sectionTitle(l10n.displayOverOtherApps,context),
-          paragraph(l10n.displayOverAppsDesc,context),
+      child: FutureBuilder<List<Map<String, dynamic>>>(
+        key: _refreshKey,
+        future: AppSpecialPermissionPlatform().getOverlayApps(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-          SizedBox(height: AppSize.height * 0.02),
+          final apps = snapshot.data ?? [];
 
-          FutureBuilder<bool>(
-            future: AppSpecialPermissionPlatform().checkOverlayPermission(),
-            builder: (context, snapshot) {
-              final enabled = snapshot.data ?? false;
-              return riskBadge(level: _overlayLevel(enabled),context);
-            },
-          ),
-
-          SizedBox(height: AppSize.height * 0.03),
-
-          GestureDetector(
-            onTap: () {
-              AppSpecialPermissionPlatform().openOverlaySettings();
-            },
-            child: Container(
-              width: double.infinity,
-              height: AppSize.height * 0.06,
-              decoration: BoxDecoration(
-                color: AppColor.CartDark,
-                border: Border.all(width: 1, color: AppColor.green1),
-                borderRadius: BorderRadius.circular(AppSize.width * 0.04),
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              sectionTitle(l10n.displayOverOtherApps, context),
+              paragraph(l10n.displayOverAppsDesc, context),
+              SizedBox(height: AppSize.height * 0.02),
+              riskBadge(level: _overlayLevel(apps.length), context),
+              SizedBox(height: AppSize.height * 0.03),
+              actionButton(
+                context: context,
+                text: l10n.openDisplayOverAppsSettings,
+                onTap: () {
+                  AppSpecialPermissionPlatform().openOverlaySettings();
+                },
               ),
-              child: Center(
-                child: Text(
-                  l10n.openDisplayOverAppsSettings,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyle.greenFont(context),
-                  textAlign: TextAlign.center,
+              SizedBox(height: AppSize.height * 0.04),
+              sectionTitle(l10n.appsWithOverlayPermission, context),
+              SizedBox(height: AppSize.height * 0.015),
+              Expanded(
+                child: apps.isEmpty
+                    ? Center(
+                  child: EmptyPageWidget(
+                    text: l10n.appsWithOverlayPermission,
+                  ),
+                )
+                    : Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
+                  child: ListView.separated(
+                    itemCount: apps.length,
+                    separatorBuilder: (_, __) => Divider(
+                      color: context.isDark
+                          ? Colors.white12
+                          : AppColor.textLight,
+                    ),
+                    itemBuilder: (context, index) {
+                      final app = apps[index];
+                      return ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: app['icon'] != null
+                            ? Image.memory(
+                          base64Decode(app['icon']),
+                          width: AppSize.width * 0.1,
+                          height: AppSize.width * 0.1,
+                        )
+                            : Icon(
+                          Icons.layers,
+                          color: context.isDark
+                              ? Colors.white54
+                              : AppColor.textLight,
+                        ),
+                        title: Padding(
+                          padding: EdgeInsets.only(top: 20.h),
+                          child: Text(
+                            app['name'] ?? '',
+                            style: AppTextStyle.appName(context),
+                          ),
+                        ),
+                        subtitle: Text(
+                          app['package'] ?? '',
+                          style: AppTextStyle.lastScan(context).copyWith(
+                            color: context.isDark
+                                ? Colors.white54
+                                : AppColor.textLight,
+                            fontSize: AppSize.width * 0.03,
+                          ),
+                        ),
+
+
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-          ),
-
-          SizedBox(height: AppSize.height * 0.04),
-
-          Expanded(
-            child: Text(
-              l10n.overlayPermissionNote,
-              style: AppTextStyle.trustDescription(context).copyWith(color: AppColor.green2),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }
