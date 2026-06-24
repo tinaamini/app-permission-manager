@@ -73,6 +73,26 @@ class ScanDiff {
   });
 
   bool get isEmpty => newApps.isEmpty && changedApps.isEmpty;
+
+  // ✅ اضافه شد
+  Map<String, dynamic> toJson() {
+    return {
+      'newApps': newApps.map((a) => a.toJson()).toList(),
+      'changedApps': changedApps.map((c) => c.toJson()).toList(),
+    };
+  }
+
+  // ✅ اضافه شد
+  static ScanDiff fromJson(Map<String, dynamic> json) {
+    return ScanDiff(
+      newApps: ((json['newApps'] as List?) ?? [])
+          .map((e) => AppPermSnapshot.fromJson(Map<String, dynamic>.from(e)))
+          .toList(),
+      changedApps: ((json['changedApps'] as List?) ?? [])
+          .map((e) => PermChange.fromJson(Map<String, dynamic>.from(e)))
+          .toList(),
+    );
+  }
 }
 
 class PermChange {
@@ -87,4 +107,23 @@ class PermChange {
   });
 
   bool get hasChanges => added.isNotEmpty || removed.isNotEmpty;
+
+  // ✅ اضافه شد
+  Map<String, dynamic> toJson() {
+    return {
+      'current': current.toJson(),
+      'added': added,
+      'removed': removed,
+    };
+  }
+
+  // ✅ اضافه شد
+  static PermChange fromJson(Map<String, dynamic> json) {
+    return PermChange(
+      current: AppPermSnapshot.fromJson(
+          Map<String, dynamic>.from(json['current'])),
+      added: List<String>.from(json['added'] ?? []),
+      removed: List<String>.from(json['removed'] ?? []),
+    );
+  }
 }

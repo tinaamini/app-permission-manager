@@ -52,9 +52,12 @@ class SinceLastScanWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(AppSize.width * 0.035),
       decoration: BoxDecoration(
-        color: context.isDark ?AppColor.CartDark:AppColor.btnLight,
+        color: context.isDark ? AppColor.CartDark : AppColor.btnLight,
         borderRadius: BorderRadius.circular(AppSize.width * 0.04),
-        border: Border.all(color: context.isDark ? Colors.white.withAlpha(20):AppColor.borderLight),
+        border: Border.all(
+            color: context.isDark
+                ? Colors.white.withAlpha(20)
+                : AppColor.borderLight),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +82,8 @@ class SinceLastScanWidget extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     border: Border.all(width: 1, color: AppColor.blue1),
-                    color: context.isDark ? AppColor.CartDark:AppColor.btnLight,
+                    color:
+                        context.isDark ? AppColor.CartDark : AppColor.btnLight,
                     borderRadius: BorderRadius.circular(AppSize.width * 0.025),
                   ),
                   child: Row(
@@ -112,23 +116,22 @@ class SinceLastScanWidget extends StatelessWidget {
           ),
           SizedBox(height: AppSize.height * 0.01),
           Text(lastText,
-              style: AppTextStyle.lastScan(context).copyWith(color: AppColor.blue1)),
+              style: AppTextStyle.lastScan(context)
+                  .copyWith(color: AppColor.blue1)),
           SizedBox(height: AppSize.height * 0.015),
-
           Row(
             children: [
-              _pill(l10n.newApps, newCount,context),
+              _pill(l10n.newApps, newCount, context),
               SizedBox(width: AppSize.width * 0.02),
-              _pill(l10n.changedPermissions, changedCount,context),
+              _pill(l10n.changedPermissions, changedCount, context),
             ],
           ),
-
           SizedBox(height: AppSize.height * 0.015),
-
           Row(
             children: [
               Expanded(
-                child: _tabBtn(context,
+                child: _tabBtn(
+                  context,
                   text: l10n.newApps,
                   selected: selectedTab == ScanTab.newApps,
                   onTap: () => onTabChange(ScanTab.newApps),
@@ -136,7 +139,8 @@ class SinceLastScanWidget extends StatelessWidget {
               ),
               SizedBox(width: AppSize.width * 0.025),
               Expanded(
-                child: _tabBtn(context,
+                child: _tabBtn(
+                  context,
                   text: l10n.changed,
                   selected: selectedTab == ScanTab.changedPerms,
                   onTap: () => onTabChange(ScanTab.changedPerms),
@@ -144,9 +148,7 @@ class SinceLastScanWidget extends StatelessWidget {
               ),
             ],
           ),
-
           SizedBox(height: AppSize.height * 0.015),
-
           if (diff == null)
             Text(
               l10n.runScanToCompare,
@@ -160,13 +162,13 @@ class SinceLastScanWidget extends StatelessWidget {
                   .copyWith(color: AppColor.blue2),
             )
           else
-            _buildList(selectedTab, diff!, _decodeIcon, l10n),
+            _buildList(selectedTab, diff!, _decodeIcon, l10n, context),
         ],
       ),
     );
   }
 
-  Widget _pill(String label, int count,BuildContext context) {
+  Widget _pill(String label, int count, BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: AppSize.width * 0.025,
@@ -184,7 +186,8 @@ class SinceLastScanWidget extends StatelessWidget {
     );
   }
 
-  Widget _tabBtn(BuildContext context,{
+  Widget _tabBtn(
+    BuildContext context, {
     required String text,
     required bool selected,
     required VoidCallback onTap,
@@ -195,7 +198,7 @@ class SinceLastScanWidget extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: AppSize.height * 0.015),
         decoration: BoxDecoration(
-          color: context.isDark ? AppColor.CartDark:AppColor.btnLight,
+          color: context.isDark ? AppColor.CartDark : AppColor.btnLight,
           borderRadius: BorderRadius.circular(AppSize.width * 0.025),
           border: Border.all(
             color: selected ? AppColor.blue1 : Colors.transparent,
@@ -205,7 +208,9 @@ class SinceLastScanWidget extends StatelessWidget {
           child: Text(
             text,
             style: AppTextStyle.lastScan(context).copyWith(
-              color: selected ? AppColor.blue1 :( context.isDark ? AppColor.borderCard:AppColor.textLight),
+              color: selected
+                  ? AppColor.blue1
+                  : (context.isDark ? AppColor.borderCard : AppColor.textLight),
             ),
           ),
         ),
@@ -214,16 +219,18 @@ class SinceLastScanWidget extends StatelessWidget {
   }
 
   Widget _buildList(
-      ScanTab tab,
-      ScanDiff diff,
-      Uint8List? Function(String?) decodeIcon,
-      AppLocalizations l10n,
-      ) {
+    ScanTab tab,
+    ScanDiff diff,
+    Uint8List? Function(String?) decodeIcon,
+    AppLocalizations l10n,
+    BuildContext context,
+  ) {
     if (tab == ScanTab.newApps) {
       return Column(
         children: diff.newApps.map((a) {
           final bytes = decodeIcon(a.iconBase64);
           return _simpleRow(
+            context: context,
             icon: bytes,
             title: a.name,
             subtitle: a.packageName,
@@ -239,6 +246,7 @@ class SinceLastScanWidget extends StatelessWidget {
         final a = c.current;
         final bytes = decodeIcon(a.iconBase64);
         return _changedRow(
+          context: context,
           icon: bytes,
           title: a.name,
           subtitle: a.packageName,
@@ -251,6 +259,7 @@ class SinceLastScanWidget extends StatelessWidget {
   }
 
   Widget _simpleRow({
+    required BuildContext context,
     required Uint8List? icon,
     required String title,
     required String subtitle,
@@ -261,7 +270,7 @@ class SinceLastScanWidget extends StatelessWidget {
       margin: EdgeInsets.only(bottom: AppSize.height * 0.012),
       padding: EdgeInsets.all(AppSize.width * 0.03),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.04),
+        color:context.isDark? Colors.white.withOpacity(0.04):AppColor.btnLight,
         borderRadius: BorderRadius.circular(AppSize.width * 0.03),
       ),
       child: Row(
@@ -275,17 +284,12 @@ class SinceLastScanWidget extends StatelessWidget {
                 Text(title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        fontSize: AppSize.width * 0.033)),
+                    style: AppTextStyle.appName(context)),
                 SizedBox(height: AppSize.height * 0.005),
                 Text(subtitle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: Colors.white38,
-                        fontSize: AppSize.width * 0.028)),
+                    style: AppTextStyle.lastScan(context).copyWith(color: context.isDark? Colors.white38:AppColor.textLight)),
               ],
             ),
           ),
@@ -300,10 +304,7 @@ class SinceLastScanWidget extends StatelessWidget {
             ),
             child: Text(
               trailing,
-              style: TextStyle(
-                  color: trailingColor,
-                  fontWeight: FontWeight.w900,
-                  fontSize: AppSize.width * 0.028),
+              style: AppTextStyle.lastScan(context).copyWith(color: context.isDark? AppColor.green2:AppColor.green4)
             ),
           ),
         ],
@@ -318,12 +319,13 @@ class SinceLastScanWidget extends StatelessWidget {
     required List<String> added,
     required List<String> removed,
     required AppLocalizations l10n,
+    required BuildContext context,
   }) {
     return Container(
       margin: EdgeInsets.only(bottom: AppSize.height * 0.012),
       padding: EdgeInsets.all(AppSize.width * 0.03),
       decoration: BoxDecoration(
-        color: Colors.white.withAlpha(10),
+        color: context.isDark ? Colors.white.withAlpha(10) : AppColor.btnLight,
         borderRadius: BorderRadius.circular(AppSize.width * 0.03),
       ),
       child: Column(
@@ -339,17 +341,15 @@ class SinceLastScanWidget extends StatelessWidget {
                     Text(title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                            fontSize: AppSize.width * 0.033)),
+                        style:AppTextStyle.appName(context)),
                     SizedBox(height: AppSize.height * 0.005),
                     Text(subtitle,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: Colors.white38,
-                            fontSize: AppSize.width * 0.028)),
+                        style: AppTextStyle.lastScan(context).copyWith(
+                            color: context.isDark
+                                ? Colors.white38
+                                : AppColor.textLight)),
                   ],
                 ),
               ),
@@ -374,15 +374,15 @@ class SinceLastScanWidget extends StatelessWidget {
           ),
           SizedBox(height: AppSize.height * 0.012),
           if (added.isNotEmpty)
-            _changeLine(l10n.added, added, Colors.greenAccent),
+            _changeLine(context,l10n.added, added, Colors.greenAccent),
           if (removed.isNotEmpty)
-            _changeLine(l10n.removed, removed, Colors.redAccent),
+            _changeLine(context,l10n.removed, removed, Colors.redAccent),
         ],
       ),
     );
   }
 
-  Widget _changeLine(String label, List<String> items, Color c) {
+  Widget _changeLine(BuildContext context,String label, List<String> items, Color c) {
     final text = items.take(6).join(', ') + (items.length > 6 ? ' …' : '');
     return Container(
       width: double.infinity,
@@ -398,8 +398,11 @@ class SinceLastScanWidget extends StatelessWidget {
       ),
       child: Text(
         '$label: $text',
-        style: TextStyle(
-            color: Colors.white70, fontSize: AppSize.width * 0.028),
+        style:
+        AppTextStyle.lastScan(context).copyWith(
+            color: context.isDark
+                ? Colors.white38
+                : AppColor.textLight),
       ),
     );
   }
@@ -413,12 +416,11 @@ class SinceLastScanWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSize.width * 0.025),
       ),
       child: bytes == null
-          ? Icon(Icons.apps,
-          color: Colors.white38, size: AppSize.width * 0.05)
+          ? Icon(Icons.apps, color: Colors.white38, size: AppSize.width * 0.05)
           : ClipRRect(
-        borderRadius: BorderRadius.circular(AppSize.width * 0.025),
-        child: Image.memory(bytes, fit: BoxFit.cover),
-      ),
+              borderRadius: BorderRadius.circular(AppSize.width * 0.025),
+              child: Image.memory(bytes, fit: BoxFit.cover),
+            ),
     );
   }
 }

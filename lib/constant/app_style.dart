@@ -18,7 +18,7 @@ class AppTextStyle {
       fontFamily: _font(context),
       fontSize:  16.sp,
       fontWeight: FontWeight.w400,
-      color: AppColor.white);
+      color: context.isDark?AppColor.white:AppColor.black);
 
   static TextStyle onboardingTitle(BuildContext context) => TextStyle(
       fontFamily: _font(context),

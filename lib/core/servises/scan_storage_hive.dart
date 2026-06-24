@@ -35,4 +35,22 @@ class ScanStorageHive {
     final box = await _box();
     await box.delete(_keyLastSnapshot);
   }
+
+  // ذخیره diff
+  static Future<void> saveLastDiff(ScanDiff diff) async {
+    final box = await Hive.openBox('scan_box');
+    await box.put('last_diff', jsonEncode(diff.toJson()));
+  }
+
+// خواندن diff
+  static Future<ScanDiff?> loadLastDiff() async {
+    final box = await Hive.openBox('scan_box');
+    final raw = box.get('last_diff');
+    if (raw == null) return null;
+    try {
+      return ScanDiff.fromJson(jsonDecode(raw));
+    } catch (_) {
+      return null;
+    }
+  }
 }

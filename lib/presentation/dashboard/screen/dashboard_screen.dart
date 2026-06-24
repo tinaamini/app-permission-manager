@@ -18,7 +18,8 @@ import 'package:Privio/presentation/utils/app_bar.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
 import 'package:Privio/presentation/utils/base_screen.dart';
 import 'package:Privio/presentation/utils/custome_dotsloader.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:Privio/logic/utils/scan/scan_cubit.dart';
 class DashboardPermissionScreen extends StatefulWidget {
   const DashboardPermissionScreen({super.key});
 
@@ -57,6 +58,7 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
     if (state == AppLifecycleState.resumed) {
       DashboardPermissionService.clearCache();
       _loadAlerts(showLoader: false);
+      _loadLastScan();
     }
   }
 
@@ -81,13 +83,14 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
 
   Future<void> _loadLastScan() async {
     final last = await ScanStorageHive.loadLastSnapshot();
+    final diff = await ScanStorageHive.loadLastDiff();
     if (!mounted) return;
 
     setState(() {
       _lastScanTime = last == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(last.timestampMs);
-      _scanDiff = null;
+      _scanDiff = diff;
     });
   }
 
@@ -98,6 +101,8 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
     try {
       final prev = await ScanStorageHive.loadLastSnapshot();
       final curr = await ScanService.takeSnapshot();
+      final diff = (prev == null) ? null : diffSnapshots(prev, curr);
+      if (diff != null) await ScanStorageHive.saveLastDiff(diff);
 
       await ScanStorageHive.saveLastSnapshot(curr);
 
@@ -105,9 +110,13 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
 
       setState(() {
         _lastScanTime = DateTime.fromMillisecondsSinceEpoch(curr.timestampMs);
-        _scanDiff = (prev == null) ? null : diffSnapshots(prev, curr);
+        _scanDiff = diff;
         _scanning = false;
       });
+
+
+      if (mounted) context.read<ScanCubit>().loadLastScan();
+
     } catch (_) {
       if (!mounted) return;
       setState(() => _scanning = false);
