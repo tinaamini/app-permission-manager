@@ -25,7 +25,7 @@ class MainActivity : FlutterActivity() {
     private val DASHBOARD_CHANNEL = "permissions/safe_dashboard"
     private val SYSTEM_SETTINGS_CHANNEL = "system_settings"
 
-    private val ioExecutor = Executors.newSingleThreadExecutor()
+    private val ioExecutor = Executors.newFixedThreadPool(4)
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -86,6 +86,22 @@ class MainActivity : FlutterActivity() {
                                 runOnUiThread { result.success(data) }
                             } catch (e: Exception) {
                                 runOnUiThread { result.error("APP_LIST_ERROR", e.message, null) }
+                            }
+                        }
+                    }
+
+                    // یک درخواست واحد که لیست اپ‌ها + وضعیت لوکیشن هرکدوم رو با هم برمی‌گردونه.
+                    // به‌جای این‌که Dart برای هر اپ جداگانه getLocationState صدا بزنه (N درخواست
+                    // جدا روی method channel)، همینجا توی همون حلقه‌ای که داریم اپ‌ها رو
+                    // می‌خونیم، وضعیت لوکیشن هر اپ رو هم محاسبه می‌کنیم (چون خودش سبکه، فقط
+                    // چندتا pm.checkPermission است) و یکجا برمی‌گردونیم.
+                    "getInstalledAppsListWithLocation" -> {
+                        ioExecutor.execute {
+                            try {
+                                val data = getInstalledAppsListWithLocation()
+                                runOnUiThread { result.success(data) }
+                            } catch (e: Exception) {
+                                runOnUiThread { result.error("APP_LIST_LOCATION_ERROR", e.message, null) }
                             }
                         }
                     }
@@ -645,33 +661,47 @@ class MainActivity : FlutterActivity() {
             val appInfo = pkg.applicationInfo ?: continue
             if ((appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0) continue
 
-            val appName = pm.getApplicationLabel(appInfo).toString()
-            val packageName = appInfo.packageName
+            // کل پردازش این پکیج توی try-catch است: اگه یک پکیج خاص (مثلاً
+            // یک پکیج محافظت‌شده‌ی سامسونگ/Knox) روی هر کدوم از این خط‌ها
+            // (getApplicationLabel، getApplicationIcon و ...) Exception بده،
+            // فقط همین یک اپ با continue رد می‌شه و پردازش بقیه‌ی اپ‌ها ادامه
+            // پیدا می‌کنه. قبلاً فقط ساخت آیکون try-catch داشت، نه کل بلوک؛
+            // یعنی خطا روی هر بخش دیگه (مثل getApplicationLabel) کل تابع رو
+            // متوقف می‌کرد و همه‌ی اپ‌ها (نه فقط همون یکی) از دست می‌رفتن.
+            try {
+                val appName = pm.getApplicationLabel(appInfo).toString()
+                val packageName = appInfo.packageName
 
-            val grantedPermissions = mutableListOf<String>()
-            pkg.requestedPermissions?.forEachIndexed { index, permission ->
-                val flagsArray = pkg.requestedPermissionsFlags
-                if (flagsArray != null && index < flagsArray.size) {
-                    val flags = flagsArray[index]
-                    if ((flags and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
-                        grantedPermissions.add(permission)
+                val grantedPermissions = mutableListOf<String>()
+                pkg.requestedPermissions?.forEachIndexed { index, permission ->
+                    val flagsArray = pkg.requestedPermissionsFlags
+                    if (flagsArray != null && index < flagsArray.size) {
+                        val flags = flagsArray[index]
+                        if ((flags and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
+                            grantedPermissions.add(permission)
+                        }
                     }
                 }
-            }
 
-            try {
-                val drawable = pm.getApplicationIcon(appInfo)
-                val width = if (drawable.intrinsicWidth > 0) drawable.intrinsicWidth else 96
-                val height = if (drawable.intrinsicHeight > 0) drawable.intrinsicHeight else 96
+                var encodedIcon = ""
+                try {
+                    val drawable = pm.getApplicationIcon(appInfo)
+                    // سایز ثابت به‌جای intrinsicWidth/Height: بعضی آیکون‌ها (خصوصاً روی
+                    // گوشی‌های xxxhdpi) می‌تونن ۱۹۲px یا بیشتر باشن؛ با صدها اپ نصب‌شده
+                    // روی یک گوشی واقعی، این یعنی صدها Bitmap بزرگ که ساخت و فشرده‌سازیشون
+                    // زمان‌بره و باعث گیر کردن UI روی «در حال بارگذاری» می‌شه.
+                    val size = 96
+                    val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+                    val canvas = Canvas(bitmap)
+                    drawable.setBounds(0, 0, size, size)
+                    drawable.draw(canvas)
 
-                val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-                val canvas = Canvas(bitmap)
-                drawable.setBounds(0, 0, canvas.width, canvas.height)
-                drawable.draw(canvas)
-
-                val stream = ByteArrayOutputStream()
-                bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
-                val encodedIcon = Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
+                    val stream = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+                    encodedIcon = Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
+                } catch (_: Exception) {
+                    // اگه فقط آیکون خطا بده، بقیه‌ی اطلاعات اپ (اسم/پرمیشن) بازم ثبت می‌شه
+                }
 
                 apps.add(
                     mapOf(
@@ -679,6 +709,53 @@ class MainActivity : FlutterActivity() {
                         "package" to packageName,
                         "icon" to encodedIcon,
                         "permissions" to grantedPermissions
+                    )
+                )
+            } catch (_: Exception) {}
+        }
+
+        return apps
+    }
+
+    private fun getInstalledAppsListWithLocation(): List<Map<String, Any>> {
+        val pm: PackageManager = applicationContext.packageManager
+        val packages = pm.getInstalledPackages(PackageManager.GET_PERMISSIONS)
+        val apps = mutableListOf<Map<String, Any>>()
+
+        for (pkg in packages) {
+            val appInfo = pkg.applicationInfo ?: continue
+            if ((appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0) continue
+
+            // مثل getInstalledAppsListHeavy: کل پردازش هر پکیج توی try-catch
+            // است تا اگه یک پکیج خاص (مثلاً Knox-protected) خطا بده، فقط
+            // همون رد بشه، نه کل لیست.
+            try {
+                val appName = pm.getApplicationLabel(appInfo).toString()
+                val packageName = appInfo.packageName
+
+                var encodedIcon = ""
+                try {
+                    val drawable = pm.getApplicationIcon(appInfo)
+                    val size = 96
+                    val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+                    val canvas = Canvas(bitmap)
+                    drawable.setBounds(0, 0, size, size)
+                    drawable.draw(canvas)
+                    val stream = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+                    encodedIcon = Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
+                } catch (_: Exception) {}
+
+                // به‌جای یک درخواست جدا از Dart برای هر اپ، همینجا محاسبه می‌شه
+                val location = LocationUtils.getLocationStateForPackage(this, packageName)
+
+                apps.add(
+                    mapOf(
+                        "name" to appName,
+                        "package" to packageName,
+                        "icon" to encodedIcon,
+                        "locationState" to (location["state"] ?: "denied"),
+                        "locationPrecision" to (location["precision"] ?: "none")
                     )
                 )
             } catch (_: Exception) {}
@@ -863,12 +940,27 @@ class MainActivity : FlutterActivity() {
         return false
     }
 
+//    private fun hasAnyNonSystemOverlayPermission(): Boolean {
+//        val pm = applicationContext.packageManager
+//        val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+//        for (app in packages) {
+//            if ((app.flags and ApplicationInfo.FLAG_SYSTEM) != 0) continue
+//            if (Settings.canDrawOverlays(this)) return true
+//        }
+//        return false
+//    }
+
     private fun hasAnyNonSystemOverlayPermission(): Boolean {
         val pm = applicationContext.packageManager
-        val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+        val appOps = getSystemService(Context.APP_OPS_SERVICE) as android.app.AppOpsManager
+        val packages = pm.getInstalledApplications(0)
         for (app in packages) {
             if ((app.flags and ApplicationInfo.FLAG_SYSTEM) != 0) continue
-            if (Settings.canDrawOverlays(this)) return true
+            val mode = appOps.checkOpNoThrow(
+                android.app.AppOpsManager.OPSTR_SYSTEM_ALERT_WINDOW,
+                app.uid, app.packageName
+            )
+            if (mode == android.app.AppOpsManager.MODE_ALLOWED) return true
         }
         return false
     }

@@ -70,25 +70,52 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     if (state is AppPermissionLoading) return;
 
     emit(AppPermissionLoading());
+    await _loadAppsInternal(retriesLeft: 1);
+  }
 
-    final trusted = trustedApps;
+  // این متد جداست تا guard بالا (state is AppPermissionLoading) مانع retry نشه
+  Future<void> _loadAppsInternal({required int retriesLeft}) async {
+    try {
+      final trusted = trustedApps;
 
-    final apps = await _platform.getInstalledApps();
+      final apps = await _platform.getInstalledApps();
 
-    final result = await compute(
-      processAppsInIsolate,
-      {
-        'apps': apps,
-        'trusted': trusted,
-      },
-    );
+      final result = await compute(
+        processAppsInIsolate,
+        {
+          'apps': apps,
+          'trusted': trusted,
+        },
+      );
 
-    emit(AppPermissionLoaded(
-      noRisk: result['noRisk']!,
-      lowRisk: result['lowRisk']!,
-      mediumRisk: result['mediumRisk']!,
-      highRisk: result['highRisk']!,
-    ));
+      emit(AppPermissionLoaded(
+        noRisk: result['noRisk']!,
+        lowRisk: result['lowRisk']!,
+        mediumRisk: result['mediumRisk']!,
+        highRisk: result['highRisk']!,
+      ));
+    } catch (e, st) {
+      // قبلاً این خطا هیچ‌جا catch نمی‌شد و state برای همیشه روی
+      // AppPermissionLoading می‌موند؛ یعنی هر صفحه‌ای که وابسته به این
+      // cubit بود (خانه، لیست اپ‌ها، جزئیات اپ، keep/trusted و ...) تا
+      // ابد اسپینر لودینگ نشون می‌داد. الان: یک بار دیگه امتحان می‌کنیم
+      // (شاید خطا موقتی بوده)، و اگه بازم شکست خورد، به‌جای گیر کردن،
+      // یک حالت خالی emit می‌شه تا UI آزاد بشه.
+      debugPrint('AppPermissionCubit.loadApps failed: $e\n$st');
+
+      if (retriesLeft > 0) {
+        await Future.delayed(const Duration(milliseconds: 400));
+        return _loadAppsInternal(retriesLeft: retriesLeft - 1);
+      }
+
+      emit(AppPermissionError(e.toString()));
+      emit(AppPermissionLoaded(
+        noRisk: const [],
+        lowRisk: const [],
+        mediumRisk: const [],
+        highRisk: const [],
+      ));
+    }
   }
 
   Future<void> refreshApp(String packageName) async {
@@ -96,54 +123,61 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
 
     final current = state as AppPermissionLoaded;
 
-    final freshApps = await _platform.getInstalledApps();
+    try {
+      final freshApps = await _platform.getInstalledApps();
 
-    final updatedApp = freshApps.firstWhere(
-      (a) => a.packageName == packageName,
-      orElse: () => throw Exception('App not found'),
-    );
+      final updatedApp = freshApps.firstWhere(
+            (a) => a.packageName == packageName,
+        orElse: () => throw Exception('App not found'),
+      );
 
-    final newRisk = RiskCalculator.calculate(
-      permissions: updatedApp.permissions,
-      packageName: updatedApp.packageName,
-      appName: updatedApp.appName,
-    );
+      final newRisk = RiskCalculator.calculate(
+        permissions: updatedApp.permissions,
+        packageName: updatedApp.packageName,
+        appName: updatedApp.appName,
+      );
 
-    final finalRisk = isAppTrusted(updatedApp.packageName)
-        ? RiskLevel.noRisk
-        : newRisk;
+      final finalRisk = isAppTrusted(updatedApp.packageName)
+          ? RiskLevel.noRisk
+          : newRisk;
 
-    final newApp = updatedApp.copyWith(riskLevel: finalRisk);
-    List<AppPermissionUi> noRisk =
-        current.noRisk.where((a) => a.packageName != packageName).toList();
-    List<AppPermissionUi> lowRisk =
-        current.lowRisk.where((a) => a.packageName != packageName).toList();
-    List<AppPermissionUi> mediumRisk =
-        current.mediumRisk.where((a) => a.packageName != packageName).toList();
-    List<AppPermissionUi> highRisk =
-        current.highRisk.where((a) => a.packageName != packageName).toList();
+      final newApp = updatedApp.copyWith(riskLevel: finalRisk);
+      List<AppPermissionUi> noRisk =
+      current.noRisk.where((a) => a.packageName != packageName).toList();
+      List<AppPermissionUi> lowRisk =
+      current.lowRisk.where((a) => a.packageName != packageName).toList();
+      List<AppPermissionUi> mediumRisk =
+      current.mediumRisk.where((a) => a.packageName != packageName).toList();
+      List<AppPermissionUi> highRisk =
+      current.highRisk.where((a) => a.packageName != packageName).toList();
 
-    switch (newRisk) {
-      case RiskLevel.noRisk:
-        noRisk.add(newApp);
-        break;
-      case RiskLevel.lowRisk:
-        lowRisk.add(newApp);
-        break;
-      case RiskLevel.mediumRisk:
-        mediumRisk.add(newApp);
-        break;
-      case RiskLevel.highRisk:
-        highRisk.add(newApp);
-        break;
+      switch (newRisk) {
+        case RiskLevel.noRisk:
+          noRisk.add(newApp);
+          break;
+        case RiskLevel.lowRisk:
+          lowRisk.add(newApp);
+          break;
+        case RiskLevel.mediumRisk:
+          mediumRisk.add(newApp);
+          break;
+        case RiskLevel.highRisk:
+          highRisk.add(newApp);
+          break;
+      }
+
+      emit(AppPermissionLoaded(
+        noRisk: noRisk,
+        lowRisk: lowRisk,
+        mediumRisk: mediumRisk,
+        highRisk: highRisk,
+      ));
+    } catch (e) {
+      // قبلاً بدون try-catch بود: اگه اپ پیدا نمی‌شد یا native خطا می‌داد،
+      // exception از کل متد بیرون می‌زد. الان فقط لاگ می‌شه و state قبلی
+      // (که همچنان معتبره) دست‌نخورده باقی می‌مونه.
+      debugPrint('AppPermissionCubit.refreshApp failed: $e');
     }
-
-    emit(AppPermissionLoaded(
-      noRisk: noRisk,
-      lowRisk: lowRisk,
-      mediumRisk: mediumRisk,
-      highRisk: highRisk,
-    ));
   }
 
   List<String> _readKeepApps() {

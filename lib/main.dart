@@ -20,10 +20,12 @@ import 'logic/special_permission/special_permission_cubit.dart';
 import 'logic/utils/scan/scan_cubit.dart';
 
 Future<void> main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
   await _precacheSvgs();
 
 
-  WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
   await Hive.openBox('app_preferences');
@@ -101,11 +103,6 @@ Future<void> _precacheSvgs() async {
     'assets/utils/Property 1=2 (1).svg',
     'assets/utils/Property 1=3 (1).svg',
     'assets/utils/Property 1=4 (1).svg',
-    'assets/special_permission/Battery.svg',
-    'assets/special_permission/display.svg',
-    'assets/special_permission/Disturb.svg',
-    'assets/special_permission/notification.svg',
-    'assets/special_permission/usage.svg',
     'assets/main/danger.svg',
     'assets/main/danger_alert.svg',
     'assets/main/low.svg',
