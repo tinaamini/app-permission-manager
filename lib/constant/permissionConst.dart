@@ -59,28 +59,6 @@ class PermissionConst {
     'android.permission.RECORD_AUDIO',
   };
 
-
-  // static const Map<String, String> displayPermissions = {
-  //   'android.permission.CAMERA': 'Camera',
-  //   'android.permission.RECORD_AUDIO': 'Microphone',
-  //   'android.permission.ACCESS_FINE_LOCATION': 'Precise Location',
-  //   'android.permission.ACCESS_COARSE_LOCATION': 'Approximate Location',
-  //   'android.permission.READ_CONTACTS': 'Contacts',
-  //   'android.permission.READ_CALL_LOG': 'Call Logs',
-  //   'android.permission.READ_SMS': 'SMS',
-  //   'android.permission.SEND_SMS': 'Send SMS',
-  //   'android.permission.SYSTEM_ALERT_WINDOW': 'Draw over apps',
-  //   'android.permission.PACKAGE_USAGE_STATS': 'Usage Access',
-  //   'android.permission.MANAGE_EXTERNAL_STORAGE': 'All Files Access',
-  //   // Media (Android 13+)
-  //   'android.permission.READ_MEDIA_IMAGES': 'Photos',
-  //   'android.permission.READ_MEDIA_VIDEO': 'Videos',
-  //   'android.permission.READ_MEDIA_AUDIO': 'Audio',
-  //
-  //   // Storage (Android 12-)
-  //   'android.permission.READ_EXTERNAL_STORAGE': 'Photos & Videos (Storage)',
-  //   'android.permission.WRITE_EXTERNAL_STORAGE': 'Modify Storage',
-  // };
   static const Map<String, Map<String, String>> displayPermissions = {
     'android.permission.CAMERA': {
       'en': 'Camera',
@@ -145,6 +123,15 @@ class PermissionConst {
     'android.permission.WRITE_EXTERNAL_STORAGE': {
       'en': 'Modify Storage',
       'fa': 'ویرایش حافظه',
+    },
+
+    'android.permission.WRITE_SETTINGS': {
+      'en': 'Modify System Settings',
+      'fa': 'تغییر تنظیمات سیستم',
+    },
+    'android.permission.BIND_ACCESSIBILITY_SERVICE': {
+      'en': 'Accessibility Service',
+      'fa': 'سرویس دسترس‌پذیری',
     },
   };
   static const Set<String> dangerousPermissions = {

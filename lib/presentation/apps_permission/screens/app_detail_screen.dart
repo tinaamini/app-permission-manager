@@ -7,6 +7,8 @@ import 'package:Privio/constant/risk_level.dart';
 import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:Privio/core/models/app_permission_ui.dart';
 import 'package:Privio/core/servises/app_permission_service.dart';
+import 'package:Privio/core/servises/app_special_permiision_service.dart';
+import 'package:Privio/core/servises/dashboard_permission_service.dart';
 import 'package:Privio/generated/app_localizations.dart';
 import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
 import 'package:Privio/logic/app_permission/app_permission_state.dart';
@@ -67,7 +69,7 @@ class _AppDetailScreenState extends State<AppDetailScreen>
     return BaseScreen(
       child: BlocConsumer<AppPermissionCubit, AppPermissionState>(
         listenWhen: (_, current) =>
-            current is AppTrustedSuccess ||
+        current is AppTrustedSuccess ||
             current is AppUntrustedSuccess ||
             current is AppKeptSuccess ||
             current is AppUnkeptSuccess,
@@ -106,7 +108,7 @@ class _AppDetailScreenState extends State<AppDetailScreen>
           }
         },
         buildWhen: (previous, current) =>
-            current is AppPermissionLoaded || current is AppTrusting,
+        current is AppPermissionLoaded || current is AppTrusting,
         builder: (context, state) {
           if (state is! AppPermissionLoaded && state is! AppTrusting) {
             return const Center(
@@ -129,17 +131,17 @@ class _AppDetailScreenState extends State<AppDetailScreen>
             ...loaded.mediumRisk,
             ...loaded.highRisk,
           ].firstWhere(
-            (a) => a.packageName == widget.app.packageName,
+                (a) => a.packageName == widget.app.packageName,
             orElse: () => widget.app,
           );
 
           final percent = calculateRiskPercent(app.permissions);
 
           final isKept = context.select<AppPermissionCubit, bool>(
-            (c) => c.isAppKept(widget.app.packageName),
+                (c) => c.isAppKept(widget.app.packageName),
           );
           final isTrust = context.select<AppPermissionCubit, bool>(
-            (c) => c.isAppTrusted(widget.app.packageName),
+                (c) => c.isAppTrusted(widget.app.packageName),
           );
 
           final bool isTrusting = state is AppTrusting
@@ -181,21 +183,21 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                 child: isTrust
                     ? Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: screenWidth * 0.035,
-                          vertical: screenHeight * 0.012,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.blue.withAlpha(38),
-                          borderRadius:
-                              BorderRadius.circular(screenWidth * 0.05),
-                        ),
-                        child: Text(l10n.trustedAppsExcluded,
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTextStyle.trusted(context)),
-                      )
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.035,
+                    vertical: screenHeight * 0.012,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withAlpha(38),
+                    borderRadius:
+                    BorderRadius.circular(screenWidth * 0.05),
+                  ),
+                  child: Text(l10n.trustedAppsExcluded,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyle.trusted(context)),
+                )
                     : RiskBadge(riskLevel: app.riskLevel),
               ),
 
@@ -213,11 +215,11 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                         onTap: () {
                           isTrust
                               ? context
-                                  .read<AppPermissionCubit>()
-                                  .untrustApp(app.packageName)
+                              .read<AppPermissionCubit>()
+                              .untrustApp(app.packageName)
                               : context
-                                  .read<AppPermissionCubit>()
-                                  .trustApp(app.packageName);
+                              .read<AppPermissionCubit>()
+                              .trustApp(app.packageName);
                         },
                       ),
                     ),
@@ -229,11 +231,11 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                           if (isTrust) return;
                           isKept
                               ? context
-                                  .read<AppPermissionCubit>()
-                                  .unkeepApp(app.packageName)
+                              .read<AppPermissionCubit>()
+                              .unkeepApp(app.packageName)
                               : context
-                                  .read<AppPermissionCubit>()
-                                  .keepApp(widget.app.packageName);
+                              .read<AppPermissionCubit>()
+                              .keepApp(widget.app.packageName);
                         },
                       ),
                     ),
@@ -267,7 +269,7 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                           builder: (_) => Dialog(
                             shape: RoundedRectangleBorder(
                               borderRadius:
-                                  BorderRadius.circular(screenWidth * 0.05),
+                              BorderRadius.circular(screenWidth * 0.05),
                             ),
                             child: InfoWidget(),
                           ),
@@ -278,13 +280,13 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                         height: screenWidth * 0.075,
                         decoration: BoxDecoration(
                           borderRadius:
-                              BorderRadius.circular(screenWidth * 0.0625),
+                          BorderRadius.circular(screenWidth * 0.0625),
                           color: AppColor.CartDark,
                         ),
                         child: Icon(
                           Icons.info_outline,
                           color:
-                              context.isDark ? Colors.white70 : AppColor.black,
+                          context.isDark ? Colors.white70 : AppColor.black,
                         ),
                       ),
                     ),
@@ -299,13 +301,13 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                 child: ListView(
                   padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                   children:
-                      PermissionConst.displayPermissions.entries.map((entry) {
+                  PermissionConst.displayPermissions.entries.map((entry) {
                     final permissionKey = entry.key;
                     final lang = Localizations.localeOf(context).languageCode;
                     final permissionName = PermissionConst
-                            .displayPermissions[permissionKey]?[lang] ??
+                        .displayPermissions[permissionKey]?[lang] ??
                         PermissionConst.displayPermissions[permissionKey]
-                            ?['en'] ??
+                        ?['en'] ??
                         permissionKey;
                     ;
 
@@ -332,8 +334,47 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                                 await Future.delayed(
                                   const Duration(milliseconds: 50),
                                 );
-                                await AppPermissionPlatform()
-                                    .openAppSettings(widget.app.packageName);
+
+                                // permission های خاص (special permissions) توی
+                                // صفحه‌ی عمومی App Info لیست نمی‌شن و هرکدوم یه
+                                // مسیر تنظیمات اختصاصی خودشون رو دارن؛ برای بقیه‌ی
+                                // permission های عادی (دوربین، مکان، مخاطبین و ...)
+                                // همون صفحه‌ی عمومی App Info کافیه.
+                                switch (permissionKey) {
+                                  case 'android.permission.SYSTEM_ALERT_WINDOW':
+                                    await AppSpecialPermissionPlatform()
+                                        .openAppOverlaySettings(
+                                        widget.app.packageName);
+                                    break;
+                                  case 'android.permission.PACKAGE_USAGE_STATS':
+                                  // برای Usage Access مسیر اختصاصی per-app
+                                  // نداریم؛ صفحه‌ی لیست کلی usage access باز
+                                  // می‌شه و کاربر خودش اپ رو از توش پیدا می‌کنه.
+                                    await AppSpecialPermissionPlatform()
+                                        .openUsageAccessSettings();
+                                    break;
+                                  case 'android.permission.MANAGE_EXTERNAL_STORAGE':
+                                    await AppSpecialPermissionPlatform()
+                                        .openAppAllFilesAccessSettings(
+                                        widget.app.packageName);
+                                    break;
+                                  case 'android.permission.WRITE_SETTINGS':
+                                    await AppSpecialPermissionPlatform()
+                                        .openAppWriteSettingsSettings(
+                                        widget.app.packageName);
+                                    break;
+                                  case 'android.permission.BIND_ACCESSIBILITY_SERVICE':
+                                  // اندروید مسیر مستقیم per-app برای صفحه‌ی
+                                  // Accessibility نداره؛ فقط لیست کلی سرویس‌ها
+                                  // باز می‌شه و کاربر خودش پیدا می‌کنه.
+                                    await SafeDashboardPlatform
+                                        .openAccessibilitySettings();
+                                    break;
+                                  default:
+                                    await AppPermissionPlatform()
+                                        .openAppSettings(
+                                        widget.app.packageName);
+                                }
                               },
                             ),
                           ),

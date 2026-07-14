@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import android.util.Base64
 import io.flutter.embedding.android.FlutterActivity
@@ -267,6 +268,58 @@ class MainActivity : FlutterActivity() {
                                 result.success(true)
                             } catch (e: Exception) {
                                 result.error("OVERLAY_ERROR", e.message, null)
+                            }
+                        }
+                    }
+
+                    // "Modify System Settings" (WRITE_SETTINGS) هم مثل overlay یک
+                    // special permission است و توی App Info عادی نیست.
+                    "openAppWriteSettingsSettings" -> {
+                        val pkg = call.argument<String>("packageName")
+                        if (pkg.isNullOrBlank()) {
+                            result.error("NO_PACKAGE", "packageName missing", null)
+                        } else {
+                            try {
+                                val intent = Intent(
+                                    Settings.ACTION_MANAGE_WRITE_SETTINGS,
+                                    Uri.parse("package:$pkg")
+                                )
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(intent)
+                                result.success(true)
+                            } catch (e: Exception) {
+                                result.error("WRITE_SETTINGS_ERROR", e.message, null)
+                            }
+                        }
+                    }
+
+                    // "All Files Access" (MANAGE_EXTERNAL_STORAGE) هم مثل overlay
+                    // یک special permission است و توی صفحه‌ی عمومی App Info لیست
+                    // نمی‌شه؛ نیاز به همین intent اختصاصی داره (فقط Android 11+).
+                    "openAppAllFilesAccessSettings" -> {
+                        val pkg = call.argument<String>("packageName")
+                        if (pkg.isNullOrBlank()) {
+                            result.error("NO_PACKAGE", "packageName missing", null)
+                        } else {
+                            try {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                    val intent = Intent(
+                                        Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                                        Uri.parse("package:$pkg")
+                                    )
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    startActivity(intent)
+                                } else {
+                                    // زیر Android 11 این permission اصلاً وجود نداره؛
+                                    // برای احتیاط به صفحه‌ی عمومی App Info برمی‌گردیم
+                                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                    intent.data = Uri.parse("package:$pkg")
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    startActivity(intent)
+                                }
+                                result.success(true)
+                            } catch (e: Exception) {
+                                result.error("ALL_FILES_ACCESS_ERROR", e.message, null)
                             }
                         }
                     }
@@ -620,6 +673,44 @@ class MainActivity : FlutterActivity() {
         return apps
     }
 
+    // برای permission های عادی، پرچم REQUESTED_PERMISSION_GRANTED قابل‌اعتماده.
+    // ولی این سه‌تا (SYSTEM_ALERT_WINDOW, PACKAGE_USAGE_STATS, WRITE_SETTINGS)
+    // از طریق AppOpsManager کنترل می‌شن، نه مکانیزم استاندارد permission؛
+    // پرچم استاندارد فقط یعنی اپ توی manifest خودش خواسته، نه این‌که کاربر
+    // واقعاً توی تنظیمات روشنش کرده. برای این سه‌تا باید مستقیم از
+    // AppOpsManager بپرسیم، وگرنه اپ‌هایی که فقط این permission رو
+    // «خواستن» (ولی کاربر رد کرده) اشتباهاً granted حساب می‌شن.
+    private fun isPermissionActuallyGranted(
+        packageName: String,
+        permission: String,
+        requestedFlags: Int
+    ): Boolean {
+        val opString = when (permission) {
+            "android.permission.SYSTEM_ALERT_WINDOW" ->
+                android.app.AppOpsManager.OPSTR_SYSTEM_ALERT_WINDOW
+            "android.permission.PACKAGE_USAGE_STATS" ->
+                android.app.AppOpsManager.OPSTR_GET_USAGE_STATS
+            "android.permission.WRITE_SETTINGS" ->
+                android.app.AppOpsManager.OPSTR_WRITE_SETTINGS
+            else -> null
+        }
+
+        if (opString == null) {
+            return (requestedFlags and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0
+        }
+
+        return try {
+            val appOps =
+                getSystemService(Context.APP_OPS_SERVICE) as android.app.AppOpsManager
+            val uid = applicationContext.packageManager
+                .getApplicationInfo(packageName, 0).uid
+            val mode = appOps.checkOpNoThrow(opString, uid, packageName)
+            mode == android.app.AppOpsManager.MODE_ALLOWED
+        } catch (_: Exception) {
+            false
+        }
+    }
+
     private fun getGrantedPermissionsForPackage(pkg: String): List<String> {
         val pm = applicationContext.packageManager
         val granted = mutableListOf<String>()
@@ -627,11 +718,9 @@ class MainActivity : FlutterActivity() {
 
         info.requestedPermissions?.forEachIndexed { index, permission ->
             val flagsArray = info.requestedPermissionsFlags
-            if (flagsArray != null && index < flagsArray.size) {
-                val flags = flagsArray[index]
-                if ((flags and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
-                    granted.add(permission)
-                }
+            val flags = if (flagsArray != null && index < flagsArray.size) flagsArray[index] else 0
+            if (isPermissionActuallyGranted(pkg, permission, flags)) {
+                granted.add(permission)
             }
         }
         return granted
@@ -675,11 +764,9 @@ class MainActivity : FlutterActivity() {
                 val grantedPermissions = mutableListOf<String>()
                 pkg.requestedPermissions?.forEachIndexed { index, permission ->
                     val flagsArray = pkg.requestedPermissionsFlags
-                    if (flagsArray != null && index < flagsArray.size) {
-                        val flags = flagsArray[index]
-                        if ((flags and PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
-                            grantedPermissions.add(permission)
-                        }
+                    val flags = if (flagsArray != null && index < flagsArray.size) flagsArray[index] else 0
+                    if (isPermissionActuallyGranted(packageName, permission, flags)) {
+                        grantedPermissions.add(permission)
                     }
                 }
 

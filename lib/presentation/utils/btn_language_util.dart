@@ -19,7 +19,7 @@ class BtnLanguageUtil extends StatelessWidget {
               index: 0,
               onTap: () {
                 context.read<BtnLanguageCubit>().select(0);
-                context.read<LocaleCubit>().setLocale(Locale('en'));
+                context.read<LocaleCubit>().setLocale(const Locale('en'));
               },
               text: "EN",
             ),
@@ -27,7 +27,7 @@ class BtnLanguageUtil extends StatelessWidget {
               index: 1,
               onTap: () {
                 context.read<BtnLanguageCubit>().select(1);
-                context.read<LocaleCubit>().setLocale(Locale('fa'));
+                context.read<LocaleCubit>().setLocale(const Locale('fa'));
               },
               text: "FA",
             ),

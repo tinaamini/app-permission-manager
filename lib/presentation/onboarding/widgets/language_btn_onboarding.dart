@@ -28,7 +28,7 @@ class LanguageBtnOnboarding extends StatelessWidget {
               text: "English",
               onTap: () {
                 context.read<BtnLanguageCubit>().select(0);
-                context.read<LocaleCubit>().toggle();
+                context.read<LocaleCubit>().setLocale(const Locale('en'));
               }
           ),
           SizedBox(height: AppSize.height * 0.02,),
@@ -38,7 +38,7 @@ class LanguageBtnOnboarding extends StatelessWidget {
               text: "فارسی",
               onTap: () {
                 context.read<BtnLanguageCubit>().select(1);
-                context.read<LocaleCubit>().toggle();
+                context.read<LocaleCubit>().setLocale(const Locale('fa'));
               }
           ),
         ],

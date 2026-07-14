@@ -20,16 +20,13 @@ import 'logic/special_permission/special_permission_cubit.dart';
 import 'logic/utils/scan/scan_cubit.dart';
 
 Future<void> main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
 
   await _precacheSvgs();
 
-
-
   await Hive.initFlutter();
   await Hive.openBox('app_preferences');
-  await Hive.openBox('app_settings');
+  final appSettingsBox = await Hive.openBox('app_settings');
   final themeBox = await Hive.openBox('theme');
 
   final storage = OnboardingStorage();
@@ -39,21 +36,23 @@ Future<void> main() async {
 
   final router = createRouter(onboardingShowCubit);
 
-  runApp( MainApp(
-    router: router,
-    storage: storage,
-    onboardingShowCubit: onboardingShowCubit,
-    themeBox: themeBox,
-
-  ));
+  runApp(
+    MainApp(
+      router: router,
+      storage: storage,
+      onboardingShowCubit: onboardingShowCubit,
+      themeBox: themeBox,
+      appSettingsBox: appSettingsBox,
+    ),
+  );
 }
-
 
 class MainApp extends StatelessWidget {
   final GoRouter router;
   final OnboardingStorage storage;
   final OnboardingShowCubit onboardingShowCubit;
   final Box themeBox;
+  final Box appSettingsBox;
 
   const MainApp({
     super.key,
@@ -61,16 +60,22 @@ class MainApp extends StatelessWidget {
     required this.storage,
     required this.onboardingShowCubit,
     required this.themeBox,
+    required this.appSettingsBox,
   });
 
   @override
   Widget build(BuildContext context) {
-
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: onboardingShowCubit),
         BlocProvider<BtnLanguageCubit>(
-          create: (_) => BtnLanguageCubit(),
+          create: (_) => BtnLanguageCubit(
+            initialIndex:
+                appSettingsBox.get(LocaleCubit.storageKey, defaultValue: 'fa') ==
+                        'en'
+                    ? 0
+                    : 1,
+          ),
         ),
         BlocProvider<AppPermissionCubit>(
           create: (_) => AppPermissionCubit(),
@@ -79,7 +84,7 @@ class MainApp extends StatelessWidget {
           create: (_) => SpecialPermissionCubit(AppSpecialPermissionPlatform()),
         ),
         BlocProvider<LocaleCubit>(
-          create: (_) => LocaleCubit(),
+          create: (_) => LocaleCubit(appSettingsBox),
         ),
         BlocProvider<ThemeCubit>(
           create: (_) => ThemeCubit(themeBox),

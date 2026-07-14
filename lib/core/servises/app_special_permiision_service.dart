@@ -68,6 +68,26 @@ class AppSpecialPermissionPlatform {
     } catch (_) {}
   }
 
+  // ===== All Files Access (MANAGE_EXTERNAL_STORAGE) =====
+  Future<void> openAppAllFilesAccessSettings(String packageName) async {
+    try {
+      await _channel.invokeMethod(
+        'openAppAllFilesAccessSettings',
+        {'packageName': packageName},
+      );
+    } catch (_) {}
+  }
+
+  // ===== Modify System Settings (WRITE_SETTINGS) =====
+  Future<void> openAppWriteSettingsSettings(String packageName) async {
+    try {
+      await _channel.invokeMethod(
+        'openAppWriteSettingsSettings',
+        {'packageName': packageName},
+      );
+    } catch (_) {}
+  }
+
   // ===== Notification Access =====
   Future<void> openNotificationAccessSettings() async {
     try {

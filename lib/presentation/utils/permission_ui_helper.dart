@@ -1,16 +1,19 @@
 import 'package:Privio/constant/permissionConst.dart';
 
-/// Returns risk percent between 0.0 and 1.0
 double calculateRiskPercent(List<String> permissions) {
   if (permissions.isEmpty) return 0.0;
 
-  final dangerousCount = permissions
-      .where(PermissionConst.dangerousPermissions.contains)
-      .length;
+  int score = 0;
+  for (final p in permissions) {
+    if (PermissionConst.sensitive.contains(p)) score += 10;
+    if (PermissionConst.dangerous.contains(p)) score += 25;
+    if (PermissionConst.special.contains(p)) score += 40;
+  }
 
-  const maxDangerous = 6;
+  const maxScore = 120;
 
-  final percent = dangerousCount / maxDangerous;
+  final percent = score / maxScore;
 
   return percent.clamp(0.0, 1.0);
 }
+ 
