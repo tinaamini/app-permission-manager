@@ -9,8 +9,15 @@ import 'package:Privio/constant/app_style.dart';
 class BtnCard extends StatelessWidget {
   final String image;
   final String text;
+  final String count;
   final VoidCallback ontap;
-  const BtnCard({super.key, required this.image, required this.text, required this.ontap});
+  const BtnCard({
+    super.key,
+    required this.image,
+    required this.text,
+    required this.count,
+    required this.ontap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +51,33 @@ class BtnCard extends StatelessWidget {
                 height: screenWidth * 0.12,),
               SizedBox(width: screenWidth * 0.025),
 
-                  Expanded(child: Text(text,style: AppTextStyle.btnHome(context).copyWith(color:isDark?AppColor.white:AppColor.black),)),
+              Expanded(
+                child: Text(
+                  text,
+                  style: AppTextStyle.btnHome(context).copyWith(
+                    color: isDark ? AppColor.white : AppColor.black,
+                  ),
+                ),
+              ),
+              Container(
+                constraints: BoxConstraints(
+                  minWidth: screenWidth * 0.075,
+                  minHeight: screenHeight * 0.032,
+                ),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
+                decoration: BoxDecoration(
+                  color: AppColor.boxSh.withValues(alpha: 0.30),
+                  borderRadius: BorderRadius.circular(screenWidth * 0.08),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  count,
+                  maxLines: 1,
+                  style: AppTextStyle.btnAppPermissionInt(context).copyWith(
+                    color:AppColor.boxSh ,
+                  ),
+                ),
+              ),
 
 
             ],

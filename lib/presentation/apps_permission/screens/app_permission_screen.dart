@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:Privio/constant/risk_level.dart';
 import 'package:Privio/core/servises/usage_access_service.dart';
+import 'package:Privio/core/servises/recent_apps_service.dart';
 import 'package:Privio/generated/app_localizations.dart';
 import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
 import 'package:Privio/logic/app_permission/app_permission_state.dart';
@@ -17,8 +18,28 @@ import 'package:Privio/presentation/utils/custome_dotsloader.dart';
 import 'package:Privio/routs/rout_name.dart';
 import '../widgets/btn_permission_widget.dart';
 
-class AppPermissionScreen extends StatelessWidget {
+class AppPermissionScreen extends StatefulWidget {
   const AppPermissionScreen({super.key});
+
+  @override
+  State<AppPermissionScreen> createState() => _AppPermissionScreenState();
+}
+
+class _AppPermissionScreenState extends State<AppPermissionScreen> {
+  late Future<List<dynamic>> _recentApps;
+
+  @override
+  void initState() {
+    super.initState();
+    _recentApps = RecentAppsService.getTodayRecentApps();
+  }
+
+  void _refreshRecentApps() {
+    if (!mounted) return;
+    setState(() {
+      _recentApps = RecentAppsService.getTodayRecentApps();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +58,13 @@ class AppPermissionScreen extends StatelessWidget {
                   svgPath3: 'assets/utils/Property 1=3 (1).svg',
                   svgPath4: 'assets/utils/Property 1=4 (1).svg'));
         }
+
+        final cubit = context.read<AppPermissionCubit>();
+        final keptCount =
+            state.allApps.where((app) => cubit.isAppKept(app.packageName)).length;
+        final trustedCount = state.allApps
+            .where((app) => cubit.isAppTrusted(app.packageName))
+            .length;
 
         return BaseScreen(
           child: Column(
@@ -150,6 +178,7 @@ class AppPermissionScreen extends StatelessWidget {
                         BtnCard(
                           image: 'assets/app_permission/keep.svg',
                           text: l10n.keepApp,
+                          count: keptCount.toString(),
                           ontap: () => context.pushNamed(RouteName.keepApps),
                         ),
 
@@ -159,36 +188,55 @@ class AppPermissionScreen extends StatelessWidget {
                         BtnCard(
                           image: 'assets/app_permission/trust.svg',
                           text: l10n.trustApp,
+                          count: trustedCount.toString(),
                           ontap: () => context.pushNamed(RouteName.trustedApps),
                         ),
 
                         SizedBox(
                           height: screenHeight * (14 / 812),
                         ),
-                        BtnCard(
-                          image: 'assets/app_permission/recent.svg',
-                          text: l10n.recentApps,
-                          ontap: () async {
-                            final granted =
-                                await UsageAccessService.isUsageAccessGranted();
-                            await UsageAccessService.isUsageAccessGranted();
+                        FutureBuilder<List<dynamic>>(
+                          future: _recentApps,
+                          builder: (context, snapshot) {
+                            final installedPackages = state.allApps
+                                .map((app) => app.packageName)
+                                .toSet();
+                            final recentCount = (snapshot.data ?? [])
+                                .map((item) => item['package'] as String?)
+                                .whereType<String>()
+                                .where(installedPackages.contains)
+                                .toSet()
+                                .length;
 
-                            if (granted) {
-                              context.pushNamed(RouteName.recentApps);
-                            } else {
-                              final result = await showDialog<bool>(
-                                context: context,
-                                builder: (_) => Dialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: UsageAccessScreen(),
-                                ),
-                              );
-                              if (result == true) {
-                                context.pushNamed(RouteName.recentApps);
-                              }
-                            }
+                            return BtnCard(
+                              image: 'assets/app_permission/recent.svg',
+                              text: l10n.recentApps,
+                              count: recentCount.toString(),
+                              ontap: () async {
+                                final granted = await UsageAccessService
+                                    .isUsageAccessGranted();
+
+                                if (granted) {
+                                  await context.pushNamed(RouteName.recentApps);
+                                  _refreshRecentApps();
+                                } else {
+                                  final result = await showDialog<bool>(
+                                    context: context,
+                                    builder: (_) => Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: UsageAccessScreen(),
+                                    ),
+                                  );
+                                  if (result == true) {
+                                    await context
+                                        .pushNamed(RouteName.recentApps);
+                                    _refreshRecentApps();
+                                  }
+                                }
+                              },
+                            );
                           },
                         ),
 
