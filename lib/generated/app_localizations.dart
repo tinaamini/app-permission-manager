@@ -227,13 +227,13 @@ abstract class AppLocalizations {
   /// No description provided for @keepApps.
   ///
   /// In en, this message translates to:
-  /// **'KEEP APPS'**
+  /// **'FAVORITES'**
   String get keepApps;
 
   /// No description provided for @trustedApps.
   ///
   /// In en, this message translates to:
-  /// **'Trusted Apps'**
+  /// **'Safe list'**
   String get trustedApps;
 
   /// No description provided for @riskPercent.
@@ -275,7 +275,7 @@ abstract class AppLocalizations {
   /// No description provided for @trustApp.
   ///
   /// In en, this message translates to:
-  /// **'Trust App'**
+  /// **'Safe list'**
   String get trustApp;
 
   /// No description provided for @appDetailSnackBarSuccess.
@@ -299,7 +299,7 @@ abstract class AppLocalizations {
   /// No description provided for @keepApp.
   ///
   /// In en, this message translates to:
-  /// **'Keep App'**
+  /// **'Favorites'**
   String get keepApp;
 
   /// No description provided for @removeKeep.
@@ -437,13 +437,13 @@ abstract class AppLocalizations {
   /// No description provided for @noKeepApps.
   ///
   /// In en, this message translates to:
-  /// **'NO KEEP APP'**
+  /// **'No apps in favorites'**
   String get noKeepApps;
 
   /// No description provided for @noTrustedApps.
   ///
   /// In en, this message translates to:
-  /// **'NO TRUSTED APP'**
+  /// **'No apps in safe list'**
   String get noTrustedApps;
 
   /// No description provided for @somethingWentWrong.

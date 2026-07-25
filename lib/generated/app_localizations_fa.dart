@@ -82,10 +82,10 @@ class AppLocalizationsFa extends AppLocalizations {
   String get highRiskApps => 'اپ‌های پرریسک';
 
   @override
-  String get keepApps => 'برنامه‌های نگه‌داری';
+  String get keepApps => 'علاقه‌مندی‌ها';
 
   @override
-  String get trustedApps => 'اپ‌های مورد اعتماد';
+  String get trustedApps => 'لیست امن';
 
   @override
   String riskPercent(Object percent) {
@@ -108,7 +108,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get openSettings => 'باز کردن تنظیمات';
 
   @override
-  String get trustApp => 'اعتماد به برنامه';
+  String get trustApp => 'لیست امن';
 
   @override
   String get appDetailSnackBarSuccess =>
@@ -122,7 +122,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get untrustApp => 'حذف اعتماد';
 
   @override
-  String get keepApp => 'نگه‌داری';
+  String get keepApp => 'علاقه‌مندی‌ها';
 
   @override
   String get removeKeep => 'حذف از نگه‌داری';
@@ -195,10 +195,10 @@ class AppLocalizationsFa extends AppLocalizations {
   String get noAppsFound => 'اپی یافت نشد';
 
   @override
-  String get noKeepApps => 'اپ نگه‌داری شده‌ای وجود ندارد';
+  String get noKeepApps => 'اپی در علاقه‌مندی‌ها وجود ندارد';
 
   @override
-  String get noTrustedApps => 'اپ مورد اعتمادی وجود ندارد';
+  String get noTrustedApps => 'اپی در لیست امن وجود ندارد';
 
   @override
   String get somethingWentWrong => 'مشکلی پیش آمد';

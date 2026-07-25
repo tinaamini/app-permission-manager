@@ -82,10 +82,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get highRiskApps => 'High Risk Apps';
 
   @override
-  String get keepApps => 'KEEP APPS';
+  String get keepApps => 'FAVORITES';
 
   @override
-  String get trustedApps => 'Trusted Apps';
+  String get trustedApps => 'Safe list';
 
   @override
   String riskPercent(Object percent) {
@@ -108,7 +108,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openSettings => 'Open Settings';
 
   @override
-  String get trustApp => 'Trust App';
+  String get trustApp => 'Safe list';
 
   @override
   String get appDetailSnackBarSuccess => 'App marked as Trusted';
@@ -120,7 +120,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get untrustApp => 'Untrust';
 
   @override
-  String get keepApp => 'Keep App';
+  String get keepApp => 'Favorites';
 
   @override
   String get removeKeep => 'Remove from Keep';
@@ -193,10 +193,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noAppsFound => 'No applications found';
 
   @override
-  String get noKeepApps => 'NO KEEP APP';
+  String get noKeepApps => 'No apps in favorites';
 
   @override
-  String get noTrustedApps => 'NO TRUSTED APP';
+  String get noTrustedApps => 'No apps in safe list';
 
   @override
   String get somethingWentWrong => 'Something went wrong';
