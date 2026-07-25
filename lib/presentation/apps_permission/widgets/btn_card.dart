@@ -46,9 +46,49 @@ class BtnCard extends StatelessWidget {
           padding: EdgeInsets.only(top: screenHeight * 0.006),
           child: Row(crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SvgPicture.asset(image,
-                width: screenWidth * 0.12,
-                height: screenWidth * 0.12,),
+              SizedBox(
+                width: screenWidth * 0.15,
+                height: screenWidth * 0.14,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Positioned(
+                      left: screenWidth * 0.012,
+                      bottom: 0,
+                      child: SvgPicture.asset(
+                        image,
+                        width: screenWidth * 0.12,
+                        height: screenWidth * 0.12,
+                      ),
+                    ),
+                    Positioned(
+                      top: -screenHeight * 0.006,
+                      right: 0,
+                      child: Container(
+                        constraints: BoxConstraints(
+                          minWidth: screenWidth * 0.07,
+                          minHeight: screenHeight * 0.03,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.012,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColor.boxSh.withValues(alpha: 0.30),
+                          borderRadius:
+                              BorderRadius.circular(screenWidth * 0.08),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          count,
+                          maxLines: 1,
+                          style: AppTextStyle.btnAppPermissionInt(context)
+                              .copyWith(color: AppColor.boxSh),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(width: screenWidth * 0.025),
 
               Expanded(
@@ -59,27 +99,6 @@ class BtnCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                constraints: BoxConstraints(
-                  minWidth: screenWidth * 0.075,
-                  minHeight: screenHeight * 0.032,
-                ),
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
-                decoration: BoxDecoration(
-                  color: AppColor.boxSh.withValues(alpha: 0.30),
-                  borderRadius: BorderRadius.circular(screenWidth * 0.08),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  count,
-                  maxLines: 1,
-                  style: AppTextStyle.btnAppPermissionInt(context).copyWith(
-                    color:AppColor.boxSh ,
-                  ),
-                ),
-              ),
-
-
             ],
           ),
         ),
