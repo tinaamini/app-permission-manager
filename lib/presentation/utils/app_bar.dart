@@ -7,7 +7,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-import 'btn_language_util.dart';
 import 'package:Privio/routs/rout_name.dart';
 
 class AppBarWidget extends StatelessWidget {
@@ -79,39 +78,12 @@ class AppBarWidget extends StatelessWidget {
       ),
     );
 
-    final language = SizedBox(
-      width: 34,
-      height: 34,
-      child: Center(
-        child: const BtnLanguageUtil(compact: true),
-      ),
-    );
-
-    final homeAndLanguage = Row(crossAxisAlignment: CrossAxisAlignment.center,
-
-    mainAxisSize: MainAxisSize.min,
-      textDirection: TextDirection.ltr,
-      children: [
-        if (showHome) home,
-        if (showHome) const SizedBox(width: 12),
-        language,
-      ],
-    );
-
     final leftGroup = isFa
-        ? homeAndLanguage
+        ? (showHome ? home : const SizedBox.shrink())
         : (showBack ? back : const SizedBox.shrink());
     final rightGroup = isFa
         ? (showBack ? back : const SizedBox.shrink())
-        : Row(crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            textDirection: TextDirection.ltr,
-            children: [
-              language,
-              if (showHome) const SizedBox(width: 12),
-              if (showHome) home,
-            ],
-          );
+        : (showHome ? home : const SizedBox.shrink());
 
     return Container(
       height: appBarHeight,
