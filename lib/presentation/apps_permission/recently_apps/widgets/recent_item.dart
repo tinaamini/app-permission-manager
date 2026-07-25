@@ -115,52 +115,80 @@ class RecentItem extends StatelessWidget {
   }
 
   Widget _permissionAvailability(BuildContext context, AppLocalizations l10n) {
+    final available = <(String, bool)>[
+      (
+        l10n.permLocation,
+        permissions.contains('android.permission.ACCESS_FINE_LOCATION') ||
+            permissions.contains('android.permission.ACCESS_COARSE_LOCATION')
+      ),
+      (
+        l10n.permBackgroundLocation,
+        permissions.contains('android.permission.ACCESS_BACKGROUND_LOCATION')
+      ),
+      (l10n.permCamera, permissions.contains('android.permission.CAMERA')),
+      (
+        l10n.permMicrophone,
+        permissions.contains('android.permission.RECORD_AUDIO')
+      ),
+      (
+        l10n.permContacts,
+        permissions.contains('android.permission.READ_CONTACTS') ||
+            permissions.contains('android.permission.WRITE_CONTACTS')
+      ),
+      (
+        l10n.permSms,
+        permissions.contains('android.permission.READ_SMS') ||
+            permissions.contains('android.permission.SEND_SMS') ||
+            permissions.contains('android.permission.RECEIVE_SMS')
+      ),
+      (
+        l10n.permCallLogs,
+        permissions.contains('android.permission.READ_CALL_LOG')
+      ),
+      (
+        l10n.permPhone,
+        permissions.contains('android.permission.READ_PHONE_STATE') ||
+            permissions.contains('android.permission.CALL_PHONE')
+      ),
+      (
+        l10n.permStorage,
+        permissions.contains('android.permission.READ_EXTERNAL_STORAGE') ||
+            permissions.contains('android.permission.WRITE_EXTERNAL_STORAGE') ||
+            permissions.contains('android.permission.READ_MEDIA_IMAGES') ||
+            permissions.contains('android.permission.READ_MEDIA_VIDEO')
+      ),
+      (
+        l10n.permCalendar,
+        permissions.contains('android.permission.READ_CALENDAR') ||
+            permissions.contains('android.permission.WRITE_CALENDAR')
+      ),
+      (
+        l10n.permBluetooth,
+        permissions.contains('android.permission.BLUETOOTH') ||
+            permissions.contains('android.permission.BLUETOOTH_CONNECT') ||
+            permissions.contains('android.permission.BLUETOOTH_SCAN')
+      ),
+      (
+        l10n.permNotifications,
+        permissions.contains('android.permission.POST_NOTIFICATIONS')
+      ),
+      (
+        l10n.permSensors,
+        permissions.contains('android.permission.BODY_SENSORS')
+      ),
+    ].where((entry) => entry.$2).toList();
+
+    if (available.isEmpty) return const SizedBox.shrink();
+
     return Wrap(
       spacing: 6,
       runSpacing: 6,
-      children: [
-        _permChip(context, l10n.permLocation,
-            permissions.contains('android.permission.ACCESS_FINE_LOCATION') ||
-                permissions.contains('android.permission.ACCESS_COARSE_LOCATION')),
-        _permChip(context, l10n.permBackgroundLocation,
-            permissions.contains('android.permission.ACCESS_BACKGROUND_LOCATION')),
-        _permChip(context, l10n.permCamera,
-            permissions.contains('android.permission.CAMERA')),
-        _permChip(context, l10n.permMicrophone,
-            permissions.contains('android.permission.RECORD_AUDIO')),
-        _permChip(context, l10n.permContacts,
-            permissions.contains('android.permission.READ_CONTACTS') ||
-                permissions.contains('android.permission.WRITE_CONTACTS')),
-        _permChip(context, l10n.permSms,
-            permissions.contains('android.permission.READ_SMS') ||
-                permissions.contains('android.permission.SEND_SMS') ||
-                permissions.contains('android.permission.RECEIVE_SMS')),
-        _permChip(context, l10n.permCallLogs,
-            permissions.contains('android.permission.READ_CALL_LOG')),
-        _permChip(context, l10n.permPhone,
-            permissions.contains('android.permission.READ_PHONE_STATE') ||
-                permissions.contains('android.permission.CALL_PHONE')),
-        _permChip(context, l10n.permStorage,
-            permissions.contains('android.permission.READ_EXTERNAL_STORAGE') ||
-                permissions.contains('android.permission.WRITE_EXTERNAL_STORAGE') ||
-                permissions.contains('android.permission.READ_MEDIA_IMAGES') ||
-                permissions.contains('android.permission.READ_MEDIA_VIDEO')),
-        _permChip(context, l10n.permCalendar,
-            permissions.contains('android.permission.READ_CALENDAR') ||
-                permissions.contains('android.permission.WRITE_CALENDAR')),
-        _permChip(context, l10n.permBluetooth,
-            permissions.contains('android.permission.BLUETOOTH') ||
-                permissions.contains('android.permission.BLUETOOTH_CONNECT') ||
-                permissions.contains('android.permission.BLUETOOTH_SCAN')),
-        _permChip(context, l10n.permNotifications,
-            permissions.contains('android.permission.POST_NOTIFICATIONS')),
-        _permChip(context, l10n.permSensors,
-            permissions.contains('android.permission.BODY_SENSORS')),
-      ],
+      children:
+          available.map((entry) => _permChip(context, entry.$1)).toList(),
     );
   }
 
-  Widget _permChip(BuildContext context, String label, bool enabled) {
+  Widget _permChip(BuildContext context, String label) {
     final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: EdgeInsets.symmetric(
@@ -168,13 +196,13 @@ class RecentItem extends StatelessWidget {
         vertical: AppSize.height * 0.005,
       ),
       decoration: BoxDecoration(
-        color: enabled ? Colors.orange.withValues(alpha: 0.15) : (context.isDark ?Colors.white12:AppColor.btnLight),
+        color: Colors.orange.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(AppSize.width * 0.05),
       ),
       child: Text(
-        enabled ? l10n.permEnabled(label) : l10n.permDisabled(label),
+        l10n.permEnabled(label),
         style: TextStyle(
-          color: enabled ? Colors.orangeAccent : (context.isDark?Colors.white38:AppColor.blurStyle),
+          color: Colors.orangeAccent,
           fontSize: AppSize.width * 0.025,
         ),
       ),
