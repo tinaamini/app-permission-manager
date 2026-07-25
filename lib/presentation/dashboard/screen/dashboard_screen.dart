@@ -20,6 +20,7 @@ import 'package:Privio/presentation/utils/base_screen.dart';
 import 'package:Privio/presentation/utils/custome_dotsloader.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Privio/logic/utils/scan/scan_cubit.dart';
+
 class DashboardPermissionScreen extends StatefulWidget {
   const DashboardPermissionScreen({super.key});
 
@@ -114,14 +115,13 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
         _scanning = false;
       });
 
-
       if (mounted) context.read<ScanCubit>().loadLastScan();
-
     } catch (_) {
       if (!mounted) return;
       setState(() => _scanning = false);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -132,10 +132,10 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
           AppBarWidget(
             text: l10n.dashboardPermission,
             ontap: () => context.pop(),
+            showBack: true,
+            showHome: false,
           ),
-
           SizedBox(height: AppSize.height * 0.02),
-
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
@@ -145,27 +145,22 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     SystemPrivacyDashboardCard(),
-
                     SizedBox(height: 16),
-
                     _loadingAlerts
                         ? const Center(
-                      child: CustomDotsLoader(
-                        svgPath1: 'assets/utils/Property 1=1 (1).svg',
-                        svgPath2: 'assets/utils/Property 1=2 (1).svg',
-                        svgPath3: 'assets/utils/Property 1=3 (1).svg',
-                        svgPath4: 'assets/utils/Property 1=4 (1).svg',
-                      ),
-                    )
+                            child: CustomDotsLoader(
+                              svgPath1: 'assets/utils/Property 1=1 (1).svg',
+                              svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                              svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                              svgPath4: 'assets/utils/Property 1=4 (1).svg',
+                            ),
+                          )
                         : SafeAlertSectionWidget(
-                      accessibilityOn: _accessibilityOn,
-                      apps: _appsForAlerts,
-                    ),
-
+                            accessibilityOn: _accessibilityOn,
+                            apps: _appsForAlerts,
+                          ),
                     SizedBox(height: 20),
-
                     SinceLastScanWidget(
                       diff: _scanDiff,
                       lastScanTime: _lastScanTime,
@@ -174,7 +169,6 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
                       selectedTab: _scanTab,
                       onTabChange: (t) => setState(() => _scanTab = t),
                     ),
-
                     SizedBox(height: 30),
                   ],
                 ),

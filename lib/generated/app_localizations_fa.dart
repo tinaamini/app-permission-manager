@@ -39,6 +39,9 @@ class AppLocalizationsFa extends AppLocalizations {
   String get notScannedYet => 'هنوز اسکن نشده';
 
   @override
+  String get scanToStart => 'برای شروع، اسکن کنید';
+
+  @override
   String get justNow => 'چند ثانیه پیش';
 
   @override

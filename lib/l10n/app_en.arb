@@ -11,6 +11,7 @@
   "recentApps": "Usage Time",
   "lastScann": "Last Scan",
    "notScannedYet": "Not scanned yet",
+   "scanToStart": "Scan to get started",
     "justNow": "Just now",
 
      "minutesAgo": "{count} minutes ago",

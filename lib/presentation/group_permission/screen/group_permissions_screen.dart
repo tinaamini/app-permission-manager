@@ -12,8 +12,6 @@ import 'package:Privio/presentation/utils/app_size.dart';
 import 'package:Privio/presentation/utils/base_screen.dart';
 import 'package:Privio/routs/rout_name.dart';
 
-
-
 class GroupPermissionsScreen extends StatefulWidget {
   const GroupPermissionsScreen({super.key});
 
@@ -38,17 +36,26 @@ class _GroupPermissionsScreenState extends State<GroupPermissionsScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     final items = <_GroupItem>[
-    _GroupItem('assets/group_permission/location.png', l10n.locationPermission, PermissionGroupType.location),
-    _GroupItem('assets/group_permission/camera.png', l10n.cameraPermission, PermissionGroupType.camera),
-    _GroupItem('assets/group_permission/microphone.png', l10n.microphonePermission, PermissionGroupType.microphone),
-    _GroupItem('assets/group_permission/contacts.png', l10n.contactsPermission, PermissionGroupType.contacts),
-    _GroupItem('assets/group_permission/sms.png', l10n.smsPermission, PermissionGroupType.sms),
-    _GroupItem('assets/group_permission/call.png', l10n.callPermission, PermissionGroupType.call),
-    _GroupItem('assets/group_permission/files.png', l10n.storagePermission, PermissionGroupType.storage),
-    _GroupItem('assets/group_permission/calendar.png', l10n.calendarPermission, PermissionGroupType.calendar),
-    _GroupItem('assets/group_permission/notification.png', l10n.notificationPermission, PermissionGroupType.notification),
-    _GroupItem('assets/group_permission/activity.png', l10n.activityPermission, PermissionGroupType.activity),
-
+      _GroupItem('assets/group_permission/location.png',
+          l10n.locationPermission, PermissionGroupType.location),
+      _GroupItem('assets/group_permission/camera.png', l10n.cameraPermission,
+          PermissionGroupType.camera),
+      _GroupItem('assets/group_permission/microphone.png',
+          l10n.microphonePermission, PermissionGroupType.microphone),
+      _GroupItem('assets/group_permission/contacts.png',
+          l10n.contactsPermission, PermissionGroupType.contacts),
+      _GroupItem('assets/group_permission/sms.png', l10n.smsPermission,
+          PermissionGroupType.sms),
+      _GroupItem('assets/group_permission/call.png', l10n.callPermission,
+          PermissionGroupType.call),
+      _GroupItem('assets/group_permission/files.png', l10n.storagePermission,
+          PermissionGroupType.storage),
+      _GroupItem('assets/group_permission/calendar.png',
+          l10n.calendarPermission, PermissionGroupType.calendar),
+      _GroupItem('assets/group_permission/notification.png',
+          l10n.notificationPermission, PermissionGroupType.notification),
+      _GroupItem('assets/group_permission/activity.png',
+          l10n.activityPermission, PermissionGroupType.activity),
     ];
     final w = AppSize.width;
     final crossAxisCount = w >= 900 ? 4 : (w >= 600 ? 3 : 2);
@@ -59,9 +66,10 @@ class _GroupPermissionsScreenState extends State<GroupPermissionsScreen> {
           AppBarWidget(
             text: l10n.groupPermission,
             ontap: () => context.pop(),
+            showBack: true,
+            showHome: false,
           ),
           SizedBox(height: AppSize.height * 0.015),
-
           Expanded(
             child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
               builder: (context, state) {
@@ -87,9 +95,9 @@ class _GroupPermissionsScreenState extends State<GroupPermissionsScreen> {
                     final count = allApps == null
                         ? 0
                         : _countAppsForGroup(
-                      allApps: allApps,
-                      groupType: item.type,
-                    );
+                            allApps: allApps,
+                            groupType: item.type,
+                          );
 
                     return BtnGroupWidget(
                       image: item.image,

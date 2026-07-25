@@ -70,6 +70,8 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
               AppBarWidget(
                 text: l10n.specialPermission,
                 ontap: () => context.pop(),
+                showBack: true,
+                showHome: false,
               ),
               SizedBox(height: AppSize.height * 0.028),
               Expanded(

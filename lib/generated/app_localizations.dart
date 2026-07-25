@@ -158,6 +158,12 @@ abstract class AppLocalizations {
   /// **'Not scanned yet'**
   String get notScannedYet;
 
+  /// No description provided for @scanToStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan to get started'**
+  String get scanToStart;
+
   /// No description provided for @justNow.
   ///
   /// In en, this message translates to:

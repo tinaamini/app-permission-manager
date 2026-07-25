@@ -153,6 +153,8 @@ class _AppDetailScreenState extends State<AppDetailScreen>
               AppBarWidget(
                 text: l10n.appDetails,
                 ontap: () => context.pop(),
+                showBack: true,
+                showHome: true,
               ),
 
               SizedBox(height: screenHeight * 0.015),

@@ -39,6 +39,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notScannedYet => 'Not scanned yet';
 
   @override
+  String get scanToStart => 'Scan to get started';
+
+  @override
   String get justNow => 'Just now';
 
   @override

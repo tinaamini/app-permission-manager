@@ -1,10 +1,8 @@
-import 'package:Privio/core/models/scan_model.dart';
 import 'package:Privio/core/servises/scan_service.dart';
 import 'package:Privio/core/servises/scan_storage_hive.dart';
 import 'package:Privio/core/utils/scan_diff.dart';
 import 'package:Privio/logic/utils/scan/scan_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 class ScanCubit extends Cubit<ScanState> {
   ScanCubit() : super(const ScanState());

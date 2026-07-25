@@ -31,8 +31,9 @@ class TrustedAppsScreen extends StatelessWidget {
           AppBarWidget(
             text: l10n.trustedApps,
             ontap: () => context.pop(),
+            showBack: true,
+            showHome: true,
           ),
-
           Expanded(
             child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
               builder: (context, state) {
@@ -67,13 +68,19 @@ class TrustedAppsScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        SvgPicture.asset("assets/app_permission/shield-tick.svg",width: 30.w,height: 30.h,),
+                        SvgPicture.asset(
+                          "assets/app_permission/shield-tick.svg",
+                          width: 30.w,
+                          height: 30.h,
+                        ),
                         SizedBox(width: screenWidth * 0.02),
-                        Text(l10n.whiteList, style: AppTextStyle.blueFont(context)),
+                        Text(l10n.whiteList,
+                            style: AppTextStyle.blueFont(context)),
                       ],
                     ),
                     SizedBox(height: screenHeight * 0.007),
-                    Text(l10n.appsYouFullyTrust, style: AppTextStyle.trustTitle(context)),
+                    Text(l10n.appsYouFullyTrust,
+                        style: AppTextStyle.trustTitle(context)),
                     SizedBox(height: screenHeight * 0.007),
                     Text(
                       l10n.trustedListDesc,
@@ -81,11 +88,12 @@ class TrustedAppsScreen extends StatelessWidget {
                     ),
                     SizedBox(height: screenHeight * 0.02),
                     ...trustedApps.map(
-                          (app) => appTile(
+                      (app) => appTile(
                         context,
                         app,
                         actionText: l10n.untrust,
-                        onTap: () => _confirmUntrust(context, app.packageName, l10n),
+                        onTap: () =>
+                            _confirmUntrust(context, app.packageName, l10n),
                       ),
                     ),
                   ],
@@ -98,11 +106,13 @@ class TrustedAppsScreen extends StatelessWidget {
     );
   }
 
-  void _confirmUntrust(BuildContext context, String packageName, AppLocalizations l10n) {
+  void _confirmUntrust(
+      BuildContext context, String packageName, AppLocalizations l10n) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor:context.isDark? AppColor.CartDarkBorder:AppColor.white,
+        backgroundColor:
+            context.isDark ? AppColor.CartDarkBorder : AppColor.white,
         title: Text(l10n.removeTrust, style: AppTextStyle.blueFont(context)),
         content: Text(
           l10n.removeTrustDesc,

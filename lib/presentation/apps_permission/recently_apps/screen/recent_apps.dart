@@ -28,7 +28,8 @@ class RecentAppsScreen extends StatefulWidget {
 }
 
 class _RecentAppsScreenState extends State<RecentAppsScreen> {
-  late final Future<List<dynamic>> _future = RecentAppsService.getTodayRecentApps();
+  late final Future<List<dynamic>> _future =
+      RecentAppsService.getTodayRecentApps();
 
   @override
   Widget build(BuildContext context) {
@@ -68,21 +69,24 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
 
               final recentRaw = snapshot.data ?? [];
 
-              final items = recentRaw.map((recent) {
-                final pkg = recent['package'] as String?;
-                if (pkg == null) return null;
+              final items = recentRaw
+                  .map((recent) {
+                    final pkg = recent['package'] as String?;
+                    if (pkg == null) return null;
 
-                final app = state.allApps.firstWhereOrNull(
+                    final app = state.allApps.firstWhereOrNull(
                       (a) => a.packageName == pkg,
-                );
-                if (app == null) return null;
+                    );
+                    if (app == null) return null;
 
-                return _RecentItem(
-                  app: app,
-                  lastUsed: recent['lastTimeUsed'] ?? 0,
-                  foregroundTime: recent['foregroundTime'] ?? 0,
-                );
-              }).whereType<_RecentItem>().toList();
+                    return _RecentItem(
+                      app: app,
+                      lastUsed: recent['lastTimeUsed'] ?? 0,
+                      foregroundTime: recent['foregroundTime'] ?? 0,
+                    );
+                  })
+                  .whereType<_RecentItem>()
+                  .toList();
 
               if (items.isEmpty) {
                 return Column(
@@ -91,6 +95,8 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
                     AppBarWidget(
                       text: l10n.recentApps,
                       ontap: () => context.pop(),
+                      showBack: true,
+                      showHome: true,
                     ),
                     Flexible(
                       child: EmptyPageWidget(text: l10n.noAppsUsedToday),
@@ -107,15 +113,19 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
                   AppBarWidget(
                     text: l10n.usageTime,
                     ontap: () => context.pop(),
+                    showBack: true,
+                    showHome: true,
                   ),
                   SizedBox(height: AppSize.height * 0.015),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: AppSize.width * 0.04),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: AppSize.width * 0.04),
                     child: _summaryCard(items, l10n),
                   ),
                   SizedBox(height: AppSize.height * 0.03),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: AppSize.width * 0.04),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: AppSize.width * 0.04),
                     child: Text(
                       l10n.recentApps,
                       style: AppTextStyle.summary(context),
@@ -126,7 +136,8 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
                     child: ListView.separated(
                       itemCount: items.length,
                       separatorBuilder: (_, __) => Padding(
-                        padding: EdgeInsets.symmetric(horizontal: AppSize.width * 0.04),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: AppSize.width * 0.04),
                         child: Divider(
                           color: Colors.orange,
                           height: AppSize.height * 0.04,
@@ -148,15 +159,14 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
 
   Widget _summaryCard(List<_RecentItem> items, AppLocalizations l10n) {
     final totalApps = items.length;
-    final highRiskCount = items
-        .where((e) => e.app.riskLevel == RiskLevel.highRisk)
-        .length;
+    final highRiskCount =
+        items.where((e) => e.app.riskLevel == RiskLevel.highRisk).length;
     final totalTime = items.fold<int>(0, (sum, e) => sum + e.foregroundTime);
 
     return Container(
       padding: EdgeInsets.all(AppSize.width * 0.04),
       decoration: BoxDecoration(
-        color:context.isDark? AppColor.CartDark:AppColor.btnLight,
+        color: context.isDark ? AppColor.CartDark : AppColor.btnLight,
         borderRadius: BorderRadius.circular(AppSize.width * 0.035),
         border: Border.all(color: Colors.white12),
       ),
@@ -180,12 +190,10 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            child: Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyle.summaryRow(context)
-            ),
+            child: Text(label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyle.summaryRow(context)),
           ),
           Text(value, style: AppTextStyle.summaryValue(context)),
         ],

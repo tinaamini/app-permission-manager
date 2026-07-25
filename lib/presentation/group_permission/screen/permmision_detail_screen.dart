@@ -61,6 +61,8 @@ class _PermissionDetailScreenState extends State<PermissionDetailScreen>
           AppBarWidget(
             text: _title(),
             ontap: () => context.pop(),
+            showBack: true,
+            showHome: true,
           ),
 
           Expanded(

@@ -27,6 +27,8 @@ class SpecialPermissionDetailScreen extends StatelessWidget {
           AppBarWidget(
             text: _title(context),
             ontap: () => context.pop(),
+            showBack: true,
+            showHome: true,
           ),
 
           Expanded(

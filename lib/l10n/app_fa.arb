@@ -11,6 +11,7 @@
   "recentApps": "زمان استفاده",
   "lastScann": "آخرین اسکن",
   "notScannedYet": "هنوز اسکن نشده",
+  "scanToStart": "برای شروع، اسکن کنید",
     "justNow": "چند ثانیه پیش",
     "minutesAgo": "{count} دقیقه پیش",
     "@minutesAgo": {

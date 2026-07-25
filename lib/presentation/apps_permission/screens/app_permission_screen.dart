@@ -27,18 +27,15 @@ class AppPermissionScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final isDark = context.watch<ThemeCubit>().state == ThemeMode.dark;
 
-
     return BlocBuilder<AppPermissionCubit, AppPermissionState>(
       builder: (context, state) {
         if (state is! AppPermissionLoaded) {
-          return const  Center(
+          return const Center(
               child: CustomDotsLoader(
-                  svgPath1:
-                  'assets/utils/Property 1=1 (1).svg',
+                  svgPath1: 'assets/utils/Property 1=1 (1).svg',
                   svgPath2: 'assets/utils/Property 1=2 (1).svg',
                   svgPath3: 'assets/utils/Property 1=3 (1).svg',
-                  svgPath4:
-                  'assets/utils/Property 1=4 (1).svg'));
+                  svgPath4: 'assets/utils/Property 1=4 (1).svg'));
         }
 
         return BaseScreen(
@@ -47,13 +44,15 @@ class AppPermissionScreen extends StatelessWidget {
               AppBarWidget(
                 text: l10n.appPermission,
                 ontap: () => context.pop(),
+                showBack: true,
+                showHome: false,
               ),
-
               Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(  horizontal: screenWidth * 0.0375,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.0375,
                     ),
                     child: Column(
                       children: [
@@ -71,7 +70,9 @@ class AppPermissionScreen extends StatelessWidget {
                                     extra: RiskLevel.noRisk,
                                   );
                                 },
-                                image: isDark?'assets/app_permission/noRisk.svg':"assets/app_permission/Frame 8.svg",
+                                image: isDark
+                                    ? 'assets/app_permission/noRisk.svg'
+                                    : "assets/app_permission/Frame 8.svg",
                                 text: l10n.noRisk,
                                 integer: state.noRisk.length.toString(),
                                 color: Colors.blue,
@@ -88,7 +89,9 @@ class AppPermissionScreen extends StatelessWidget {
                                     extra: RiskLevel.lowRisk,
                                   );
                                 },
-                                image: isDark?'assets/app_permission/lowRisk.svg':"assets/app_permission/Frame 8 (1).svg",
+                                image: isDark
+                                    ? 'assets/app_permission/lowRisk.svg'
+                                    : "assets/app_permission/Frame 8 (1).svg",
                                 text: l10n.lowRisk,
                                 integer: state.lowRisk.length.toString(),
                                 color: Colors.green,
@@ -110,7 +113,9 @@ class AppPermissionScreen extends StatelessWidget {
                                     extra: RiskLevel.mediumRisk,
                                   );
                                 },
-                                image:isDark? 'assets/app_permission/mediumRisk.svg':"assets/app_permission/Frame 8 (2).svg",
+                                image: isDark
+                                    ? 'assets/app_permission/mediumRisk.svg'
+                                    : "assets/app_permission/Frame 8 (2).svg",
                                 text: l10n.mediumRisk,
                                 integer: state.mediumRisk.length.toString(),
                                 color: Colors.orange,
@@ -127,7 +132,9 @@ class AppPermissionScreen extends StatelessWidget {
                                     extra: RiskLevel.highRisk,
                                   );
                                 },
-                                image: isDark ?'assets/app_permission/highRisk.svg':"assets/app_permission/Frame 8 (3).svg",
+                                image: isDark
+                                    ? 'assets/app_permission/highRisk.svg'
+                                    : "assets/app_permission/Frame 8 (3).svg",
                                 text: l10n.highRisk,
                                 integer: state.highRisk.length.toString(),
                                 color: Colors.red,
@@ -163,7 +170,7 @@ class AppPermissionScreen extends StatelessWidget {
                           text: l10n.recentApps,
                           ontap: () async {
                             final granted =
-                            await UsageAccessService.isUsageAccessGranted();
+                                await UsageAccessService.isUsageAccessGranted();
                             await UsageAccessService.isUsageAccessGranted();
 
                             if (granted) {
@@ -174,7 +181,6 @@ class AppPermissionScreen extends StatelessWidget {
                                 builder: (_) => Dialog(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
-
                                   ),
                                   child: UsageAccessScreen(),
                                 ),
@@ -188,7 +194,8 @@ class AppPermissionScreen extends StatelessWidget {
 
                         SizedBox(
                           height: screenHeight * 0.03,
-                        ),                      ],
+                        ),
+                      ],
                     ),
                   ),
                 ),

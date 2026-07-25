@@ -57,7 +57,6 @@ class _SvgLoaderAnimationState extends State<CustomDotsLoader> {
       svgPaths[_currentIndex],
       height: AppSize.width * 0.08,
       width: AppSize.width * 0.08,
-      color: null,
     );
   }
 }

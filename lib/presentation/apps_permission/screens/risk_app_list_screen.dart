@@ -38,37 +38,39 @@ class RiskAppListScreen extends StatelessWidget {
           AppBarWidget(
             text: _title(l10n),
             ontap: () => context.pop(),
+            showBack: true,
+            showHome: true,
           ),
           SizedBox(height: AppSize.height * 0.015),
-
           Expanded(
             child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
               builder: (context, state) {
                 if (state is! AppPermissionLoaded) {
-                  return const  Center(
+                  return const Center(
                       child: CustomDotsLoader(
-                          svgPath1:
-                          'assets/utils/Property 1=1 (1).svg',
+                          svgPath1: 'assets/utils/Property 1=1 (1).svg',
                           svgPath2: 'assets/utils/Property 1=2 (1).svg',
                           svgPath3: 'assets/utils/Property 1=3 (1).svg',
-                          svgPath4:
-                          'assets/utils/Property 1=4 (1).svg'));
+                          svgPath4: 'assets/utils/Property 1=4 (1).svg'));
                 }
 
                 final apps = _getAppsByRisk(state);
 
                 if (apps.isEmpty) {
-                  return  EmptyPageWidget(text: l10n.noAppsFound);
+                  return EmptyPageWidget(text: l10n.noAppsFound);
                 }
 
                 return ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth * (16 / 812),),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * (16 / 812),
+                  ),
                   itemCount: apps.length,
                   itemBuilder: (context, index) {
                     final app = apps[index];
 
                     return Padding(
-                      padding: EdgeInsets.symmetric(vertical: screenHeight * (10/812)),
+                      padding: EdgeInsets.symmetric(
+                          vertical: screenHeight * (10 / 812)),
                       child: GestureDetector(
                         onTap: () {
                           context.pushNamed(

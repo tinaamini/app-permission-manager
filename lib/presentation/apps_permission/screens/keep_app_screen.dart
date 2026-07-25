@@ -31,8 +31,9 @@ class KeepAppsScreen extends StatelessWidget {
           AppBarWidget(
             text: l10n.keepApps,
             ontap: () => context.pop(),
+            showBack: true,
+            showHome: true,
           ),
-
           Expanded(
             child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
               builder: (context, state) {
@@ -67,38 +68,48 @@ class KeepAppsScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        SvgPicture.asset(context.isDark ?"assets/app_permission/tick-square.svg":"assets/app_permission/tick-square2.svg",width: 30.w,height: 30.h,),
+                        SvgPicture.asset(
+                          context.isDark
+                              ? "assets/app_permission/tick-square.svg"
+                              : "assets/app_permission/tick-square2.svg",
+                          width: 30.w,
+                          height: 30.h,
+                        ),
                         SizedBox(width: screenWidth * 0.02),
-                        Text(l10n.reviewedList, style: AppTextStyle.greenFont(context)),
+                        Text(l10n.reviewedList,
+                            style: AppTextStyle.greenFont(context)),
                       ],
                     ),
                     SizedBox(height: screenHeight * 0.007),
-                    Text(l10n.markedAsSafe, style: AppTextStyle.trustTitle(context)),
+                    Text(l10n.markedAsSafe,
+                        style: AppTextStyle.trustTitle(context)),
                     SizedBox(height: screenHeight * 0.007),
                     Text(
                       l10n.reviewedListDesc,
                       style: AppTextStyle.trustDescription(context).copyWith(
-                        color:context.isDark? AppColor.green2: AppColor.green4,
+                        color:
+                            context.isDark ? AppColor.green2 : AppColor.green4,
                       ),
                     ),
-
                     SizedBox(height: screenHeight * (16 / 812)),
                     ...keptApps.map(
-                          (app) => appTile(
+                      (app) => appTile(
                         context,
                         app,
                         actionText: l10n.remove,
-                        onTap: () => _confirmUnKeep(context, app.packageName, l10n),
+                        onTap: () =>
+                            _confirmUnKeep(context, app.packageName, l10n),
                       ),
                     ),
-
                     SizedBox(height: screenHeight * (12 / 812)),
                     Container(
-                      margin: EdgeInsets.only(bottom: screenHeight * (12 / 812)),
+                      margin:
+                          EdgeInsets.only(bottom: screenHeight * (12 / 812)),
                       padding: EdgeInsets.all(screenWidth * (12 / 812)),
                       decoration: BoxDecoration(
                         color: AppColor.green1.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(screenWidth * (24 / 812)),
+                        borderRadius:
+                            BorderRadius.circular(screenWidth * (24 / 812)),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,15 +135,19 @@ class KeepAppsScreen extends StatelessWidget {
     );
   }
 
-  void _confirmUnKeep(BuildContext context, String packageName, AppLocalizations l10n) {
+  void _confirmUnKeep(
+      BuildContext context, String packageName, AppLocalizations l10n) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor:context.isDark? AppColor.CartDarkBorder:AppColor.white,
-        title: Text(l10n.removeFromKeep, style: AppTextStyle.greenFont(context)),
+        backgroundColor:
+            context.isDark ? AppColor.CartDarkBorder : AppColor.white,
+        title:
+            Text(l10n.removeFromKeep, style: AppTextStyle.greenFont(context)),
         content: Text(
           l10n.removeFromKeepDesc,
-          style: AppTextStyle.trustDescription(context).copyWith(color:context.isDark? AppColor.green2:AppColor.green4),
+          style: AppTextStyle.trustDescription(context).copyWith(
+              color: context.isDark ? AppColor.green2 : AppColor.green4),
         ),
         actions: [
           TextButton(
