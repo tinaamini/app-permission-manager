@@ -13,6 +13,7 @@ class RouteName {
   static const specialPermission = 'specialPermission';
   static const specialPermissionDetail = 'specialPermissionDetail';
   static const dashboardPermission = 'dashboardPermission';
+  static const about = 'about';
 
 
 }

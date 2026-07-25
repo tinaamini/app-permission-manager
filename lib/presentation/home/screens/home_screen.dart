@@ -1,4 +1,5 @@
 import 'package:Privio/logic/utils/theme/theme_cubit.dart';
+import 'package:Privio/constant/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -43,10 +44,27 @@ class HomeScreen extends StatelessWidget {
                   padding:  EdgeInsets.only(top:AppSize.height *0.03
                       ,
                   ),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Row(
                     children: [
                       BtnLanguageUtil(),
-
+                      const Spacer(),
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => context.push('/about'),
+                        child: SizedBox.square(
+                          dimension: 48,
+                          child: Center(
+                            child: Icon(
+                              Icons.info_outline_rounded,
+                              size: 25,
+                              color: isDark
+                                  ? Colors.white70
+                                  : AppColor.textLight,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
                       GestureDetector(
                         onTap: (){
                           context.read<ThemeCubit>().toggle();

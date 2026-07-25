@@ -17,6 +17,7 @@ import 'package:Privio/presentation/dashboard/screen/dashboard_screen.dart';
 import 'package:Privio/presentation/group_permission/screen/group_permissions_screen.dart';
 import 'package:Privio/presentation/group_permission/screen/permmision_detail_screen.dart';
 import 'package:Privio/presentation/home/screens/home_screen.dart';
+import 'package:Privio/presentation/about/screen/about_screen.dart';
 import 'package:Privio/presentation/onboarding/screen/onboarding_screen.dart';
 import 'package:Privio/presentation/special_permissions/screen/special_permission_detail_screen.dart';
 import 'package:Privio/presentation/special_permissions/screen/special_permission_screen.dart';
@@ -71,6 +72,14 @@ GoRouter createRouter(OnboardingShowCubit onboardingShowCubit) {
           pageBuilder: (context, state) => CupertinoPage(
             key: state.pageKey,
             child: HomeScreen(),
+          ),
+        ),
+        GoRoute(
+          name: RouteName.about,
+          path: '/about',
+          pageBuilder: (context, state) => CupertinoPage(
+            key: state.pageKey,
+            child: const AboutScreen(),
           ),
         ),
 
