@@ -14,6 +14,7 @@ import 'package:Privio/generated/app_localizations.dart';
 import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
 import 'package:Privio/logic/app_permission/app_permission_state.dart';
 import 'package:Privio/presentation/apps_permission/recently_apps/widgets/recent_item.dart';
+import 'package:Privio/presentation/apps_permission/widgets/app_search_bar.dart';
 import 'package:Privio/presentation/utils/app_bar.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
 import 'package:Privio/presentation/utils/base_screen.dart';
@@ -30,6 +31,7 @@ class RecentAppsScreen extends StatefulWidget {
 class _RecentAppsScreenState extends State<RecentAppsScreen> {
   late final Future<List<dynamic>> _future =
       RecentAppsService.getTodayRecentApps();
+  String _query = '';
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +100,8 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
                       showBack: true,
                       showHome: true,
                     ),
+                    AppSearchBar(
+                        onChanged: (value) => setState(() => _query = value)),
                     Flexible(
                       child: EmptyPageWidget(text: l10n.noAppsUsedToday),
                     ),
@@ -106,6 +110,29 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
               }
 
               items.sort((a, b) => b.lastUsed.compareTo(a.lastUsed));
+              final filteredItems = items.where((item) {
+                final query = _query.trim().toLowerCase();
+                return query.isEmpty ||
+                    item.app.appName.toLowerCase().contains(query) ||
+                    item.app.packageName.toLowerCase().contains(query);
+              }).toList();
+
+              if (filteredItems.isEmpty) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppBarWidget(
+                      text: l10n.usageTime,
+                      ontap: () => context.pop(),
+                      showBack: true,
+                      showHome: true,
+                    ),
+                    AppSearchBar(
+                        onChanged: (value) => setState(() => _query = value)),
+                    Expanded(child: EmptyPageWidget(text: l10n.noAppsFound)),
+                  ],
+                );
+              }
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,11 +143,13 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
                     showBack: true,
                     showHome: true,
                   ),
+                  AppSearchBar(
+                      onChanged: (value) => setState(() => _query = value)),
                   SizedBox(height: AppSize.height * 0.015),
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: AppSize.width * 0.04),
-                    child: _summaryCard(items, l10n),
+                    child: _summaryCard(filteredItems, l10n),
                   ),
                   SizedBox(height: AppSize.height * 0.03),
                   Padding(
@@ -134,7 +163,7 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
                   SizedBox(height: AppSize.height * 0.03),
                   Expanded(
                     child: ListView.separated(
-                      itemCount: items.length,
+                      itemCount: filteredItems.length,
                       separatorBuilder: (_, __) => Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: AppSize.width * 0.04),
@@ -144,7 +173,7 @@ class _RecentAppsScreenState extends State<RecentAppsScreen> {
                         ),
                       ),
                       itemBuilder: (context, index) {
-                        return _recentItem(items[index]);
+                        return _recentItem(filteredItems[index]);
                       },
                     ),
                   ),

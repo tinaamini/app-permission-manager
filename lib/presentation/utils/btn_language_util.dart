@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/logic/locale/locale_cubit.dart';
@@ -8,7 +8,12 @@ import 'app_size.dart';
 import 'btn_language_widget.dart';
 
 class BtnLanguageUtil extends StatelessWidget {
-  const BtnLanguageUtil({super.key});
+  final bool compact;
+
+  const BtnLanguageUtil({
+    super.key,
+    this.compact = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +39,50 @@ class BtnLanguageUtil extends StatelessWidget {
           ];
           final isEnglish = locale.languageCode == 'en';
 
-          return   Container(
+          if (compact) {
+            final nextLocale = isEnglish ? 'fa' : 'en';
+
+            return Semantics(
+              button: true,
+              label: 'Switch language',
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  final nextIndex = isEnglish ? 1 : 0;
+                  context.read<BtnLanguageCubit>().select(nextIndex);
+                  context.read<LocaleCubit>().setLocale(Locale(nextLocale));
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 180),
+                  curve: Curves.easeOut,
+                  width: 56,
+                  height: 32,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColor.blue1.withOpacity(0.9),
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 180),
+                    child: Text(
+                      isEnglish ? 'EN' : 'FA',
+                      key: ValueKey(isEnglish),
+                      style: const TextStyle(
+                        color: AppColor.blue1,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }
+
+          return Container(
             width: AppSize.width * 0.25,
             height: AppSize.height * 0.04,
             decoration: BoxDecoration(

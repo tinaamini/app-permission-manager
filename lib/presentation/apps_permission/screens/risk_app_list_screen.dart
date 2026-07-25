@@ -6,6 +6,7 @@ import 'package:Privio/generated/app_localizations.dart';
 import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
 import 'package:Privio/logic/app_permission/app_permission_state.dart';
 import 'package:Privio/presentation/apps_permission/widgets/app_item_widget.dart';
+import 'package:Privio/presentation/apps_permission/widgets/app_search_bar.dart';
 import 'package:Privio/presentation/utils/app_bar.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
 import 'package:Privio/presentation/utils/base_screen.dart';
@@ -18,13 +19,20 @@ import 'package:go_router/go_router.dart';
 
 import '../../utils/custome_dotsloader.dart';
 
-class RiskAppListScreen extends StatelessWidget {
+class RiskAppListScreen extends StatefulWidget {
   final RiskLevel riskLevel;
 
   const RiskAppListScreen({
     super.key,
     required this.riskLevel,
   });
+
+  @override
+  State<RiskAppListScreen> createState() => _RiskAppListScreenState();
+}
+
+class _RiskAppListScreenState extends State<RiskAppListScreen> {
+  String _query = '';
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +49,7 @@ class RiskAppListScreen extends StatelessWidget {
             showBack: true,
             showHome: true,
           ),
+          AppSearchBar(onChanged: (value) => setState(() => _query = value)),
           SizedBox(height: AppSize.height * 0.015),
           Expanded(
             child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
@@ -54,7 +63,9 @@ class RiskAppListScreen extends StatelessWidget {
                           svgPath4: 'assets/utils/Property 1=4 (1).svg'));
                 }
 
-                final apps = _getAppsByRisk(state);
+                final apps = _getAppsByRisk(state)
+                    .where((app) => _matches(app.appName, app.packageName))
+                    .toList();
 
                 if (apps.isEmpty) {
                   return EmptyPageWidget(text: l10n.noAppsFound);
@@ -75,7 +86,7 @@ class RiskAppListScreen extends StatelessWidget {
                         onTap: () {
                           context.pushNamed(
                             RouteName.appDetail,
-                            extra: app,
+                                    extra: app,
                           );
                         },
                         child: AppItem(
@@ -101,8 +112,15 @@ class RiskAppListScreen extends StatelessWidget {
     );
   }
 
+  bool _matches(String appName, String packageName) {
+    final query = _query.trim().toLowerCase();
+    return query.isEmpty ||
+        appName.toLowerCase().contains(query) ||
+        packageName.toLowerCase().contains(query);
+  }
+
   String _title(AppLocalizations l10n) {
-    switch (riskLevel) {
+    switch (widget.riskLevel) {
       case RiskLevel.noRisk:
         return l10n.noRiskApps;
       case RiskLevel.lowRisk:
@@ -115,7 +133,7 @@ class RiskAppListScreen extends StatelessWidget {
   }
 
   List<AppPermissionUi> _getAppsByRisk(AppPermissionLoaded state) {
-    switch (riskLevel) {
+    switch (widget.riskLevel) {
       case RiskLevel.noRisk:
         return state.noRisk;
       case RiskLevel.lowRisk:

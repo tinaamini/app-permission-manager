@@ -11,13 +11,21 @@ import 'package:Privio/constant/app_style.dart';
 import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
 import 'package:Privio/logic/app_permission/app_permission_state.dart';
 import 'package:Privio/presentation/apps_permission/widgets/app_tile.dart';
+import 'package:Privio/presentation/apps_permission/widgets/app_search_bar.dart';
 import 'package:Privio/presentation/utils/app_bar.dart';
 import 'package:Privio/presentation/utils/base_screen.dart';
 import 'package:Privio/presentation/utils/custome_dotsloader.dart';
 import 'package:Privio/presentation/utils/empty_page_widget.dart';
 
-class KeepAppsScreen extends StatelessWidget {
+class KeepAppsScreen extends StatefulWidget {
   const KeepAppsScreen({super.key});
+
+  @override
+  State<KeepAppsScreen> createState() => _KeepAppsScreenState();
+}
+
+class _KeepAppsScreenState extends State<KeepAppsScreen> {
+  String _query = '';
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +42,7 @@ class KeepAppsScreen extends StatelessWidget {
             showBack: true,
             showHome: true,
           ),
+          AppSearchBar(onChanged: (value) => setState(() => _query = value)),
           Expanded(
             child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
               builder: (context, state) {
@@ -55,7 +64,9 @@ class KeepAppsScreen extends StatelessWidget {
                   ...state.lowRisk,
                   ...state.mediumRisk,
                   ...state.highRisk,
-                ].where((app) => cubit.isAppKept(app.packageName)).toList();
+                ].where((app) =>
+                    cubit.isAppKept(app.packageName) &&
+                    _matches(app.appName, app.packageName)).toList();
 
                 if (keptApps.isEmpty) {
                   return Center(
@@ -133,6 +144,13 @@ class KeepAppsScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  bool _matches(String name, String packageName) {
+    final query = _query.trim().toLowerCase();
+    return query.isEmpty ||
+        name.toLowerCase().contains(query) ||
+        packageName.toLowerCase().contains(query);
   }
 
   void _confirmUnKeep(

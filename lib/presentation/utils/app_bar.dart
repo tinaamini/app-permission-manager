@@ -3,6 +3,7 @@ import 'package:Privio/constant/app_style.dart';
 import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
@@ -25,62 +26,139 @@ class AppBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    bool _fa(BuildContext context) =>
-        Localizations.localeOf(context).languageCode == 'fa';
+    final height = MediaQuery.of(context).size.height;
+    final isFa = Localizations.localeOf(context).languageCode == 'fa';
     final isDark = context.watch<ThemeCubit>().state == ThemeMode.dark;
+    final padding = 10.w;
+    final appBarHeight = (height * 0.09).clamp(80.0, 96.0).toDouble();
+    const sideWidth = 112.0;
 
-    return Container(
-      height: screenHeight * 0.09,
-      color: isDark ? AppColor.CartDark : AppColor.btnLight,
-      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-      child: Row(
-        children: [
-          if (showBack)
-            GestureDetector(
-              onTap: ontap,
-              child: AnimatedRotation(
-                turns: _fa(context) ? 0.5 : 0.0,
-                duration: const Duration(milliseconds: 700),
-                child: SvgPicture.asset(
-                  "assets/main/back_icon.svg",
-                  width: screenWidth * 0.035,
-                  height: screenHeight * 0.035,
-                ),
-              ),
-            ),
-          Expanded(
-            child: Center(
-              child: Text(
-                text,
-                style: AppTextStyle.nameApp(context).copyWith(
-                  color: isDark ? AppColor.white : AppColor.black,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+    final back = Semantics(
+      button: true,
+      label: 'Back',
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: ontap,
+        child: SizedBox.square(
+          dimension: 44,
+          child: Center(
+            child: AnimatedRotation(
+              turns: isFa ? 0.5 : 0,
+              duration: const Duration(milliseconds: 700),
+              child: SvgPicture.asset(
+                'assets/main/back_icon.svg',
+                width: 34,
+                height: 34,
               ),
             ),
           ),
-          BtnLanguageUtil(),
-          if (showHome)
-            Semantics(
-              button: true,
-              label: 'Home',
-              child: GestureDetector(
-                onTap: () => context.goNamed(RouteName.home),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.only(
-                    start: screenWidth * 0.035,
+        ),
+      ),
+    );
+
+    final home = Semantics(
+      button: true,
+      label: 'Home',
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => context.goNamed(RouteName.home),
+        child: SizedBox.square(
+          dimension: 44,
+          child: Center(
+            child: SvgPicture.asset(
+              'assets/utils/home_green_icon.svg',
+              width: 32,
+              height: 32,
+              colorFilter: ColorFilter.mode(
+                isDark ? Colors.white70 : AppColor.textLight,
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final language = SizedBox(
+      width: 34,
+      height: 34,
+      child: Center(
+        child: const BtnLanguageUtil(compact: true),
+      ),
+    );
+
+    final homeAndLanguage = Row(crossAxisAlignment: CrossAxisAlignment.center,
+
+    mainAxisSize: MainAxisSize.min,
+      textDirection: TextDirection.ltr,
+      children: [
+        if (showHome) home,
+        if (showHome) const SizedBox(width: 12),
+        language,
+      ],
+    );
+
+    final leftGroup = isFa
+        ? homeAndLanguage
+        : (showBack ? back : const SizedBox.shrink());
+    final rightGroup = isFa
+        ? (showBack ? back : const SizedBox.shrink())
+        : Row(crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            textDirection: TextDirection.ltr,
+            children: [
+              language,
+              if (showHome) const SizedBox(width: 12),
+              if (showHome) home,
+            ],
+          );
+
+    return Container(
+      height: appBarHeight,
+      color: isDark ? AppColor.CartDark : AppColor.btnLight,
+      padding: EdgeInsets.symmetric(horizontal: padding),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned.fill(
+            child: Row(
+              textDirection: TextDirection.ltr,
+              children: [
+                SizedBox(
+                  width: sideWidth,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: leftGroup,
                   ),
-                  child: SvgPicture.asset(
-                    'assets/utils/home_green_icon.svg',
-                    width: screenWidth * 0.06,
-                    height: screenHeight * 0.04,
+                ),
+                const Spacer(),
+                SizedBox(
+                  width: sideWidth,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: rightGroup,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned.fill(
+            left: sideWidth,
+            right: sideWidth,
+            child: IgnorePointer(
+              child: Center(
+                child: Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyle.nameApp(context).copyWith(
+                    color: isDark ? AppColor.white : AppColor.black,
                   ),
                 ),
               ),
             ),
+          ),
         ],
       ),
     );
