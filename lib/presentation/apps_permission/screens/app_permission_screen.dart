@@ -67,44 +67,20 @@ class AppPermissionScreen extends StatelessWidget {
                                 ontap: () {
                                   context.pushNamed(
                                     RouteName.riskApps,
-                                    extra: RiskLevel.noRisk,
+                                    extra: RiskLevel.highRisk,
                                   );
                                 },
                                 image: isDark
-                                    ? 'assets/app_permission/noRisk.svg'
-                                    : "assets/app_permission/Frame 8.svg",
-                                text: l10n.noRisk,
-                                integer: state.noRisk.length.toString(),
-                                color: Colors.blue,
+                                    ? 'assets/app_permission/highRisk.svg'
+                                    : "assets/app_permission/Frame 8 (3).svg",
+                                text: l10n.highRisk,
+                                integer: state.highRisk.length.toString(),
+                                color: Colors.red,
                               ),
                             ),
                             SizedBox(
                               width: screenWidth * 0.03,
                             ),
-                            Expanded(
-                              child: BtnPermissionWidget(
-                                ontap: () {
-                                  context.pushNamed(
-                                    RouteName.riskApps,
-                                    extra: RiskLevel.lowRisk,
-                                  );
-                                },
-                                image: isDark
-                                    ? 'assets/app_permission/lowRisk.svg'
-                                    : "assets/app_permission/Frame 8 (1).svg",
-                                text: l10n.lowRisk,
-                                integer: state.lowRisk.length.toString(),
-                                color: Colors.green,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(
-                          height: screenHeight * 0.02,
-                        ),
-                        Row(
-                          children: [
                             Expanded(
                               child: BtnPermissionWidget(
                                 ontap: () {
@@ -121,6 +97,30 @@ class AppPermissionScreen extends StatelessWidget {
                                 color: Colors.orange,
                               ),
                             ),
+                          ],
+                        ),
+
+                        SizedBox(
+                          height: screenHeight * 0.02,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: BtnPermissionWidget(
+                                ontap: () {
+                                  context.pushNamed(
+                                    RouteName.riskApps,
+                                    extra: RiskLevel.lowRisk,
+                                  );
+                                },
+                                image: isDark
+                                    ? 'assets/app_permission/lowRisk.svg'
+                                    : "assets/app_permission/Frame 8 (1).svg",
+                                text: l10n.lowRisk,
+                                integer: state.lowRisk.length.toString(),
+                                color: Colors.green,
+                              ),
+                            ),
                             SizedBox(
                               width: screenWidth * 0.03,
                             ),
@@ -129,15 +129,15 @@ class AppPermissionScreen extends StatelessWidget {
                                 ontap: () {
                                   context.pushNamed(
                                     RouteName.riskApps,
-                                    extra: RiskLevel.highRisk,
+                                    extra: RiskLevel.noRisk,
                                   );
                                 },
                                 image: isDark
-                                    ? 'assets/app_permission/highRisk.svg'
-                                    : "assets/app_permission/Frame 8 (3).svg",
-                                text: l10n.highRisk,
-                                integer: state.highRisk.length.toString(),
-                                color: Colors.red,
+                                    ? 'assets/app_permission/noRisk.svg'
+                                    : "assets/app_permission/Frame 8.svg",
+                                text: l10n.noRisk,
+                                integer: state.noRisk.length.toString(),
+                                color: Colors.blue,
                               ),
                             ),
                           ],
