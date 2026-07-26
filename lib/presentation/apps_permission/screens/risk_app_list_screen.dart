@@ -91,10 +91,24 @@ class _RiskAppListScreenState extends State<RiskAppListScreen> {
                         },
                         child: AppItem(
                           packageName: app.packageName,
-                          icon: Image.memory(
-                            base64Decode(app.iconBase64),
-                            width: screenWidth * 0.1,
-                            height: screenHeight * 0.05,
+                          icon: ClipOval(
+                            child: Image.memory(
+                              base64Decode(app.iconBase64),
+                              width: double.infinity,
+                              height: double.infinity,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => ColoredBox(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .surfaceContainerHighest,
+                                child: Icon(
+                                  Icons.apps_rounded,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
+                                ),
+                              ),
+                            ),
                           ),
                           appName: app.appName,
                           permissions: app.permissions,

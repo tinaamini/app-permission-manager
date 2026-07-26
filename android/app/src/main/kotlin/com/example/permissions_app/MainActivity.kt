@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.provider.Settings
 import android.util.Base64
 import io.flutter.embedding.android.FlutterActivity
@@ -28,8 +29,50 @@ class MainActivity : FlutterActivity() {
 
     private val ioExecutor = Executors.newFixedThreadPool(4)
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        SecurityNotifications.initialize(this)
+        SecurityWorkScheduler.schedule(this)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) !=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(
+                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                7300,
+            )
+        } else {
+            SecurityNotifications.showReadyOnce(this)
+            PermissionMonitorService.start(this)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 7300 &&
+            grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED
+        ) {
+            SecurityNotifications.showReadyOnce(this)
+            PermissionMonitorService.start(this)
+        }
+    }
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "notification_navigation")
+            .setMethodCallHandler { call, result ->
+                if (call.method == "getPendingPackage") {
+                    result.success(intent?.getStringExtra("notification_package_name"))
+                    intent?.removeExtra("notification_package_name")
+                } else {
+                    result.notImplemented()
+                }
+            }
 
         // ===================== permission_channel =====================
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
