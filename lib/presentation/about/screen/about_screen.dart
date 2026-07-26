@@ -1,4 +1,4 @@
-import 'package:Privio/constant/app_color.dart';
+﻿import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/constant/app_style.dart';
 import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:Privio/presentation/utils/app_bar.dart';
@@ -14,11 +14,11 @@ class AboutScreen extends StatelessWidget {
     final isFa = Localizations.localeOf(context).languageCode == 'fa';
     final sections = isFa
         ? const [
-            ('داستان محصول', 'Privio برای کمک به شما ساخته شده است تا بدانید هر برنامه به چه مجوزهایی دسترسی دارد و بتوانید با خیال راحت‌تری از گوشی خود استفاده کنید.'),
-            ('چرا رایگان است؟', 'حریم خصوصی و امنیت باید برای همه قابل دسترس باشد. Privio رایگان است تا هیچ‌کس برای محافظت از اطلاعات شخصی خود مجبور به پرداخت هزینه نباشد.'),
-            ('مدیریت داده‌ها', 'اطلاعات بررسی مجوزها روی دستگاه شما پردازش می‌شود و ما آن‌ها را برای فروش، تبلیغات یا ردیابی شما جمع‌آوری نمی‌کنیم.'),
-            ('تیم محصول', 'Privio توسط تیمی مستقل ساخته شده که تمرکزش طراحی ابزارهای ساده و شفاف برای امنیت و حریم خصوصی کاربران است.'),
-            ('سیاست حریم خصوصی', 'ما فقط دسترسی‌های لازم برای نمایش وضعیت اپ‌ها و مجوزها را بررسی می‌کنیم. شما همیشه کنترل داده‌ها و تصمیم‌های امنیتی خود را در اختیار دارید.'),
+            ('Ø¯Ø§Ø³ØªØ§Ù† Ù…Ø­ØµÙˆÙ„', 'Privio Ø¨Ø±Ø§ÛŒ Ú©Ù…Ú© Ø¨Ù‡ Ø´Ù…Ø§ Ø³Ø§Ø®ØªÙ‡ Ø´Ø¯Ù‡ Ø§Ø³Øª ØªØ§ Ø¨Ø¯Ø§Ù†ÛŒØ¯ Ù‡Ø± Ø¨Ø±Ù†Ø§Ù…Ù‡ Ø¨Ù‡ Ú†Ù‡ Ù…Ø¬ÙˆØ²Ù‡Ø§ÛŒÛŒ Ø¯Ø³ØªØ±Ø³ÛŒ Ø¯Ø§Ø±Ø¯ Ùˆ Ø¨ØªÙˆØ§Ù†ÛŒØ¯ Ø¨Ø§ Ø®ÛŒØ§Ù„ Ø±Ø§Ø­Øªâ€ŒØªØ±ÛŒ Ø§Ø² Ú¯ÙˆØ´ÛŒ Ø®ÙˆØ¯ Ø§Ø³ØªÙØ§Ø¯Ù‡ Ú©Ù†ÛŒØ¯.'),
+            ('Ú†Ø±Ø§ Ø±Ø§ÛŒÚ¯Ø§Ù† Ø§Ø³ØªØŸ', 'Ø­Ø±ÛŒÙ… Ø®ØµÙˆØµÛŒ Ùˆ Ø§Ù…Ù†ÛŒØª Ø¨Ø§ÛŒØ¯ Ø¨Ø±Ø§ÛŒ Ù‡Ù…Ù‡ Ù‚Ø§Ø¨Ù„ Ø¯Ø³ØªØ±Ø³ Ø¨Ø§Ø´Ø¯. Privio Ø±Ø§ÛŒÚ¯Ø§Ù† Ø§Ø³Øª ØªØ§ Ù‡ÛŒÚ†â€ŒÚ©Ø³ Ø¨Ø±Ø§ÛŒ Ù…Ø­Ø§ÙØ¸Øª Ø§Ø² Ø§Ø·Ù„Ø§Ø¹Ø§Øª Ø´Ø®ØµÛŒ Ø®ÙˆØ¯ Ù…Ø¬Ø¨ÙˆØ± Ø¨Ù‡ Ù¾Ø±Ø¯Ø§Ø®Øª Ù‡Ø²ÛŒÙ†Ù‡ Ù†Ø¨Ø§Ø´Ø¯.'),
+            ('Ù…Ø¯ÛŒØ±ÛŒØª Ø¯Ø§Ø¯Ù‡â€ŒÙ‡Ø§', 'Ø§Ø·Ù„Ø§Ø¹Ø§Øª Ø¨Ø±Ø±Ø³ÛŒ Ù…Ø¬ÙˆØ²Ù‡Ø§ Ø±ÙˆÛŒ Ø¯Ø³ØªÚ¯Ø§Ù‡ Ø´Ù…Ø§ Ù¾Ø±Ø¯Ø§Ø²Ø´ Ù…ÛŒâ€ŒØ´ÙˆØ¯ Ùˆ Ù…Ø§ Ø¢Ù†â€ŒÙ‡Ø§ Ø±Ø§ Ø¨Ø±Ø§ÛŒ ÙØ±ÙˆØ´ØŒ ØªØ¨Ù„ÛŒØºØ§Øª ÛŒØ§ Ø±Ø¯ÛŒØ§Ø¨ÛŒ Ø´Ù…Ø§ Ø¬Ù…Ø¹â€ŒØ¢ÙˆØ±ÛŒ Ù†Ù…ÛŒâ€ŒÚ©Ù†ÛŒÙ….'),
+            ('ØªÛŒÙ… Ù…Ø­ØµÙˆÙ„', 'Privio ØªÙˆØ³Ø· ØªÛŒÙ…ÛŒ Ù…Ø³ØªÙ‚Ù„ Ø³Ø§Ø®ØªÙ‡ Ø´Ø¯Ù‡ Ú©Ù‡ ØªÙ…Ø±Ú©Ø²Ø´ Ø·Ø±Ø§Ø­ÛŒ Ø§Ø¨Ø²Ø§Ø±Ù‡Ø§ÛŒ Ø³Ø§Ø¯Ù‡ Ùˆ Ø´ÙØ§Ù Ø¨Ø±Ø§ÛŒ Ø§Ù…Ù†ÛŒØª Ùˆ Ø­Ø±ÛŒÙ… Ø®ØµÙˆØµÛŒ Ú©Ø§Ø±Ø¨Ø±Ø§Ù† Ø§Ø³Øª.'),
+            ('Ø³ÛŒØ§Ø³Øª Ø­Ø±ÛŒÙ… Ø®ØµÙˆØµÛŒ', 'Ù…Ø§ ÙÙ‚Ø· Ø¯Ø³ØªØ±Ø³ÛŒâ€ŒÙ‡Ø§ÛŒ Ù„Ø§Ø²Ù… Ø¨Ø±Ø§ÛŒ Ù†Ù…Ø§ÛŒØ´ ÙˆØ¶Ø¹ÛŒØª Ø§Ù¾â€ŒÙ‡Ø§ Ùˆ Ù…Ø¬ÙˆØ²Ù‡Ø§ Ø±Ø§ Ø¨Ø±Ø±Ø³ÛŒ Ù…ÛŒâ€ŒÚ©Ù†ÛŒÙ…. Ø´Ù…Ø§ Ù‡Ù…ÛŒØ´Ù‡ Ú©Ù†ØªØ±Ù„ Ø¯Ø§Ø¯Ù‡â€ŒÙ‡Ø§ Ùˆ ØªØµÙ…ÛŒÙ…â€ŒÙ‡Ø§ÛŒ Ø§Ù…Ù†ÛŒØªÛŒ Ø®ÙˆØ¯ Ø±Ø§ Ø¯Ø± Ø§Ø®ØªÛŒØ§Ø± Ø¯Ø§Ø±ÛŒØ¯.'),
           ]
         : const [
             ('Our story', 'Privio helps you understand what permissions each app uses, so you can use your phone with more confidence.'),
@@ -32,7 +32,7 @@ class AboutScreen extends StatelessWidget {
       child: Column(
         children: [
           AppBarWidget(
-            text: isFa ? 'درباره ما' : 'About us',
+            text: isFa ? 'Ø¯Ø±Ø¨Ø§Ø±Ù‡ Ù…Ø§' : 'About us',
             ontap: () => context.pop(),
             showBack: true,
             showHome: true,
@@ -41,20 +41,13 @@ class AboutScreen extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
               children: [
-                _AboutSection(
+                _AboutIntro(
                   title: isFa
-                      ? 'امنیت بهتر با شفافیت شروع می‌شود.'
+                      ? 'Ø§Ù…Ù†ÛŒØª Ø¨Ù‡ØªØ± Ø¨Ø§ Ø´ÙØ§ÙÛŒØª Ø´Ø±ÙˆØ¹ Ù…ÛŒâ€ŒØ´ÙˆØ¯.'
                       : 'Better security starts with transparency.',
-                  body: '',
-                  highlight: true,
                 ),
                 const SizedBox(height: 16),
-                ...sections.map(
-                  (section) => Padding(
-                    padding: const EdgeInsets.only(bottom: 14),
-                    child: _AboutSection(title: section.$1, body: section.$2),
-                  ),
-                ),
+                _AboutSections(sections: sections),
               ],
             ),
           ),
@@ -64,42 +57,158 @@ class AboutScreen extends StatelessWidget {
   }
 }
 
+class _AboutIntro extends StatelessWidget {
+  final String title;
+
+  const _AboutIntro({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = context.isDark ? AppColor.green1 : AppColor.green3;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+      decoration: BoxDecoration(
+        color: accent.withOpacity(.12),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: accent.withOpacity(.3)),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.shield_rounded, color: accent, size: 28),
+          const SizedBox(width: 13),
+          Expanded(child: Text(title, style: AppTextStyle.trustTitle(context))),
+        ],
+      ),
+    );
+  }
+}
+
+class _AboutSections extends StatefulWidget {
+  final List<(String, String)> sections;
+
+  const _AboutSections({required this.sections});
+
+  @override
+  State<_AboutSections> createState() => _AboutSectionsState();
+}
+
+class _AboutSectionsState extends State<_AboutSections> {
+  int? _openIndex;
+
+  static const _icons = [
+    Icons.auto_stories_rounded,
+    Icons.volunteer_activism_rounded,
+    Icons.insights_rounded,
+    Icons.groups_rounded,
+    Icons.verified_user_rounded,
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (var index = 0; index < widget.sections.length; index++) ...[
+          _AboutSection(
+            title: widget.sections[index].$1,
+            body: widget.sections[index].$2,
+            icon: _icons[index % _icons.length],
+            isOpen: _openIndex == index,
+            onTap: () => setState(
+              () => _openIndex = _openIndex == index ? null : index,
+            ),
+          ),
+          if (index != widget.sections.length - 1) const SizedBox(height: 12),
+        ],
+      ],
+    );
+  }
+}
+
 class _AboutSection extends StatelessWidget {
   final String title;
   final String body;
-  final bool highlight;
+  final IconData icon;
+  final bool isOpen;
+  final VoidCallback onTap;
 
   const _AboutSection({
     required this.title,
     required this.body,
-    this.highlight = false,
+    required this.icon,
+    required this.isOpen,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(18),
+    final isDark = context.isDark;
+    final accent = isDark ? AppColor.green1 : AppColor.green3;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 240),
+      curve: Curves.easeOut,
       decoration: BoxDecoration(
-        color: context.isDark ? AppColor.CartDark : AppColor.btnLight,
+        color: isDark ? AppColor.CartDark : AppColor.btnLight,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: context.isDark ? AppColor.CartDarkBorder : AppColor.borderLight,
+          color: isOpen ? accent.withOpacity(.75) :
+              (isDark ? AppColor.CartDarkBorder : AppColor.borderLight),
+          width: isOpen ? 1.4 : 1,
         ),
+        boxShadow: isOpen
+            ? [BoxShadow(color: accent.withOpacity(.12), blurRadius: 18, offset: const Offset(0, 6))]
+            : const [],
       ),
-      child: highlight
-          ? Text(
-              title,
-              style: AppTextStyle.trustTitle(context),
-              textAlign: TextAlign.center,
-            )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(20),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
               children: [
-                Text(title, style: AppTextStyle.greenFont(context)),
-                const SizedBox(height: 8),
-                Text(body, style: AppTextStyle.trustDescription(context)),
+                Row(
+                  children: [
+                    Container(
+                      width: 42,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        color: accent.withOpacity(isOpen ? .2 : .12),
+                        borderRadius: BorderRadius.circular(13),
+                      ),
+                      child: Icon(icon, color: accent, size: 23),
+                    ),
+                    const SizedBox(width: 13),
+                    Expanded(child: Text(title, style: AppTextStyle.greenFont(context))),
+                    AnimatedRotation(
+                      turns: isOpen ? .5 : 0,
+                      duration: const Duration(milliseconds: 220),
+                      child: Icon(Icons.keyboard_arrow_down_rounded,
+                          color: isDark ? Colors.white70 : AppColor.textLight, size: 27),
+                    ),
+                  ],
+                ),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 240),
+                  curve: Curves.easeOut,
+                  child: isOpen
+                      ? Padding(
+                          padding: const EdgeInsetsDirectional.only(start: 55, top: 13, end: 4),
+                          child: Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text(body, style: AppTextStyle.trustDescription(context)),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ),
               ],
             ),
+          ),
+        ),
+      ),
     );
   }
 }
+
