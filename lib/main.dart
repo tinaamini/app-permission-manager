@@ -1,6 +1,7 @@
 
 import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,11 +14,13 @@ import 'package:Privio/generated/app_localizations.dart';
 import 'core/servises/app_special_permiision_service.dart';
 import 'core/utils/onboarding_storage.dart';
 import 'logic/app_permission/app_permission_cubit.dart';
+import 'logic/app_permission/app_permission_state.dart';
 import 'logic/locale/locale_cubit.dart';
 import 'logic/onboarding/onboarding_cubit.dart';
 import 'logic/onboarding/show_onboarding/show_onboarding_cubit.dart';
 import 'logic/special_permission/special_permission_cubit.dart';
 import 'logic/utils/scan/scan_cubit.dart';
+import 'routs/rout_name.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -166,9 +169,23 @@ class _AppBootstrapState extends State<_AppBootstrap> {
     _started = true;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<AppPermissionCubit>().loadApps();
+      _loadAndOpenPendingApp();
       context.read<SpecialPermissionCubit>().loadStatus();
     });
+  }
+
+  Future<void> _loadAndOpenPendingApp() async {
+    final cubit = context.read<AppPermissionCubit>();
+    await cubit.loadApps();
+    if (!mounted || cubit.state is! AppPermissionLoaded) return;
+    final packageName = await const MethodChannel('notification_navigation')
+        .invokeMethod<String>('getPendingPackage');
+    if (!mounted || packageName == null) return;
+    final apps = (cubit.state as AppPermissionLoaded).allApps;
+    final matching = apps.where((item) => item.packageName == packageName);
+    if (matching.isNotEmpty) {
+      widget.router.pushNamed(RouteName.appDetail, extra: matching.first);
+    }
   }
   @override
   @override

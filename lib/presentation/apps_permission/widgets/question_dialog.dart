@@ -4,14 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/generated/app_localizations.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class QuestionDialog extends StatelessWidget {
+class QuestionDialog extends StatefulWidget {
   final VoidCallback ontapManual;
+  final ValueChanged<bool>? onDontShowAgainChanged;
 
   const QuestionDialog({
     super.key,
     required this.ontapManual,
+    this.onDontShowAgainChanged,
   });
+
+  @override
+  State<QuestionDialog> createState() => _QuestionDialogState();
+}
+
+class _QuestionDialogState extends State<QuestionDialog> {
+  bool _dontShowAgain = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +49,7 @@ class QuestionDialog extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
+
             children: [
               Text(
                 l10n.appPermission,
@@ -55,11 +66,45 @@ class QuestionDialog extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: AppTextStyle.questionDescription(context)
               ),
+              if (widget.onDontShowAgainChanged != null) ...[
+                SizedBox(height: AppSize.height * 0.012),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _dontShowAgain,
+                      activeColor: Colors.green,
+                      checkColor: Colors.white,
+                      visualDensity: const VisualDensity(
+                        horizontal: -4,
+                        vertical: -4,
+                      ),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onChanged: (value) {
+                        final checked = value ?? false;
+                        setState(() => _dontShowAgain = checked);
+                        widget.onDontShowAgainChanged?.call(checked);
+                      },
+                    ),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        Localizations.localeOf(context).languageCode == 'fa'
+                            ? 'دیگر این پیام نمایش داده نشود'
+                            : "Don't show this message again",
+                        style: AppTextStyle.questionDescription(context).copyWith(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
               SizedBox(height: AppSize.height * 0.025),
               SizedBox(
                 width: double.infinity,
                 child: GestureDetector(
-                  onTap: ontapManual,
+                  onTap: widget.ontapManual,
                   child: Container(
                     padding: EdgeInsets.symmetric(
                       vertical: AppSize.height * 0.017,

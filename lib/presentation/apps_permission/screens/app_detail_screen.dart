@@ -26,6 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive/hive.dart';
 
 class AppDetailScreen extends StatefulWidget {
   final AppPermissionUi app;
@@ -322,6 +323,14 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                       enabled: enabled,
                       isDangerous: isDangerous,
                       onTap: () {
+                        final dontShowAgain = Hive.box('app_preferences').get(
+                          _dialogPreferenceKey,
+                          defaultValue: false,
+                        ) as bool;
+                        if (dontShowAgain) {
+                          _openPermissionSettings(permissionKey);
+                          return;
+                        }
                         showDialog(
                           context: context,
                           builder: (dialogContext) => Dialog(
@@ -336,47 +345,13 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                                 await Future.delayed(
                                   const Duration(milliseconds: 50),
                                 );
-
-                                // permission های خاص (special permissions) توی
-                                // صفحه‌ی عمومی App Info لیست نمی‌شن و هرکدوم یه
-                                // مسیر تنظیمات اختصاصی خودشون رو دارن؛ برای بقیه‌ی
-                                // permission های عادی (دوربین، مکان، مخاطبین و ...)
-                                // همون صفحه‌ی عمومی App Info کافیه.
-                                switch (permissionKey) {
-                                  case 'android.permission.SYSTEM_ALERT_WINDOW':
-                                    await AppSpecialPermissionPlatform()
-                                        .openAppOverlaySettings(
-                                        widget.app.packageName);
-                                    break;
-                                  case 'android.permission.PACKAGE_USAGE_STATS':
-                                  // برای Usage Access مسیر اختصاصی per-app
-                                  // نداریم؛ صفحه‌ی لیست کلی usage access باز
-                                  // می‌شه و کاربر خودش اپ رو از توش پیدا می‌کنه.
-                                    await AppSpecialPermissionPlatform()
-                                        .openUsageAccessSettings();
-                                    break;
-                                  case 'android.permission.MANAGE_EXTERNAL_STORAGE':
-                                    await AppSpecialPermissionPlatform()
-                                        .openAppAllFilesAccessSettings(
-                                        widget.app.packageName);
-                                    break;
-                                  case 'android.permission.WRITE_SETTINGS':
-                                    await AppSpecialPermissionPlatform()
-                                        .openAppWriteSettingsSettings(
-                                        widget.app.packageName);
-                                    break;
-                                  case 'android.permission.BIND_ACCESSIBILITY_SERVICE':
-                                  // اندروید مسیر مستقیم per-app برای صفحه‌ی
-                                  // Accessibility نداره؛ فقط لیست کلی سرویس‌ها
-                                  // باز می‌شه و کاربر خودش پیدا می‌کنه.
-                                    await SafeDashboardPlatform
-                                        .openAccessibilitySettings();
-                                    break;
-                                  default:
-                                    await AppPermissionPlatform()
-                                        .openAppSettings(
-                                        widget.app.packageName);
-                                }
+                                await _openPermissionSettings(permissionKey);
+                              },
+                              onDontShowAgainChanged: (checked) {
+                                Hive.box('app_preferences').put(
+                                  _dialogPreferenceKey,
+                                  checked,
+                                );
                               },
                             ),
                           ),
@@ -391,6 +366,34 @@ class _AppDetailScreenState extends State<AppDetailScreen>
         },
       ),
     );
+  }
+
+  static const _dialogPreferenceKey = 'hide_permission_dialog_globally';
+
+  Future<void> _openPermissionSettings(String permissionKey) async {
+    switch (permissionKey) {
+      case 'android.permission.SYSTEM_ALERT_WINDOW':
+        await AppSpecialPermissionPlatform()
+            .openAppOverlaySettings(widget.app.packageName);
+        break;
+      case 'android.permission.PACKAGE_USAGE_STATS':
+        await AppSpecialPermissionPlatform().openUsageAccessSettings();
+        break;
+      case 'android.permission.MANAGE_EXTERNAL_STORAGE':
+        await AppSpecialPermissionPlatform()
+            .openAppAllFilesAccessSettings(widget.app.packageName);
+        break;
+      case 'android.permission.WRITE_SETTINGS':
+        await AppSpecialPermissionPlatform()
+            .openAppWriteSettingsSettings(widget.app.packageName);
+        break;
+      case 'android.permission.BIND_ACCESSIBILITY_SERVICE':
+        await SafeDashboardPlatform.openAccessibilitySettings();
+        break;
+      default:
+        await AppPermissionPlatform()
+            .openAppSettings(widget.app.packageName);
+    }
   }
 
   Color _riskColor(RiskLevel level) {

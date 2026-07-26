@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive/hive.dart';
 
 import 'package:Privio/constant/permission_group_type.dart';
 import 'package:Privio/core/servises/app_permission_service.dart';
@@ -108,6 +109,15 @@ class _PermissionDetailScreenState extends State<PermissionDetailScreen>
                         enabled: true,
                         isDangerous: true,
                         onTap: () {
+                          final hideDialog = Hive.box('app_preferences').get(
+                            _hidePermissionDialogKey,
+                            defaultValue: false,
+                          ) as bool;
+                          if (hideDialog) {
+                            AppPermissionPlatform()
+                                .openAppSettings(app.packageName);
+                            return;
+                          }
                           showDialog(
                             context: context,
                             builder: (dialogContext) => Dialog(
@@ -125,6 +135,12 @@ class _PermissionDetailScreenState extends State<PermissionDetailScreen>
                                   await AppPermissionPlatform()
                                       .openAppSettings(app.packageName);
                                 },
+                                onDontShowAgainChanged: (checked) {
+                                  Hive.box('app_preferences').put(
+                                    _hidePermissionDialogKey,
+                                    checked,
+                                  );
+                                },
                               ),
                             ),
                           );
@@ -140,6 +156,8 @@ class _PermissionDetailScreenState extends State<PermissionDetailScreen>
       ),
     );
   }
+
+  static const _hidePermissionDialogKey = 'hide_permission_dialog_globally';
 
   String _title() {
     final l10n = AppLocalizations.of(context)!;
