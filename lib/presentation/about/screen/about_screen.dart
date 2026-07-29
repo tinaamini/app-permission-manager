@@ -99,9 +99,9 @@ class _AboutIntro extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
       decoration: BoxDecoration(
-        color: accent.withOpacity(.12),
+        color: accent.withValues(alpha: .12),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: accent.withOpacity(.3)),
+        border: Border.all(color: accent.withValues(alpha: .3)),
       ),
       child: Row(
         children: [
@@ -126,12 +126,12 @@ class _AboutSections extends StatefulWidget {
 class _AboutSectionsState extends State<_AboutSections> {
   int? _openIndex;
 
-  static const _icons = [
-    Icons.auto_stories_rounded,
-    Icons.volunteer_activism_rounded,
-    Icons.insights_rounded,
-    Icons.groups_rounded,
-    Icons.verified_user_rounded,
+  static const _accents = [
+    AppColor.aboutAccentGreen,
+    AppColor.aboutAccentBlue,
+    AppColor.aboutAccentOrange,
+    AppColor.aboutAccentPurple,
+    AppColor.aboutAccentPink,
   ];
 
   @override
@@ -142,7 +142,7 @@ class _AboutSectionsState extends State<_AboutSections> {
           _AboutSection(
             title: widget.sections[index].$1,
             body: widget.sections[index].$2,
-            icon: _icons[index % _icons.length],
+            accent: _accents[index % _accents.length],
             isOpen: _openIndex == index,
             onTap: () => setState(
               () => _openIndex = _openIndex == index ? null : index,
@@ -158,14 +158,14 @@ class _AboutSectionsState extends State<_AboutSections> {
 class _AboutSection extends StatelessWidget {
   final String title;
   final String body;
-  final IconData icon;
+  final Color accent;
   final bool isOpen;
   final VoidCallback onTap;
 
   const _AboutSection({
     required this.title,
     required this.body,
-    required this.icon,
+    required this.accent,
     required this.isOpen,
     required this.onTap,
   });
@@ -173,23 +173,32 @@ class _AboutSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    final accent = isDark ? AppColor.green1 : AppColor.green3;
+    final cardColor = isDark ? AppColor.aboutCardDark : AppColor.btnLight2;
+    final radius = BorderRadius.circular(24);
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 240),
       curve: Curves.easeOut,
       decoration: BoxDecoration(
-        color: isDark ? AppColor.CartDark : AppColor.btnLight,
-        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          begin: AlignmentDirectional.centerStart,
+          end: AlignmentDirectional.centerEnd,
+          colors: [
+            accent.withValues(alpha: isOpen ? 0.14 : 0.07),
+            cardColor,
+          ],
+        ),
+        borderRadius: radius,
         border: Border.all(
           color: isOpen
-              ? accent.withOpacity(.75)
+              ? accent
               : (isDark ? AppColor.CartDarkBorder : AppColor.borderLight),
-          width: isOpen ? 1.4 : 1,
+          width: isOpen ? 1.5 : 1,
         ),
         boxShadow: isOpen
             ? [
                 BoxShadow(
-                  color: accent.withOpacity(.12),
+                  color: accent.withValues(alpha: 0.12),
                   blurRadius: 18,
                   offset: const Offset(0, 6),
                 ),
@@ -198,55 +207,62 @@ class _AboutSection extends StatelessWidget {
       ),
       child: Material(
         type: MaterialType.transparency,
+        borderRadius: radius,
+        clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: radius,
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 22),
             child: Column(
               children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 42,
-                      height: 42,
-                      decoration: BoxDecoration(
-                        color: accent.withOpacity(isOpen ? .2 : .12),
-                        borderRadius: BorderRadius.circular(13),
+                SizedBox(
+                  height: 34,
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.verified_user_outlined,
+                        color: accent,
+                        size: 25,
                       ),
-                      child: Icon(icon, color: accent, size: 23),
-                    ),
-                    const SizedBox(width: 13),
-                    Expanded(
-                      child: Text(title, style: AppTextStyle.greenFont(context)),
-                    ),
-                    AnimatedRotation(
-                      turns: isOpen ? .5 : 0,
-                      duration: const Duration(milliseconds: 220),
-                      child: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: isDark ? Colors.white70 : AppColor.textLight,
-                        size: 27,
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: AppTextStyle.greenFont(context).copyWith(
+                            color: isOpen
+                                ? accent
+                                : (isDark ? AppColor.white : AppColor.black),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                      AnimatedRotation(
+                        turns: isOpen ? .5 : 0,
+                        duration: const Duration(milliseconds: 220),
+                        child: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: isDark ? AppColor.white : AppColor.black,
+                          size: 28,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 AnimatedSize(
                   duration: const Duration(milliseconds: 240),
                   curve: Curves.easeOut,
                   child: isOpen
                       ? Padding(
-                          padding: const EdgeInsetsDirectional.only(
-                            start: 55,
-                            top: 13,
-                            end: 4,
-                          ),
-                          child: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text(
-                              body,
-                              style: AppTextStyle.trustDescription(context),
+                          padding: const EdgeInsets.only(top: 16),
+                          child: Text(
+                            body,
+                            style:
+                                AppTextStyle.trustDescription(context).copyWith(
+                              color: isDark ? AppColor.white : AppColor.black,
+                              fontSize: 14,
+                              height: 1.65,
                             ),
+                            textAlign: TextAlign.center,
                           ),
                         )
                       : const SizedBox.shrink(),

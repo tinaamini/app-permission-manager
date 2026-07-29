@@ -10,8 +10,6 @@ class AppColor {
   static const white1 = Color.fromRGBO(255, 255, 255, 0.37254901960784315);
   static const blurStyle = Color.fromRGBO(55, 55, 55, 0.6);
 
-
-
   static const green1 = Color.fromRGBO(74, 242, 150, 1);
   static const green2 = Color.fromRGBO(220, 252, 231, 1);
   static const green3 = Color.fromRGBO(43, 207, 117, 1.0);
@@ -21,10 +19,16 @@ class AppColor {
   static const blue2 = Color.fromRGBO(176, 186, 213, 1);
   static const boxSh = Color.fromRGBO(98, 186, 243, 1);
 
-
   static const red = Color.fromRGBO(234, 73, 75, 1);
   static const summary = Color.fromRGBO(250, 95, 26, 1.0);
 
+  // About screen
+  static const aboutCardDark = Color.fromRGBO(23, 23, 23, 1);
+  static const aboutAccentGreen = Color.fromRGBO(49, 243, 154, 1);
+  static const aboutAccentBlue = Color.fromRGBO(77, 184, 247, 1);
+  static const aboutAccentOrange = Color.fromRGBO(242, 122, 67, 1);
+  static const aboutAccentPurple = Color.fromRGBO(108, 92, 255, 1);
+  static const aboutAccentPink = Color.fromRGBO(227, 77, 184, 1);
 
   static const btnOnboardingDark = Color.fromRGBO(27, 27, 27, 1.0);
 
@@ -32,8 +36,6 @@ class AppColor {
   static const yellow = Color.fromRGBO(255, 242, 193, 74);
   static const warningBorder = Color.fromRGBO(250, 187, 26, 1.0);
   static const shadowSvgPageOne = Color.fromRGBO(242, 193, 74, 1.0);
-
-
 
   //light theme
   static const black = Color.fromRGBO(0, 0, 0, 1.0);
@@ -45,6 +47,4 @@ class AppColor {
   static const btnLight = Color.fromRGBO(213, 213, 213, 0.2);
   static const btnLight2 = Color.fromRGBO(241, 241, 241, 1.0);
   static const borderLight = Color.fromRGBO(191, 191, 191, 1.0);
-
-
 }
