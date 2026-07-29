@@ -24,6 +24,9 @@ import 'routs/rout_name.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
 
   await _precacheSvgs();
 
