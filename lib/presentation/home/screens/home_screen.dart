@@ -61,9 +61,7 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: AppSize.height * 0.025),
-            const _AboutButton(),
-            SizedBox(height: AppSize.height * 0.04),
+            SizedBox(height: AppSize.height * 0.08),
             BlocBuilder<AppPermissionCubit, AppPermissionState>(
               builder: (context, state) {
                 if (state is! AppPermissionLoaded) {
@@ -150,6 +148,8 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ],
                         ),
+                        SizedBox(height: screenHeight * 0.025),
+                        const _AboutButton(),
                       ],
                     );
                   },
@@ -219,9 +219,9 @@ class _AboutButton extends StatelessWidget {
                   const Spacer(),
                   Icon(
                     isRtl
-                        ? Icons.arrow_back_ios_new_rounded
-                        : Icons.arrow_forward_ios_rounded,
-                    size: 18,
+                        ? Icons.chevron_left_rounded
+                        : Icons.chevron_right_rounded,
+                    size: 26,
                     color: isDark ? AppColor.white : AppColor.black,
                   ),
                 ],

@@ -173,21 +173,14 @@ class _AboutSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark;
-    final cardColor = isDark ? AppColor.aboutCardDark : AppColor.btnLight2;
+    final cardColor = isDark ? AppColor.aboutCardOverlay : AppColor.btnLight;
     final radius = BorderRadius.circular(24);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 240),
       curve: Curves.easeOut,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: AlignmentDirectional.centerStart,
-          end: AlignmentDirectional.centerEnd,
-          colors: [
-            accent.withValues(alpha: isOpen ? 0.14 : 0.07),
-            cardColor,
-          ],
-        ),
+        color: cardColor,
         borderRadius: radius,
         border: Border.all(
           color: isOpen

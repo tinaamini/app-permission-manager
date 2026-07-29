@@ -23,7 +23,7 @@ class AppColor {
   static const summary = Color.fromRGBO(250, 95, 26, 1.0);
 
   // About screen
-  static const aboutCardDark = Color.fromRGBO(23, 23, 23, 1);
+  static const aboutCardOverlay = Color.fromRGBO(255, 255, 255, 0.06);
   static const aboutAccentGreen = Color.fromRGBO(49, 243, 154, 1);
   static const aboutAccentBlue = Color.fromRGBO(77, 184, 247, 1);
   static const aboutAccentOrange = Color.fromRGBO(242, 122, 67, 1);
