@@ -628,6 +628,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get calls => 'Calls';
 
   @override
+  String get riskFree => 'Risk free';
+
+  @override
+  String get highRisks => 'High risk';
+
+  @override
+  String get mediumRisks => 'Medium risk';
+
+  @override
+  String get lowRisks => 'Low risk';
+
+  @override
   String get photos => 'Photos';
 
   @override

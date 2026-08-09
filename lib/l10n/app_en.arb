@@ -279,6 +279,13 @@
 "secureSystem":"Secure system",
 "theDeviceIsSecure":"The device is secure",
 "calls": "Calls",
+"riskFree": "Risk free",
+"highRisks": "High risk",
+"mediumRisks": "Medium risk",
+"lowRisks": "Low risk",
+
+
+
 
 
 "photos": "Photos",

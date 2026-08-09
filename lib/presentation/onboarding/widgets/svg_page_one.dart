@@ -22,14 +22,14 @@ class SvgPageOne extends StatelessWidget {
         return Stack(
           children: [
             Positioned(
-              top: h * 0.15,
-              left: w * 0.27,
+              top: h * 0.18,
+              left: w * 0.24,
               child: SvgPicture.asset(
                 isDark
                     ? "assets/utils/pageDark1.svg"
                     : "assets/utils/pageLight1.svg",
                 width: w * 0.65,
-                height: h * 0.45,
+                height: h * 0.52,
               ),
             ),
 
@@ -51,7 +51,7 @@ class SvgPageOne extends StatelessWidget {
                             image: isDark
                                 ? 'assets/app_permission/highRisk.svg'
                                 : "assets/app_permission/Frame 8 (3).svg",
-                            text: l10n.highRisk,
+                            text: l10n.highRisks,
                             integer: "8",
                             color: Colors.red,
                           ),
@@ -62,7 +62,7 @@ class SvgPageOne extends StatelessWidget {
                             image: isDark
                                 ? 'assets/app_permission/noRisk.svg'
                                 : "assets/app_permission/Frame 8.svg",
-                            text: l10n.noRisk,
+                            text: l10n.riskFree,
                             integer: "50",
                             color: Colors.blue,
                           ),
@@ -80,7 +80,7 @@ class SvgPageOne extends StatelessWidget {
                           image: isDark
                               ? 'assets/app_permission/lowRisk.svg'
                               : "assets/app_permission/Frame 8 (1).svg",
-                          text: l10n.lowRisk,
+                          text: l10n.lowRisks,
                           integer: "5",
                           color: Colors.green,
                         ),
@@ -91,7 +91,7 @@ class SvgPageOne extends StatelessWidget {
                           image: isDark
                               ? 'assets/app_permission/mediumRisk.svg'
                               : "assets/app_permission/Frame 8 (2).svg",
-                          text: l10n.mediumRisk,
+                          text: l10n.mediumRisks,
                           integer: "13",
                           color: Colors.orange,
                         ),
@@ -148,10 +148,10 @@ class SvgPageOne extends StatelessWidget {
           ]),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15.w),
+          padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
           child: Text(
             text,
-            style: AppTextStyle.nameApp(context)
+            style: AppTextStyle.summary(context)
                 .copyWith(color: isDark ? AppColor.white : AppColor.black),
             textAlign: TextAlign.center,
             maxLines: 2,

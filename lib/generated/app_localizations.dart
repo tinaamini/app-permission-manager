@@ -1232,6 +1232,30 @@ abstract class AppLocalizations {
   /// **'Calls'**
   String get calls;
 
+  /// No description provided for @riskFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Risk free'**
+  String get riskFree;
+
+  /// No description provided for @highRisks.
+  ///
+  /// In en, this message translates to:
+  /// **'High risk'**
+  String get highRisks;
+
+  /// No description provided for @mediumRisks.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium risk'**
+  String get mediumRisks;
+
+  /// No description provided for @lowRisks.
+  ///
+  /// In en, this message translates to:
+  /// **'Low risk'**
+  String get lowRisks;
+
   /// No description provided for @photos.
   ///
   /// In en, this message translates to:

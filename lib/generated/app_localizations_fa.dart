@@ -635,6 +635,18 @@ class AppLocalizationsFa extends AppLocalizations {
   String get calls => 'تماس‌ها';
 
   @override
+  String get riskFree => 'بدون خطر';
+
+  @override
+  String get highRisks => 'خطر بالا';
+
+  @override
+  String get mediumRisks => 'خطر متوسط';
+
+  @override
+  String get lowRisks => 'کم خطر';
+
+  @override
   String get photos => 'عکس ها';
 
   @override

@@ -259,6 +259,13 @@
 "permMicrophone": "میکروفون",
 "permContacts": "مخاطبین",
 "permSms": "پیامک",
+"riskFree": "بدون خطر",
+"highRisks": "خطر بالا",
+"mediumRisks": "خطر متوسط",
+"lowRisks": "کم خطر",
+
+
+
 "permSmss": " پیامک ها",
 "permCallLogs": "گزارش تماس",
 "permPhone": "تلفن",
