@@ -1,3 +1,6 @@
+
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
@@ -11,11 +14,18 @@ class LocaleCubit extends Cubit<Locale> {
   LocaleCubit(this._box) : super(_localeFromBox(_box));
 
   static Locale _localeFromBox(Box box) {
-    final savedLanguageCode = box.get(storageKey, defaultValue: 'fa');
+    final saved = box.get(storageKey);
 
-    if (savedLanguageCode is String &&
-        _supportedLanguageCodes.contains(savedLanguageCode)) {
-      return Locale(savedLanguageCode);
+
+    if (saved is String && _supportedLanguageCodes.contains(saved)) {
+      return Locale(saved);
+    }
+
+    final systemCode =
+        WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+
+    if (_supportedLanguageCodes.contains(systemCode)) {
+      return Locale(systemCode);
     }
 
     return const Locale('fa');
@@ -37,3 +47,4 @@ class LocaleCubit extends Cubit<Locale> {
     }
   }
 }
+
