@@ -362,53 +362,41 @@ abstract class AppLocalizations {
   /// **'Scanning'**
   String get scanning;
 
-  /// No description provided for @onboardingTitle1.
-  ///
-  /// In en, this message translates to:
-  /// **'Complete\n Transparency'**
-  String get onboardingTitle1;
-
-  /// No description provided for @onboardingDesc1.
-  ///
-  /// In en, this message translates to:
-  /// **'We scan every app on your device to \n reveal exactly what data they\'re accessing \n behind the scenes.'**
-  String get onboardingDesc1;
-
   /// No description provided for @onboardingTitle2.
   ///
   /// In en, this message translates to:
-  /// **'Risk \n Intelligence'**
+  /// **'Not all apps need access to your\n photos and messages!'**
   String get onboardingTitle2;
 
   /// No description provided for @onboardingDesc2.
   ///
   /// In en, this message translates to:
-  /// **'Our system\n  categorizes apps into\n risk levels to keep you safe.'**
+  /// **'Know the essential permissions and\n review the unnecessary ones.'**
   String get onboardingDesc2;
 
   /// No description provided for @onboardingTitle3.
   ///
   /// In en, this message translates to:
-  /// **'Take \n Control'**
+  /// **'In a few seconds, your permission \n status becomes clear.'**
   String get onboardingTitle3;
-
-  /// No description provided for @onboardingTitle4.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose Your\n Language'**
-  String get onboardingTitle4;
 
   /// No description provided for @onboardingDesc3.
   ///
   /// In en, this message translates to:
-  /// **'Easily manage permissions \n and trust the apps you know.'**
+  /// **'With Privio, see important permissions \n and items needing attention at a glance.'**
   String get onboardingDesc3;
 
-  /// No description provided for @onboardingDesc4.
+  /// No description provided for @onboardingTitle1.
   ///
   /// In en, this message translates to:
-  /// **'Select your preferred language to\n personalize your experience.'**
-  String get onboardingDesc4;
+  /// **'Old permissions deserve \n a fresh review.'**
+  String get onboardingTitle1;
+
+  /// No description provided for @onboardingDesc1.
+  ///
+  /// In en, this message translates to:
+  /// **'Maybe some of them are dangerous!'**
+  String get onboardingDesc1;
 
   /// No description provided for @skip.
   ///
@@ -1225,6 +1213,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'SMS'**
   String get permSms;
+
+  /// No description provided for @secureSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Secure system'**
+  String get secureSystem;
+
+  /// No description provided for @theDeviceIsSecure.
+  ///
+  /// In en, this message translates to:
+  /// **'The device is secure'**
+  String get theDeviceIsSecure;
+
+  /// No description provided for @calls.
+  ///
+  /// In en, this message translates to:
+  /// **'Calls'**
+  String get calls;
+
+  /// No description provided for @photos.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
+  String get photos;
+
+  /// No description provided for @permSmss.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get permSmss;
 
   /// No description provided for @permCallLogs.
   ///

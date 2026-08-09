@@ -1,55 +1,44 @@
-import 'package:flutter/material.dart';
-import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/generated/app_localizations.dart';
-
-import 'language_btn_onboarding.dart';
+import 'package:Privio/presentation/onboarding/widgets/svg_page_one.dart';
+import 'package:Privio/presentation/onboarding/widgets/svg_page_three.dart';
+import 'package:Privio/presentation/onboarding/widgets/svg_page_two.dart';
+import 'package:flutter/material.dart';
 
 class OnboardingData {
   final String title;
   final String description;
-  final String svg;
-  final Color color;
   final Widget? bottomWidget;
+  final Widget svgWidget;
 
   OnboardingData({
     required this.title,
     required this.description,
-    required this.svg,
-    required this.color,
-    this.bottomWidget,
+    this.bottomWidget, required this.svgWidget,
   });
 }
 
 List<OnboardingData> getOnboardingPages(BuildContext context) {
   final l10n = AppLocalizations.of(context);
-  final isDark = MediaQuery.platformBrightnessOf(context) == Brightness.dark;
 
   return [
     OnboardingData(
-      title: l10n.onboardingTitle4,
-      description: l10n.onboardingDesc4,
-      svg: 'assets/utils/global.svg',
-      color: isDark ? AppColor.yellow : AppColor.shadowSvgPageOne,
-      bottomWidget: LanguageBtnOnboarding(),
-    ),
-
-    OnboardingData(
       title: l10n.onboardingTitle1,
       description: l10n.onboardingDesc1,
-      svg: 'assets/utils/eye.svg',
-      color: AppColor.blue1,
+      svgWidget: SvgPageOne()
+
     ),
     OnboardingData(
       title: l10n.onboardingTitle2,
       description: l10n.onboardingDesc2,
-      svg: 'assets/utils/shield-search.svg',
-      color: AppColor.red,
+      svgWidget: SvgPageTwo()
+
     ),
     OnboardingData(
       title: l10n.onboardingTitle3,
       description: l10n.onboardingDesc3,
-      svg: 'assets/utils/lock.svg',
-      color: AppColor.green1,
+        svgWidget: SvgPageThree()
+
+
     ),
   ];
 }

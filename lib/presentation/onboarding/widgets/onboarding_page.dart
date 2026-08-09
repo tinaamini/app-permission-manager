@@ -20,7 +20,7 @@ class OnboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    // final size = MediaQuery.of(context).size;
     final isDark = MediaQuery.platformBrightnessOf(context) == Brightness.dark;
 
     return Scaffold(
@@ -32,41 +32,13 @@ class OnboardPage extends StatelessWidget {
             children: [
               // ===== TOP VISUAL =====
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: Padding(
                   padding: EdgeInsets.only(top: AppSize.width * 0.1),
                   child: Center(
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        // Glow
-                        Container(
-                          width: size.width * 0.75,
-                          height: size.width * 0.75,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: data.color.withValues(
-                                  alpha: isDark ? 0.35 : 0.7,
-                                ),
-                                blurRadius: 90,
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // SVG
-                        FractionallySizedBox(
-                          widthFactor: currentPage == 1 ? 0.45 : 0.85,
-                          child: SvgPicture.asset(
-                            data.svg,
-                            fit: currentPage == 2
-                                ? BoxFit.none
-                                : BoxFit.fitWidth,
-                          ),
-                        ),
-                      ],
+                    child: FractionallySizedBox(
+                      widthFactor:  0.85,
+                      child: data.svgWidget,
                     ),
                   ),
                 ),
@@ -74,7 +46,7 @@ class OnboardPage extends StatelessWidget {
 
               // ===== TEXT =====
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Column(
@@ -95,18 +67,13 @@ class OnboardPage extends StatelessWidget {
                         maxLines: 4,
                         style: AppTextStyle.onboardingDescription(
                           context,
-                        ).copyWith(color: data.color),
+                        ).copyWith(color: AppColor.blue1),
                       ),
                     ],
                   ),
                 ),
               ),
-              currentPage == 0 ? SizedBox.shrink() : Spacer(flex: 1),
-              // ===== BOTTOM WIDGET =====
-              Expanded(
-                flex: 3,
-                child: data.bottomWidget ?? const SizedBox.shrink(),
-              ),
+
             ],
           ),
         ),

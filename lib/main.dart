@@ -105,11 +105,9 @@ class MainApp extends StatelessWidget {
 }
 Future<void> _precacheSvgs() async {
   const paths = [
-    'assets/utils/eye.svg',
-    'assets/utils/shield-search.svg',
-    'assets/utils/lock.svg',
+    'assets/utils/pageLight1.svg',
+    'assets/utils/pageDark1.svg',
     'assets/utils/emoji-sad.svg',
-    'assets/utils/global.svg',
     'assets/utils/Property 1=1 (1).svg',
     'assets/utils/Property 1=2 (1).svg',
     'assets/utils/Property 1=3 (1).svg',

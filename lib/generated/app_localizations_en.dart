@@ -153,32 +153,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scanning => 'Scanning';
 
   @override
-  String get onboardingTitle1 => 'Complete\n Transparency';
-
-  @override
-  String get onboardingDesc1 =>
-      'We scan every app on your device to \n reveal exactly what data they\'re accessing \n behind the scenes.';
-
-  @override
-  String get onboardingTitle2 => 'Risk \n Intelligence';
+  String get onboardingTitle2 =>
+      'Not all apps need access to your\n photos and messages!';
 
   @override
   String get onboardingDesc2 =>
-      'Our system\n  categorizes apps into\n risk levels to keep you safe.';
+      'Know the essential permissions and\n review the unnecessary ones.';
 
   @override
-  String get onboardingTitle3 => 'Take \n Control';
-
-  @override
-  String get onboardingTitle4 => 'Choose Your\n Language';
+  String get onboardingTitle3 =>
+      'In a few seconds, your permission \n status becomes clear.';
 
   @override
   String get onboardingDesc3 =>
-      'Easily manage permissions \n and trust the apps you know.';
+      'With Privio, see important permissions \n and items needing attention at a glance.';
 
   @override
-  String get onboardingDesc4 =>
-      'Select your preferred language to\n personalize your experience.';
+  String get onboardingTitle1 => 'Old permissions deserve \n a fresh review.';
+
+  @override
+  String get onboardingDesc1 => 'Maybe some of them are dangerous!';
 
   @override
   String get skip => 'Skip';
@@ -623,6 +617,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get permSms => 'SMS';
+
+  @override
+  String get secureSystem => 'Secure system';
+
+  @override
+  String get theDeviceIsSecure => 'The device is secure';
+
+  @override
+  String get calls => 'Calls';
+
+  @override
+  String get photos => 'Photos';
+
+  @override
+  String get permSmss => 'Messages';
 
   @override
   String get permCallLogs => 'Call logs';

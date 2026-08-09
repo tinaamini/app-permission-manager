@@ -155,32 +155,26 @@ class AppLocalizationsFa extends AppLocalizations {
   String get scanning => 'در حال اسکن';
 
   @override
-  String get onboardingTitle1 => 'شفافیت کامل';
-
-  @override
-  String get onboardingDesc1 =>
-      'دقیقاً بدانید هر اپ\n به چه اطلاعاتی از دستگاهتان دسترسی دارد.';
-
-  @override
-  String get onboardingTitle2 => 'هوش تشخیص ریسک';
+  String get onboardingTitle2 =>
+      'همه ی برنامه ها به عکس ها و پیامک\n های شما نیاز ندارند!';
 
   @override
   String get onboardingDesc2 =>
-      'با دسته‌بندی هوشمند اپ‌ها،\n امنیت شما را تضمین می‌کنیم.';
+      'دسترسی های ضروری را بشناسید و موارد غیر \nضروری را بررسی کنید.';
 
   @override
-  String get onboardingTitle3 => 'کنترل کامل';
-
-  @override
-  String get onboardingTitle4 => 'زبان خود \nرا انتخاب کنید';
+  String get onboardingTitle3 => 'در چند ثانیه،وضعیت درسترسی ها \nمشخص میشود.';
 
   @override
   String get onboardingDesc3 =>
-      'خودتان انتخاب کنید \nکدام اپ‌ها مورد اعتمادتان هستند.';
+      'ا Privio،دسترسی های مهم و موارد نیازمند توجه را\n در یک نگاه نشان میدهد.';
 
   @override
-  String get onboardingDesc4 =>
-      'برای شخصی‌سازی تجربه کاربری خود،\n زبان مورد نظرتان را انتخاب کنید.';
+  String get onboardingTitle1 =>
+      'دسترسی های قدیمی،ارزش یک بررسی تازه را دارند.';
+
+  @override
+  String get onboardingDesc1 => 'شاید بعضی از آنها خطرناک باشند!';
 
   @override
   String get skip => 'رد کردن';
@@ -630,6 +624,21 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get permSms => 'پیامک';
+
+  @override
+  String get secureSystem => 'سیستم امن';
+
+  @override
+  String get theDeviceIsSecure => 'دستگاه ایمن است';
+
+  @override
+  String get calls => 'تماس‌ها';
+
+  @override
+  String get photos => 'عکس ها';
+
+  @override
+  String get permSmss => ' پیامک ها';
 
   @override
   String get permCallLogs => 'گزارش تماس';

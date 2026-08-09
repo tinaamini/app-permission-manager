@@ -20,6 +20,7 @@ class AppColor {
   static const boxSh = Color.fromRGBO(98, 186, 243, 1);
 
   static const red = Color.fromRGBO(234, 73, 75, 1);
+  static const redOnboarding = Color.fromRGBO(243, 98, 98, 1);
   static const summary = Color.fromRGBO(250, 95, 26, 1.0);
 
   // About screen

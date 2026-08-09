@@ -22,13 +22,13 @@ class AppTextStyle {
 
   static TextStyle onboardingTitle(BuildContext context) => TextStyle(
       fontFamily: _font(context),
-      fontSize: 40.sp,
-      fontWeight: FontWeight.w700,
+      fontSize: 24.sp,
+      fontWeight: FontWeight.w600,
       color: AppColor.white);
 
   static TextStyle onboardingDescription(BuildContext context) => TextStyle(
       fontFamily: _font(context),
-      fontSize: 16.sp,
+      fontSize: 15.sp,
       fontWeight: FontWeight.w400,
       color: AppColor.white);
 
