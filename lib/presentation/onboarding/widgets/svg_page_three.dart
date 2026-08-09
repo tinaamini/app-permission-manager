@@ -97,8 +97,8 @@ class SvgPageThree extends StatelessWidget {
     final isDark = MediaQuery.platformBrightnessOf(context) == Brightness.dark;
 
     return Container(
-      width: 80.w,
-      height: 108.h,
+      width: 82.w,
+      height: 120.h,
       decoration: BoxDecoration(
         border: Border.all(width: 2.w, color: color),
         borderRadius: BorderRadius.circular(24.r),
@@ -108,7 +108,7 @@ class SvgPageThree extends StatelessWidget {
           SvgPicture.asset(svg),
           Text(
             text,
-            style: AppTextStyle.nameApp(context)
+            style: AppTextStyle.permissionOnboarding(context)
                 .copyWith(color: isDark ? AppColor.white : AppColor.black),
             textAlign: TextAlign.center,
             maxLines: 2,

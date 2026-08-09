@@ -41,7 +41,7 @@ class SvgPageTwo extends StatelessWidget {
     final isDark = MediaQuery.platformBrightnessOf(context) == Brightness.dark;
 
     return Container(
-      width: 100.w,
+      width: 110.w,
       height: 160.h,
       decoration: BoxDecoration(
         border: Border.all(width: 2.w, color: color),
@@ -53,7 +53,7 @@ class SvgPageTwo extends StatelessWidget {
          SizedBox(height: 10.h,),
          Text(
             text,
-            style: AppTextStyle.nameApp(context)
+            style: AppTextStyle.summary(context)
                 .copyWith(color: isDark ? AppColor.white : AppColor.black),
             textAlign: TextAlign.center,
             maxLines: 2,

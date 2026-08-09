@@ -76,11 +76,7 @@ class MainApp extends StatelessWidget {
         BlocProvider.value(value: onboardingShowCubit),
         BlocProvider<BtnLanguageCubit>(
           create: (_) => BtnLanguageCubit(
-            initialIndex:
-                appSettingsBox.get(LocaleCubit.storageKey, defaultValue: 'fa') ==
-                        'en'
-                    ? 0
-                    : 1,
+            initialIndex: LocaleCubit.initialLanguageIndex(appSettingsBox),
           ),
         ),
         BlocProvider<AppPermissionCubit>(

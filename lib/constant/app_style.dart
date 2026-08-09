@@ -19,6 +19,11 @@ class AppTextStyle {
       fontSize:  16.sp,
       fontWeight: FontWeight.w400,
       color: context.isDark?AppColor.white:AppColor.black);
+  static TextStyle permissionOnboarding(BuildContext context) => TextStyle(
+      fontFamily: _font(context),
+      fontSize: _fa(context) ? 16.sp : 10.sp,
+      fontWeight: FontWeight.w400,
+      color: context.isDark?AppColor.white:AppColor.black);
 
   static TextStyle onboardingTitle(BuildContext context) => TextStyle(
       fontFamily: _font(context),
