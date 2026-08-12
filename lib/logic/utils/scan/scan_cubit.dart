@@ -5,20 +5,26 @@ import 'package:Privio/logic/utils/scan/scan_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScanCubit extends Cubit<ScanState> {
-  ScanCubit() : super(const ScanState());
+  ScanCubit() : super(const ScanState()); // status = initial
 
   Future<void> loadLastScan() async {
     final last = await ScanStorageHive.loadLastSnapshot();
+
+    if (last == null) {
+      emit(state.copyWith(status: ScanStatus.initial));
+      return;
+    }
+
     emit(state.copyWith(
-      lastScanTime: last == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(last.timestampMs),
+      lastScanTime: DateTime.fromMillisecondsSinceEpoch(last.timestampMs),
+      status: ScanStatus.loaded,
     ));
   }
 
   Future<void> runScan() async {
-    if (state.scanning) return;
-    emit(state.copyWith(scanning: true));
+    if (state.isScanning) return;
+
+    emit(state.copyWith(status: ScanStatus.loading));
 
     try {
       final prev = await ScanStorageHive.loadLastSnapshot();
@@ -28,10 +34,10 @@ class ScanCubit extends Cubit<ScanState> {
       emit(state.copyWith(
         lastScanTime: DateTime.fromMillisecondsSinceEpoch(curr.timestampMs),
         scanDiff: prev == null ? null : diffSnapshots(prev, curr),
-        scanning: false,
+        status: ScanStatus.loaded,
       ));
     } catch (_) {
-      emit(state.copyWith(scanning: false));
+      emit(state.copyWith(status: ScanStatus.error));
     }
   }
 }

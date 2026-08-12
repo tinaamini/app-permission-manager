@@ -48,9 +48,7 @@ class DeviceStatusCard extends StatelessWidget {
               button: true,
               label: l10n.runScan,
               child: InkWell(
-                onTap: scanState.scanning
-                    ? null
-                    : () => context.read<ScanCubit>().runScan(),
+
                 customBorder: const CircleBorder(),
                 child: Container(
                   width: screenWidth * 0.24,
@@ -61,18 +59,17 @@ class DeviceStatusCard extends StatelessWidget {
                     border: Border.all(color: neutralColor.withAlpha(110)),
                   ),
                   alignment: Alignment.center,
-                  child: scanState.scanning
-                      ? const CustomDotsLoader(
+                  child:  const CustomDotsLoader(
                           svgPath1: 'assets/utils/Property 1=1 (1).svg',
                           svgPath2: 'assets/utils/Property 1=2 (1).svg',
                           svgPath3: 'assets/utils/Property 1=3 (1).svg',
                           svgPath4: 'assets/utils/Property 1=4 (1).svg',
                         )
-                      : Icon(
-                          Icons.document_scanner_outlined,
-                          size: 48.sp,
-                          color: neutralColor,
-                        ),
+                      // : Icon(
+                      //     Icons.document_scanner_outlined,
+                      //     size: 48.sp,
+                      //     color: neutralColor,
+                      //   ),
                 ),
               ),
             ),
@@ -108,11 +105,9 @@ class DeviceStatusCard extends StatelessWidget {
             height: AppSize.height * 0.02,
           ),
           Text(
-            hasScanned
-                ? status.title
-                : scanState.scanning
-                    ? l10n.scanning
-                    : l10n.scanToStart,
+                 status.title,
+
+                    // : l10n.scanToStart,
             style: AppTextStyle.titleSecure(context).copyWith(
               color: isDark ? AppColor.white : AppColor.black,
             ),

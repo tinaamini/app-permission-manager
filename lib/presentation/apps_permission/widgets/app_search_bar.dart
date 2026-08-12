@@ -1,6 +1,7 @@
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 /// Search field used above app lists throughout the app.
@@ -14,7 +15,7 @@ class AppSearchBar extends StatelessWidget {
     final isDark = context.isDark;
     final isFa = Localizations.localeOf(context).languageCode == 'fa';
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 10, 24, 8),
+      padding: const EdgeInsets.fromLTRB(10, 15, 10, 8),
       child: TextField(
         onChanged: onChanged,
         textDirection: isFa ? TextDirection.rtl : TextDirection.ltr,
@@ -36,7 +37,7 @@ class AppSearchBar extends StatelessWidget {
           fillColor: isDark ? const Color(0xFF171717) : AppColor.btnLight2,
           contentPadding: const EdgeInsets.symmetric(vertical: 14),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(28),
+            borderRadius: BorderRadius.circular(18.r),
             borderSide: BorderSide(
               color: isDark ? Colors.white12 : AppColor.borderLight,
             ),

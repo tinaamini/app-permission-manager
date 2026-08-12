@@ -263,9 +263,7 @@
 "highRisks": "خطر بالا",
 "mediumRisks": "خطر متوسط",
 "lowRisks": "کم خطر",
-
-
-
+"startScan": "برای شروع بررسی، ضربه بزنید.",
 "permSmss": " پیامک ها",
 "permCallLogs": "گزارش تماس",
 "permPhone": "تلفن",

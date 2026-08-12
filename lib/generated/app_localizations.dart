@@ -1256,6 +1256,12 @@ abstract class AppLocalizations {
   /// **'Low risk'**
   String get lowRisks;
 
+  /// No description provided for @startScan.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to start the scan.'**
+  String get startScan;
+
   /// No description provided for @photos.
   ///
   /// In en, this message translates to:

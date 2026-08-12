@@ -1,18 +1,30 @@
 import 'package:Privio/core/models/scan_model.dart';
 import 'package:Privio/generated/app_localizations.dart';
 
+enum ScanStatus { initial, loading, loaded, error }
+
 class ScanState {
   final DateTime? lastScanTime;
   final ScanDiff? scanDiff;
-  final bool scanning;
+  final ScanStatus status;
 
-  const ScanState({this.lastScanTime, this.scanDiff, this.scanning = false});
+  const ScanState({
+    this.lastScanTime,
+    this.scanDiff,
+    this.status = ScanStatus.initial,
+  });
 
-  ScanState copyWith({DateTime? lastScanTime, ScanDiff? scanDiff, bool? scanning}) {
+  bool get isScanning => status == ScanStatus.loading;
+
+  ScanState copyWith({
+    DateTime? lastScanTime,
+    ScanDiff? scanDiff,
+    ScanStatus? status,
+  }) {
     return ScanState(
       lastScanTime: lastScanTime ?? this.lastScanTime,
       scanDiff: scanDiff ?? this.scanDiff,
-      scanning: scanning ?? this.scanning,
+      status: status ?? this.status,
     );
   }
 }

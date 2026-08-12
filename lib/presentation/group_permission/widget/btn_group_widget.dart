@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/constant/app_style.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 class BtnGroupWidget extends StatelessWidget {
   final String image;
@@ -38,20 +39,21 @@ border: Border.all(width: context.isDark?0:1, color: AppColor.borderLight)
           clipBehavior: Clip.none,
           children: [
             Positioned(
-              top: -AppSize.height * 0.022,
+              top: AppSize.height * 0.014,
               left: 0,
               right: 0,
               child: Center(
-                child: Image.asset(
+                child: SvgPicture.asset(
                   image,
-                  width: AppSize.width * 0.23,
-                  height: AppSize.width * 0.23,
+                  width: AppSize.width * 0.1,
+                  height: AppSize.width * 0.1,
                   fit: BoxFit.contain,
                 ),
               ),
             ),
             Positioned(
-              right: AppSize.width * 0.025,
+              right: AppSize.width * 0.001,
+
               child: Container(
                 width: AppSize.width * 0.075,
                 height: AppSize.width * 0.075,

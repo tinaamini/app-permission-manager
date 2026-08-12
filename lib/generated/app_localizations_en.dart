@@ -640,6 +640,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lowRisks => 'Low risk';
 
   @override
+  String get startScan => 'Tap to start the scan.';
+
+  @override
   String get photos => 'Photos';
 
   @override

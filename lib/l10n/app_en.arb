@@ -283,11 +283,7 @@
 "highRisks": "High risk",
 "mediumRisks": "Medium risk",
 "lowRisks": "Low risk",
-
-
-
-
-
+"startScan": "Tap to start the scan.",
 "photos": "Photos",
 "permSmss": "Messages",
 "permCallLogs": "Call logs",

@@ -30,7 +30,7 @@ class BtnHomeWidget extends StatelessWidget {
     return GestureDetector(
       onTap: ontap,
       child: Container(
-        width: screenWidth * 0.42, // عرض ثابت برای هر کارت
+        width: screenWidth * 0.42,
         padding: EdgeInsets.symmetric(
           horizontal: screenWidth * 0.05,
           vertical: screenHeight * 0.017,

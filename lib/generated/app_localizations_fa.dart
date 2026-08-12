@@ -647,6 +647,9 @@ class AppLocalizationsFa extends AppLocalizations {
   String get lowRisks => 'کم خطر';
 
   @override
+  String get startScan => 'برای شروع بررسی، ضربه بزنید.';
+
+  @override
   String get photos => 'عکس ها';
 
   @override
