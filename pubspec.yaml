@@ -2,7 +2,7 @@ name: Privio
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.0.7+7
+version: 1.0.8+11
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -76,24 +76,18 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-
-  image_path: "assets/logo/logo.png"
-
-  adaptive_icon_foreground: "assets/logo/logo.png"
-  adaptive_icon_background: "#0D0D0D"
-
-  min_sdk_android: 21
+  image_path: "assets/logo/shield_icon.png"
 
 
 flutter_native_splash:
-  color: "#0D0D0D"
-  color_dark: "#0D0D0D"
-  image: assets/logo/logo_transparent.png
+  color: "#0A0F1C"
+  color_dark: "#0A0F1C"
+  image: assets/logo/splash_old.png
   android: true
   ios: true
   web: true
 
   android_12:
-    color: "#0D0D0D"
-    color_dark: "#0D0D0D"
-    image: assets/logo/logo_transparent.png
+    color: "#0A0F1C"
+    color_dark: "#0A0F1C"
+    image: assets/logo/splash_android12.png

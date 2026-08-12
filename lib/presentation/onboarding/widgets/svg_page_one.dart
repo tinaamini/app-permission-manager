@@ -22,7 +22,7 @@ class SvgPageOne extends StatelessWidget {
         return Stack(
           children: [
             Positioned(
-              top: h * 0.18,
+              top: h * 0.12,
               left: w * 0.24,
               child: SvgPicture.asset(
                 isDark
