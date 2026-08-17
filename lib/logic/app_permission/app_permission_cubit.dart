@@ -73,7 +73,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     await _loadAppsInternal(retriesLeft: 1);
   }
 
-  // این متد جداست تا guard بالا (state is AppPermissionLoading) مانع retry نشه
   Future<void> _loadAppsInternal({required int retriesLeft}) async {
     try {
       final trusted = trustedApps;
@@ -95,13 +94,7 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
         highRisk: result['highRisk']!,
       ));
     } catch (e, st) {
-      // قبلاً این خطا هیچ‌جا catch نمی‌شد و state برای همیشه روی
-      // AppPermissionLoading می‌موند؛ یعنی هر صفحه‌ای که وابسته به این
-      // cubit بود (خانه، لیست اپ‌ها، جزئیات اپ، keep/trusted و ...) تا
-      // ابد اسپینر لودینگ نشون می‌داد. الان: یک بار دیگه امتحان می‌کنیم
-      // (شاید خطا موقتی بوده)، و اگه بازم شکست خورد، به‌جای گیر کردن،
-      // یک حالت خالی emit می‌شه تا UI آزاد بشه.
-      debugPrint('AppPermissionCubit.loadApps failed: $e\n$st');
+
 
       if (retriesLeft > 0) {
         await Future.delayed(const Duration(milliseconds: 400));
@@ -255,11 +248,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     final updatedTrusted = {...trusted}..add(packageName);
     _prefBox.put('trusted_apps', updatedTrusted.toList());
 
-    final kept = _readList('keep_apps');
-    if (kept.contains(packageName)) {
-      final updatedKept = {...kept}..remove(packageName);
-      _prefBox.put('keep_apps', updatedKept.toList());
-    }
 
     emit(AppTrustedSuccess(packageName));
 

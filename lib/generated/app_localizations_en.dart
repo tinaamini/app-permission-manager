@@ -111,19 +111,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get trustApp => 'Safe list';
 
   @override
-  String get appDetailSnackBarSuccess => 'App marked as Trusted';
+  String get appDetailSnackBarSuccess => 'App marked as Safe';
 
   @override
-  String get appDetailSnackBarFailed => 'App untrusted';
+  String get appDetailSnackBarFailed => 'App unsafe';
 
   @override
-  String get untrustApp => 'Untrust';
+  String get untrustApp => 'Remove Safe';
 
   @override
   String get keepApp => 'Favorites';
 
   @override
-  String get removeKeep => 'Remove from Keep';
+  String get removeKeep => 'Remove from Favorites';
 
   @override
   String get alerts => 'Alerts';
@@ -274,23 +274,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get activityPermission => 'Activity Access';
 
   @override
-  String get appMarkedTrusted => 'App marked as Trusted';
+  String get appMarkedTrusted => 'App marked as Safe';
 
   @override
-  String get appUntrusted => 'App untrusted';
+  String get appUntrusted => 'App unsafe';
 
   @override
-  String get appAddedToKeep => 'App added to Keep list';
+  String get appAddedToKeep => 'App added to Favorites';
 
   @override
-  String get appRemovedFromKeep => 'App removed from Keep list';
+  String get appRemovedFromKeep => 'App removed from Favorites list';
 
   @override
   String get appDetails => 'APP DETAILS';
 
   @override
-  String get trustedAppsExcluded =>
-      'Trusted apps are excluded from risk warnings';
+  String get trustedAppsExcluded => 'Safe apps are excluded from risk warnings';
 
   @override
   String get keepAppsWarning =>
@@ -298,7 +297,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get removeFromKeepDesc =>
-      'This app will no longer be trusted and will be analyzed again for potential risks.';
+      'This app will no longer be marked safe and will be analyzed again for potential risks.';
 
   @override
   String get reviewedList => 'REVIEWED KIST';
@@ -318,7 +317,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'These are apps you have manually reviewed. They will no longer trigger risk warnings unless their behavior changes significantly.';
 
   @override
-  String get removeFromKeep => 'Remove from Keep';
+  String get removeFromKeep => 'Remove from Favorites';
 
   @override
   String get cancel => 'Cancel';
@@ -330,21 +329,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get whiteList => 'WHITE LIST';
 
   @override
-  String get appsYouFullyTrust => 'Apps you fully trust';
+  String get appsYouFullyTrust => 'Apps you fully mark as safe';
 
   @override
   String get trustedListDesc =>
-      'These applications are excluded from all risk alerts and security scans. Only trust apps you are certain are safe.';
+      'These applications are excluded from all risk alerts and security scans. Only apps you are certain are safe.';
 
   @override
-  String get removeTrust => 'Remove Trust';
+  String get removeTrust => 'Remove Safe List';
 
   @override
   String get removeTrustDesc =>
       'This app will be analyzed again and may show risk warnings.';
 
   @override
-  String get untrust => 'Untrust';
+  String get untrust => 'Unsafe';
 
   @override
   String get appsWithBatteryOptimization => 'Apps with Unrestricted Battery';
@@ -382,10 +381,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'You can reduce risk by disabling permissions that are not actively used. Permissions can be changed at any time from system settings.';
 
   @override
-  String get appIsKept => 'App is Kept';
+  String get appIsKept => 'App is Favorited';
 
   @override
-  String get kept => 'Kept';
+  String get kept => 'Favorite';
 
   @override
   String get manual => 'Manual';
@@ -398,10 +397,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get continueBtn => 'Continue';
 
   @override
-  String get trusting => 'Trusting...';
+  String get trusting => 'Marking safe...';
 
   @override
-  String get trusted => 'Trusted';
+  String get trusted => 'Safe';
 
   @override
   String get dashboardPermission => 'DASHBOARD PERMISSION';

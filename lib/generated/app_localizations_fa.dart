@@ -112,20 +112,20 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get appDetailSnackBarSuccess =>
-      'این برنامه به‌عنوان برنامه قابل اعتماد تأیید شد';
+      'این برنامه به‌عنوان برنامه امن تأیید شد';
 
   @override
   String get appDetailSnackBarFailed =>
-      'این برنامه به‌عنوان برنامه قابل اعتماد تأیید شد';
+      'این برنامه به‌عنوان برنامه ناامن تأیید شد';
 
   @override
-  String get untrustApp => 'حذف اعتماد';
+  String get untrustApp => 'حذف از لیست امن';
 
   @override
   String get keepApp => 'علاقه‌مندی‌ها';
 
   @override
-  String get removeKeep => 'حذف از نگه‌داری';
+  String get removeKeep => 'حذف از علاقه‌مندی‌ها';
 
   @override
   String get alerts => 'هشدارها';
@@ -276,16 +276,16 @@ class AppLocalizationsFa extends AppLocalizations {
   String get activityPermission => 'دسترسی به فعالیت';
 
   @override
-  String get appMarkedTrusted => 'برنامه به لیست مورد اعتماد اضافه شد';
+  String get appMarkedTrusted => 'برنامه به لیست امن اضافه شد';
 
   @override
-  String get appUntrusted => 'برنامه از لیست مورد اعتماد حذف شد';
+  String get appUntrusted => 'برنامه از لیست امن حذف شد';
 
   @override
   String get appAddedToKeep => 'برنامه در لیست نگه‌داری ذخیره شد';
 
   @override
-  String get appRemovedFromKeep => 'برنامه از لیست نگه‌داری خارج شد';
+  String get appRemovedFromKeep => 'برنامه از لیست علاقه‌مندی‌ها خارج شد';
 
   @override
   String get appDetails => 'جزئیات برنامه';
@@ -299,7 +299,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get removeFromKeepDesc =>
-      'این برنامه دیگر ایمن تلقی نمی‌شود و مجدداً از نظر خطرات احتمالی بررسی خواهد شد.';
+      'این برنامه از لیست علاقه‌مندی‌ها حذف می‌شود و مجدداً از نظر خطرات احتمالی بررسی خواهد شد.';
 
   @override
   String get reviewedList => 'لیست بررسی‌شده';
@@ -320,7 +320,7 @@ class AppLocalizationsFa extends AppLocalizations {
       'این برنامه‌ها را به‌صورت دستی بررسی کرده‌اید و دیگر هشدار ریسک دریافت نخواهید کرد، مگر اینکه رفتارشان تغییر کند.';
 
   @override
-  String get removeFromKeep => 'حذف از لیست نگه‌داری';
+  String get removeFromKeep => 'حذف از لیست علاقه‌مندی‌ها';
 
   @override
   String get cancel => 'انصراف';
@@ -332,21 +332,21 @@ class AppLocalizationsFa extends AppLocalizations {
   String get whiteList => 'لیست سفید';
 
   @override
-  String get appsYouFullyTrust => 'برنامه‌هایی که کاملاً به آن‌ها اعتماد دارید';
+  String get appsYouFullyTrust => 'رنامه‌هایی که کاملاً امن می‌دانید';
 
   @override
   String get trustedListDesc =>
       'این برنامه‌ها از تمام هشدارها و اسکن‌های امنیتی مستثنی هستند. فقط به برنامه‌هایی اعتماد کنید که کاملاً از ایمن بودنشان مطمئنید.';
 
   @override
-  String get removeTrust => 'لغو اعتماد';
+  String get removeTrust => 'حذف از امن';
 
   @override
   String get removeTrustDesc =>
       'این برنامه مجدداً بررسی می‌شود و ممکن است هشدارهای ریسک نشان داده شود.';
 
   @override
-  String get untrust => 'سلب اعتماد';
+  String get untrust => 'ناامن';
 
   @override
   String get appsWithBatteryOptimization =>
@@ -384,10 +384,10 @@ class AppLocalizationsFa extends AppLocalizations {
       'می‌توانید با غیرفعال کردن مجوزهایی که استفاده نمی‌شوند، ریسک را کاهش دهید. مجوزها را می‌توانید هر زمان از تنظیمات سیستم تغییر دهید.';
 
   @override
-  String get appIsKept => 'در لیست نگه‌داری';
+  String get appIsKept => 'در لیست علاقه‌مندی';
 
   @override
-  String get kept => 'نگه‌داری‌شده';
+  String get kept => 'علاقه‌مندی';
 
   @override
   String get manual => 'دستی';
@@ -400,10 +400,10 @@ class AppLocalizationsFa extends AppLocalizations {
   String get continueBtn => 'ادامه';
 
   @override
-  String get trusting => 'در حال اعتمادسازی...';
+  String get trusting => 'در حال علامت‌گذاری به‌عنوان امن..';
 
   @override
-  String get trusted => 'مورد اعتماد';
+  String get trusted => 'امن';
 
   @override
   String get dashboardPermission => 'داشبورد مجوزها';

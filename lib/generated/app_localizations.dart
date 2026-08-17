@@ -281,19 +281,19 @@ abstract class AppLocalizations {
   /// No description provided for @appDetailSnackBarSuccess.
   ///
   /// In en, this message translates to:
-  /// **'App marked as Trusted'**
+  /// **'App marked as Safe'**
   String get appDetailSnackBarSuccess;
 
   /// No description provided for @appDetailSnackBarFailed.
   ///
   /// In en, this message translates to:
-  /// **'App untrusted'**
+  /// **'App unsafe'**
   String get appDetailSnackBarFailed;
 
   /// No description provided for @untrustApp.
   ///
   /// In en, this message translates to:
-  /// **'Untrust'**
+  /// **'Remove Safe'**
   String get untrustApp;
 
   /// No description provided for @keepApp.
@@ -305,7 +305,7 @@ abstract class AppLocalizations {
   /// No description provided for @removeKeep.
   ///
   /// In en, this message translates to:
-  /// **'Remove from Keep'**
+  /// **'Remove from Favorites'**
   String get removeKeep;
 
   /// No description provided for @alerts.
@@ -599,25 +599,25 @@ abstract class AppLocalizations {
   /// No description provided for @appMarkedTrusted.
   ///
   /// In en, this message translates to:
-  /// **'App marked as Trusted'**
+  /// **'App marked as Safe'**
   String get appMarkedTrusted;
 
   /// No description provided for @appUntrusted.
   ///
   /// In en, this message translates to:
-  /// **'App untrusted'**
+  /// **'App unsafe'**
   String get appUntrusted;
 
   /// No description provided for @appAddedToKeep.
   ///
   /// In en, this message translates to:
-  /// **'App added to Keep list'**
+  /// **'App added to Favorites'**
   String get appAddedToKeep;
 
   /// No description provided for @appRemovedFromKeep.
   ///
   /// In en, this message translates to:
-  /// **'App removed from Keep list'**
+  /// **'App removed from Favorites list'**
   String get appRemovedFromKeep;
 
   /// No description provided for @appDetails.
@@ -629,7 +629,7 @@ abstract class AppLocalizations {
   /// No description provided for @trustedAppsExcluded.
   ///
   /// In en, this message translates to:
-  /// **'Trusted apps are excluded from risk warnings'**
+  /// **'Safe apps are excluded from risk warnings'**
   String get trustedAppsExcluded;
 
   /// No description provided for @keepAppsWarning.
@@ -641,7 +641,7 @@ abstract class AppLocalizations {
   /// No description provided for @removeFromKeepDesc.
   ///
   /// In en, this message translates to:
-  /// **'This app will no longer be trusted and will be analyzed again for potential risks.'**
+  /// **'This app will no longer be marked safe and will be analyzed again for potential risks.'**
   String get removeFromKeepDesc;
 
   /// No description provided for @reviewedList.
@@ -677,7 +677,7 @@ abstract class AppLocalizations {
   /// No description provided for @removeFromKeep.
   ///
   /// In en, this message translates to:
-  /// **'Remove from Keep'**
+  /// **'Remove from Favorites'**
   String get removeFromKeep;
 
   /// No description provided for @cancel.
@@ -701,19 +701,19 @@ abstract class AppLocalizations {
   /// No description provided for @appsYouFullyTrust.
   ///
   /// In en, this message translates to:
-  /// **'Apps you fully trust'**
+  /// **'Apps you fully mark as safe'**
   String get appsYouFullyTrust;
 
   /// No description provided for @trustedListDesc.
   ///
   /// In en, this message translates to:
-  /// **'These applications are excluded from all risk alerts and security scans. Only trust apps you are certain are safe.'**
+  /// **'These applications are excluded from all risk alerts and security scans. Only apps you are certain are safe.'**
   String get trustedListDesc;
 
   /// No description provided for @removeTrust.
   ///
   /// In en, this message translates to:
-  /// **'Remove Trust'**
+  /// **'Remove Safe List'**
   String get removeTrust;
 
   /// No description provided for @removeTrustDesc.
@@ -725,7 +725,7 @@ abstract class AppLocalizations {
   /// No description provided for @untrust.
   ///
   /// In en, this message translates to:
-  /// **'Untrust'**
+  /// **'Unsafe'**
   String get untrust;
 
   /// No description provided for @appsWithBatteryOptimization.
@@ -791,13 +791,13 @@ abstract class AppLocalizations {
   /// No description provided for @appIsKept.
   ///
   /// In en, this message translates to:
-  /// **'App is Kept'**
+  /// **'App is Favorited'**
   String get appIsKept;
 
   /// No description provided for @kept.
   ///
   /// In en, this message translates to:
-  /// **'Kept'**
+  /// **'Favorite'**
   String get kept;
 
   /// No description provided for @manual.
@@ -821,13 +821,13 @@ abstract class AppLocalizations {
   /// No description provided for @trusting.
   ///
   /// In en, this message translates to:
-  /// **'Trusting...'**
+  /// **'Marking safe...'**
   String get trusting;
 
   /// No description provided for @trusted.
   ///
   /// In en, this message translates to:
-  /// **'Trusted'**
+  /// **'Safe'**
   String get trusted;
 
   /// No description provided for @dashboardPermission.

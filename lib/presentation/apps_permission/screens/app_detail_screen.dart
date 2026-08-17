@@ -19,6 +19,7 @@ import 'package:Privio/presentation/apps_permission/widgets/question_dialog.dart
 import 'package:Privio/presentation/apps_permission/widgets/risk_badge.dart';
 import 'package:Privio/presentation/apps_permission/widgets/trust_btn.dart';
 import 'package:Privio/presentation/utils/app_bar.dart';
+import 'package:Privio/presentation/utils/app_snackbar.dart';
 import 'package:Privio/presentation/utils/base_screen.dart';
 import 'package:Privio/presentation/utils/custome_dotsloader.dart';
 import 'package:Privio/presentation/utils/permission_ui_helper.dart';
@@ -76,35 +77,32 @@ class _AppDetailScreenState extends State<AppDetailScreen>
             current is AppUnkeptSuccess,
         listener: (context, state) {
           if (state is AppTrustedSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(l10n.appMarkedTrusted),
-                duration: const Duration(seconds: 3),
-              ),
-            );
+            AppSnackBar.show(context, message: l10n.appMarkedTrusted);
           }
           if (state is AppUntrustedSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(l10n.appUntrusted),
-                duration: const Duration(seconds: 3),
-              ),
+
+            AppSnackBar.show(context, message: l10n.appUntrusted,
+              icon: Icons.verified_outlined,
             );
           }
           if (state is AppKeptSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(l10n.appAddedToKeep),
-                duration: const Duration(seconds: 3),
-              ),
+
+            AppSnackBar.show(
+              context,
+              message: l10n.appAddedToKeep,
+              accentColor: Colors.green,
+              icon: Icons.verified_rounded,
+
             );
           }
           if (state is AppUnkeptSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(l10n.appRemovedFromKeep),
-                duration: const Duration(seconds: 3),
-              ),
+
+
+            AppSnackBar.show(
+              context,
+              message: l10n.appRemovedFromKeep,
+              accentColor: Colors.green,
+              icon: Icons.push_pin_outlined,
             );
           }
         },
@@ -231,7 +229,6 @@ class _AppDetailScreenState extends State<AppDetailScreen>
                       child: KeepAppButton(
                         isKept: isKept,
                         onTap: () {
-                          if (isTrust) return;
                           isKept
                               ? context
                               .read<AppPermissionCubit>()

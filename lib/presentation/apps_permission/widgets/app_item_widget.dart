@@ -82,17 +82,24 @@ class AppItem extends StatelessWidget {
                 Expanded(
                   child: Text(
                     appName,
-                    style:AppTextStyle.appName(context))
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyle.appName(context),
+                  ),
                 ),
-                if (isTrusted)
+                if (isTrusted || isKept)
                   Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 22.w),
-                    child: const TrustedBadge(),
-                  )
-                else if (isKept)
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w),
-                    child: const KeptBadge(),
+                    padding:  EdgeInsets.symmetric( horizontal: 8.w),
+                    child: Column(
+                      children: [
+                        if (isTrusted)
+                          const TrustedBadge(),
+                        SizedBox(height: 5.h,),
+
+                        if (isKept)
+                          const KeptBadge(),
+                      ],
+                    ),
                   ),
               ],
             ),
