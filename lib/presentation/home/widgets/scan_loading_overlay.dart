@@ -1,4 +1,5 @@
 import 'package:Privio/constant/app_color.dart';
+import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,9 +9,14 @@ class ScanLoadingOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark=context.isDark;
     return Container(
-      color: Colors.black,
-      child: Center(
+      decoration:  BoxDecoration(
+        image: DecorationImage(
+          image: isDark ?AssetImage('assets/main/bg.png'): AssetImage('assets/main/bgLight.png'),
+          fit: BoxFit.cover,
+        ),
+      ),      child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

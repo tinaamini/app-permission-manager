@@ -12,7 +12,7 @@ class TrustedBadge extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: screenWidth * 0.02,
+        horizontal: screenWidth * 0.047,
         vertical: screenHeight * 0.0037,
       ),
       decoration: BoxDecoration(
