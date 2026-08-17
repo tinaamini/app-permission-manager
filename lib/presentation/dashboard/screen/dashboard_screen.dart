@@ -1,3 +1,4 @@
+import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -115,8 +116,10 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
         _scanning = false;
       });
 
-      if (mounted) context.read<ScanCubit>().loadLastScan();
-    } catch (_) {
+      if (mounted) {
+        context.read<ScanCubit>().loadLastScan();
+        await context.read<AppPermissionCubit>().refreshAll();
+      }    } catch (_) {
       if (!mounted) return;
       setState(() => _scanning = false);
     }
