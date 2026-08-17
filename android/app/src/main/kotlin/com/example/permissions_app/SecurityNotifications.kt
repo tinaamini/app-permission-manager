@@ -71,12 +71,13 @@ object SecurityNotifications {
 
     fun highRiskApp(context: Context, appName: String, packageName: String? = null) {
         val fa = AppLanguage.isFa(context)
+        val safeName = if (fa) "\u200E$appName\u200F" else appName
         show(
             context,
             ALERTS_CHANNEL,
             appName.hashCode(),
             if (fa) "اپ پرریسک جدید نصب شد" else "New high-risk app installed",
-            if (fa) "$appName دسترسی‌های حساسی دارد و بهتر است بررسی شود."
+            if (fa) " دسترسی‌های حساسی دارد و بهتر است بررسی شود.$safeName"
             else "$appName has sensitive permissions and should be reviewed.",
             packageName = packageName,
         )
@@ -94,7 +95,7 @@ object SecurityNotifications {
                 ALERTS_CHANNEL,
                 73000,
                 if (fa) "هشدارهای امنیتی فعال شد" else "Security alerts are active",
-                if (fa) "Privio نصب اپ‌های پرریسک و تغییر دسترسی‌ها را بررسی می‌کند."
+                if (fa) "\u200EPrivio\u200F نصب اپ‌های پرریسک و تغییر دسترسی‌ها را بررسی می‌کند."
                 else "Privio will monitor high-risk installs and permission changes.",
             )
         ) {
@@ -109,14 +110,15 @@ object SecurityNotifications {
         packageName: String? = null,
     ) {
         val fa = AppLanguage.isFa(context)
+        val safeName = if (fa) "\u200E$appName\u200F" else appName
         show(
             context,
             ALERTS_CHANNEL,
             appName.hashCode() xor 0x4f21,
             if (fa) "دسترسی‌های برنامه تغییر کرد" else "App permissions changed",
             if (fa)
-                if (addedCount > 0) "$appName به $addedCount دسترسی جدید دسترسی پیدا کرده است."
-                else "برخی دسترسی‌های $appName تغییر کرده‌اند."
+                if (addedCount > 0) " دسترسی جدید دریافت کرده است. $addedCount $safeName"
+                else "برخی دسترسی‌های $safeName تغییر کرده‌اند."
             else
                 if (addedCount > 0) "$appName gained $addedCount new permission(s)."
                 else "Some permissions used by $appName have changed.",
@@ -131,7 +133,7 @@ object SecurityNotifications {
             REMINDERS_CHANNEL,
             73001,
             if (fa) "زمان بررسی امنیت اپ‌هاست" else "Time for a security check",
-            if (fa) "Privio را باز کنید و یک اسکن جدید انجام دهید."
+            if (fa) " را باز کنید و یک اسکن جدید انجام دهید."
             else "Open Privio and run a new app permission scan.",
         )
     }
