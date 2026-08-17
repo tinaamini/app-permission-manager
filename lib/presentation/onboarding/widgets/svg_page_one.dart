@@ -3,7 +3,6 @@ import 'package:Privio/constant/app_style.dart';
 import 'package:Privio/generated/app_localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SvgPageOne extends StatelessWidget {
@@ -22,32 +21,32 @@ class SvgPageOne extends StatelessWidget {
         return Stack(
           children: [
             Positioned(
-              top: h * 0.17,
+              top: h * 0.14,
               left: w * 0.24,
               child: SvgPicture.asset(
                 isDark
                     ? "assets/utils/pageDark1.svg"
                     : "assets/utils/pageLight1.svg",
                 width: w * 0.65,
-                height: h * 0.52,
+                height: w * 0.55,
               ),
             ),
 
             Positioned(
-              top: 10.h,
+              top: h * 0.012,
               left: 0,
               right: 0,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 10.h),
+                    padding: EdgeInsets.only(top: h * 0.012),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Flexible(
                           child: _widgetEmoji(
-                            context,
+                            context, w, h,
                             image: isDark
                                 ? 'assets/app_permission/highRisk.svg'
                                 : "assets/app_permission/Frame 8 (3).svg",
@@ -58,7 +57,7 @@ class SvgPageOne extends StatelessWidget {
                         ),
                         Flexible(
                           child: _widgetEmoji(
-                            context,
+                            context, w, h,
                             image: isDark
                                 ? 'assets/app_permission/noRisk.svg'
                                 : "assets/app_permission/Frame 8.svg",
@@ -71,15 +70,19 @@ class SvgPageOne extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding:  EdgeInsets.only(bottom: 15.h),
-                    child: SvgPicture.asset("assets/main/safe_alert.svg",height: 98.h,width: 80.h,),
+                    padding: EdgeInsets.only(bottom: h * 0.028),
+                    child: SvgPicture.asset(
+                      "assets/main/safe_alert.svg",
+                      height: w * 0.30,
+                      width: w * 0.30,
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(
                         child: _widgetEmoji(
-                          context,
+                          context, w, h,
                           image: isDark
                               ? 'assets/app_permission/lowRisk.svg'
                               : "assets/app_permission/Frame 8 (1).svg",
@@ -90,7 +93,7 @@ class SvgPageOne extends StatelessWidget {
                       ),
                       Flexible(
                         child: _widgetEmoji(
-                          context,
+                          context, w, h,
                           image: isDark
                               ? 'assets/app_permission/mediumRisk.svg'
                               : "assets/app_permission/Frame 8 (2).svg",
@@ -111,7 +114,9 @@ class SvgPageOne extends StatelessWidget {
   }
 
   Widget _widgetEmoji(
-      BuildContext context, {
+      BuildContext context,
+      double w,
+      double h, {
         required String image,
         required String text,
         required String integer,
@@ -123,27 +128,34 @@ class SvgPageOne extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          width: 65.w,
-          height: 63.h,
+          width: w * 0.19,
+          height: w * 0.18,
           child: Stack(children: [
-            Positioned(top: 10.h, left: 12.w, child: SvgPicture.asset(image)),
+            Positioned(
+              top: h * 0.03,
+              right: w * 0.025,
+              child: SvgPicture.asset(image),
+            ),
             Positioned(
               top: 0,
-              right: 0.w,
+              right: w * 0.015,
               child: Container(
-                width: 24.w,
-                height: 24.h,
+                width: w * 0.058,
+                height: w * 0.058,
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(8.r),
+                  borderRadius: BorderRadius.circular(w * 0.02),
                 ),
                 child: Center(
-                  child: Text(
-                    integer,
-                    style: AppTextStyle.btnAppPermissionInt(context)
-                        .copyWith(color: color),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: Text(
+                      integer,
+                      style: AppTextStyle.btnAppPermissionInt(context)
+                          .copyWith(color: color),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
               ),
@@ -151,7 +163,7 @@ class SvgPageOne extends StatelessWidget {
           ]),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
+          padding: EdgeInsets.symmetric(horizontal: w * 0.02, vertical: h * 0.01),
           child: Text(
             text,
             style: AppTextStyle.summary(context)

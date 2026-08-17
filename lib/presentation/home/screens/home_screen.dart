@@ -86,7 +86,7 @@ class HomeScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(height: AppSize.height * 0.08),
+                        SizedBox(height: AppSize.height * 0.05),
                         BlocBuilder<AppPermissionCubit, AppPermissionState>(
                           builder: (context, state) {
                             if (state is! AppPermissionLoaded) {
@@ -114,7 +114,7 @@ class HomeScreen extends StatelessWidget {
                             return DeviceStatusCard(status: status);
                           },
                         ),
-                        SizedBox(height: AppSize.height * 0.05),
+                        SizedBox(height: AppSize.height * 0.02),
                         Expanded(
                           child: Align(
                             alignment: Alignment.bottomCenter,
@@ -175,6 +175,8 @@ class HomeScreen extends StatelessWidget {
                                     ),
                                     SizedBox(height: screenHeight * 0.025),
                                     const AboutButton(),
+                                    SizedBox(height: screenHeight * 0.025),
+
                                   ],
                                 );
                               },

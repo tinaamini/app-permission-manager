@@ -34,7 +34,7 @@ class OnboardPage extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: Padding(
-                  padding: EdgeInsets.only(top: AppSize.width * 0.1),
+                  padding: EdgeInsets.only(top: AppSize.width * 0.05),
                   child: Center(
                     child: FractionallySizedBox(
                       widthFactor:  0.85,
