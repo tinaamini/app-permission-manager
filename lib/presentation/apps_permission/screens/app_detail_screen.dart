@@ -9,6 +9,7 @@ import 'package:Privio/core/models/app_permission_ui.dart';
 import 'package:Privio/core/servises/app_permission_service.dart';
 import 'package:Privio/core/servises/app_special_permiision_service.dart';
 import 'package:Privio/core/servises/dashboard_permission_service.dart';
+import 'package:Privio/core/servises/usage_access_service.dart';
 import 'package:Privio/generated/app_localizations.dart';
 import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
 import 'package:Privio/logic/app_permission/app_permission_state.dart';
@@ -374,7 +375,7 @@ class _AppDetailScreenState extends State<AppDetailScreen>
             .openAppOverlaySettings(widget.app.packageName);
         break;
       case 'android.permission.PACKAGE_USAGE_STATS':
-        await AppSpecialPermissionPlatform().openUsageAccessSettings();
+        await UsageAccessService.openUsageAccessSettings();
         break;
       case 'android.permission.MANAGE_EXTERNAL_STORAGE':
         await AppSpecialPermissionPlatform()

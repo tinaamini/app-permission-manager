@@ -17,6 +17,7 @@ class UsageAccessScreen extends StatefulWidget {
 class _UsageAccessScreenState extends State<UsageAccessScreen>
     with WidgetsBindingObserver {
   bool _openedSettings = false;
+  bool _handled = false;
 
   @override
   void initState() {
@@ -33,12 +34,12 @@ class _UsageAccessScreenState extends State<UsageAccessScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state != AppLifecycleState.resumed) return;
-    if (!_openedSettings) return;
+    if (!_openedSettings || _handled) return;
 
     final granted = await UsageAccessService.isUsageAccessGranted();
-    if (!mounted) return;
-
+    if (!mounted || _handled) return;
     if (granted) {
+      _handled = true;
       Navigator.of(context, rootNavigator: true).pop(true);
     }
   }

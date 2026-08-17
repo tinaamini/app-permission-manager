@@ -67,7 +67,7 @@ class AboutScreen extends StatelessWidget {
             text: isFa ? 'درباره Privio' : 'About Privio',
             ontap: () => context.pop(),
             showBack: true,
-            showHome: true,
+            showHome: false,
           ),
           Expanded(
             child: ListView(
