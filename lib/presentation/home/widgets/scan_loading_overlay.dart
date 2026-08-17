@@ -15,7 +15,7 @@ class ScanLoadingOverlay extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
-              "assets/main/low.svg",
+              "assets/main/safe_alert.svg",
               width: 100,
               height: 100,
             ),

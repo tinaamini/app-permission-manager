@@ -25,7 +25,7 @@ class ScanInitialOverlay extends StatelessWidget {
           child: Center(
             child: Column(mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset("assets/main/Frame 31 (1).svg"),
+                SvgPicture.asset("assets/main/initialScan.svg"),
                 SizedBox(height: 20.h,),
                 Text(l10n.startScan,      textAlign: TextAlign.center,
                   maxLines: 2,

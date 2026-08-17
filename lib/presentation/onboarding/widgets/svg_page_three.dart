@@ -17,7 +17,7 @@ class SvgPageThree extends StatelessWidget {
     return Container(
       child:Column(
         children: [
-          SvgPicture.asset("assets/main/low.svg",height: 100.h,),
+          SvgPicture.asset("assets/main/safe_alert.svg",height: 100.h,),
           SizedBox(height: 15.h,),
           Container(width: 108.w,height: 35.h,
             decoration: BoxDecoration(

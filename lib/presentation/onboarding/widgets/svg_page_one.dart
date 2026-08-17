@@ -22,7 +22,7 @@ class SvgPageOne extends StatelessWidget {
         return Stack(
           children: [
             Positioned(
-              top: h * 0.12,
+              top: h * 0.17,
               left: w * 0.24,
               child: SvgPicture.asset(
                 isDark
@@ -34,7 +34,7 @@ class SvgPageOne extends StatelessWidget {
             ),
 
             Positioned(
-              top: 0,
+              top: 10.h,
               left: 0,
               right: 0,
               child: Column(
@@ -70,7 +70,10 @@ class SvgPageOne extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SvgPicture.asset("assets/main/low.svg"),
+                  Padding(
+                    padding:  EdgeInsets.only(bottom: 15.h),
+                    child: SvgPicture.asset("assets/main/safe_alert.svg",height: 98.h,width: 80.h,),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
