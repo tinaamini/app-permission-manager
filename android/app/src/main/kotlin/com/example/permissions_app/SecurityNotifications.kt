@@ -25,13 +25,28 @@ import java.util.Locale
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
+// ===================== زبان اپ =====================
+object AppLanguage {
+    private const val PREFS = "app_prefs"
+    private const val KEY = "app_language"
+
+    fun get(context: Context): String {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        return prefs.getString(KEY, null)
+            ?: if (Locale.getDefault().language == "fa") "fa" else "en"
+    }
+
+    fun isFa(context: Context): Boolean = get(context) == "fa"
+}
+
+// ===================== نوتیفیکیشن‌ها =====================
 object SecurityNotifications {
     private const val ALERTS_CHANNEL = "security_alerts"
     private const val REMINDERS_CHANNEL = "scan_reminders"
 
     fun initialize(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-        val fa = Locale.getDefault().language == "fa"
+        val fa = AppLanguage.isFa(context)
         val manager = context.getSystemService(NotificationManager::class.java)
         manager.createNotificationChannels(
             listOf(
@@ -55,7 +70,7 @@ object SecurityNotifications {
     }
 
     fun highRiskApp(context: Context, appName: String, packageName: String? = null) {
-        val fa = Locale.getDefault().language == "fa"
+        val fa = AppLanguage.isFa(context)
         show(
             context,
             ALERTS_CHANNEL,
@@ -73,7 +88,7 @@ object SecurityNotifications {
             Context.MODE_PRIVATE,
         )
         if (prefs.getBoolean("ready_notification_shown", false)) return
-        val fa = Locale.getDefault().language == "fa"
+        val fa = AppLanguage.isFa(context)
         if (show(
                 context,
                 ALERTS_CHANNEL,
@@ -93,7 +108,7 @@ object SecurityNotifications {
         addedCount: Int,
         packageName: String? = null,
     ) {
-        val fa = Locale.getDefault().language == "fa"
+        val fa = AppLanguage.isFa(context)
         show(
             context,
             ALERTS_CHANNEL,
@@ -110,7 +125,7 @@ object SecurityNotifications {
     }
 
     fun scanReminder(context: Context) {
-        val fa = Locale.getDefault().language == "fa"
+        val fa = AppLanguage.isFa(context)
         show(
             context,
             REMINDERS_CHANNEL,
@@ -162,6 +177,8 @@ object SecurityNotifications {
     }
 }
 
+// ===================== بقیه کلاس‌ها بدون تغییر =====================
+
 object SecurityWorkScheduler {
     fun schedule(context: Context) {
         val manager = WorkManager.getInstance(context)
@@ -191,14 +208,20 @@ class PermissionMonitorService : Service() {
     override fun onCreate() {
         super.onCreate()
         SecurityNotifications.initialize(this)
+
+        val fa = AppLanguage.isFa(this)
         val notification = NotificationCompat.Builder(this, "scan_reminders")
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle("Privio")
-            .setContentText("Security permission monitoring is active")
+            .setContentText(
+                if (fa) "مانیتورینگ دسترسی‌های امنیتی فعال است"
+                else "Security permission monitoring is active"
+            )
             .setOngoing(true)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .build()
         startForeground(73002, notification)
+
         scanExecutor.scheduleWithFixedDelay(
             { runCatching { scanForChanges() } },
             0,

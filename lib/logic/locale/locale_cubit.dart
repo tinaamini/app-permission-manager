@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 
 class LocaleCubit extends Cubit<Locale> {
   static const storageKey = 'languageCode';
   static const _supported = {'en', 'fa'};
+  static const _channel = MethodChannel('notification_navigation');
 
   final Box _box;
 
-  LocaleCubit(this._box) : super(_resolveInitialLocale(_box));
+  LocaleCubit(this._box) : super(_resolveInitialLocale(_box)){
+    _notifyNative(state.languageCode);
+  }
 
   static Locale _resolveInitialLocale(Box box) {
     final saved = box.get(storageKey);
@@ -44,6 +48,15 @@ class LocaleCubit extends Cubit<Locale> {
     await _box.put(storageKey, locale.languageCode);
     if (state.languageCode != locale.languageCode) {
       emit(Locale(locale.languageCode));
+      await _notifyNative(locale.languageCode);
+    }
+  }
+
+  Future<void> _notifyNative(String languageCode) async {
+    try {
+      await _channel.invokeMethod('setLanguage', {'language': languageCode});
+    } catch (e) {
+      debugPrint('Failed to send language to native: $e');
     }
   }
 }

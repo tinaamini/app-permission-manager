@@ -64,13 +64,30 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
+//        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "notification_navigation")
+//            .setMethodCallHandler { call, result ->
+//                if (call.method == "getPendingPackage") {
+//                    result.success(intent?.getStringExtra("notification_package_name"))
+//                    intent?.removeExtra("notification_package_name")
+//                } else {
+//                    result.notImplemented()
+//                }
+//            }
+
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "notification_navigation")
             .setMethodCallHandler { call, result ->
-                if (call.method == "getPendingPackage") {
-                    result.success(intent?.getStringExtra("notification_package_name"))
-                    intent?.removeExtra("notification_package_name")
-                } else {
-                    result.notImplemented()
+                when (call.method) {
+                    "getPendingPackage" -> {
+                        result.success(intent?.getStringExtra("notification_package_name"))
+                        intent?.removeExtra("notification_package_name")
+                    }
+                    "setLanguage" -> {
+                        val language = call.argument<String>("language") ?: "fa"
+                        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                        prefs.edit().putString("app_language", language).apply()
+                        result.success(null)
+                    }
+                    else -> result.notImplemented()
                 }
             }
 
