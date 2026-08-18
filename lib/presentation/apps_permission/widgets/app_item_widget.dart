@@ -5,13 +5,10 @@ import 'package:Privio/constant/risk_level.dart';
 import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
 import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:Privio/presentation/apps_permission/widgets/risk_circle_widget.dart';
-import 'package:Privio/presentation/apps_permission/widgets/trusted_badge.dart';
 import 'package:Privio/presentation/utils/permission_ui_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'kept_badge.dart';
 
 List<String> getDangerousPermissions(List<String> permissions) {
   return permissions
@@ -89,15 +86,29 @@ class AppItem extends StatelessWidget {
                 ),
                 if (isTrusted || isKept)
                   Padding(
-                    padding:  EdgeInsets.symmetric( horizontal: 8.w),
-                    child: Column(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         if (isTrusted)
-                          const TrustedBadge(),
-                        SizedBox(height: 5.h,),
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Icon(
+                              Icons.verified_rounded,
+                              size: screenWidth * 0.05,
+                              color: Colors.blueAccent,
+                            ),
+                          ),
 
                         if (isKept)
-                          const KeptBadge(),
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Icon(
+                              Icons.favorite,
+                              size: screenWidth * 0.05,
+                              color: Colors.green,
+                            ),
+                          ),
                       ],
                     ),
                   ),

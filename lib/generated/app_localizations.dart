@@ -362,41 +362,41 @@ abstract class AppLocalizations {
   /// **'Scanning'**
   String get scanning;
 
-  /// No description provided for @onboardingTitle2.
-  ///
-  /// In en, this message translates to:
-  /// **'Not all apps need access to your\n photos and messages!'**
-  String get onboardingTitle2;
-
-  /// No description provided for @onboardingDesc2.
-  ///
-  /// In en, this message translates to:
-  /// **'Know the essential permissions and\n review the unnecessary ones.'**
-  String get onboardingDesc2;
-
-  /// No description provided for @onboardingTitle3.
-  ///
-  /// In en, this message translates to:
-  /// **'In a few seconds, your permission \n status becomes clear.'**
-  String get onboardingTitle3;
-
-  /// No description provided for @onboardingDesc3.
-  ///
-  /// In en, this message translates to:
-  /// **'With Privio, see important permissions \n and items needing attention at a glance.'**
-  String get onboardingDesc3;
-
   /// No description provided for @onboardingTitle1.
   ///
   /// In en, this message translates to:
-  /// **'Old permissions deserve \n a fresh review.'**
+  /// **'Old permissions deserve \n a second look.'**
   String get onboardingTitle1;
 
   /// No description provided for @onboardingDesc1.
   ///
   /// In en, this message translates to:
-  /// **'Maybe some of them are dangerous!'**
+  /// **'Some of them could be risky'**
   String get onboardingDesc1;
+
+  /// No description provided for @onboardingTitle2.
+  ///
+  /// In en, this message translates to:
+  /// **'Not every app needs access to your\n photos and text messages.'**
+  String get onboardingTitle2;
+
+  /// No description provided for @onboardingDesc2.
+  ///
+  /// In en, this message translates to:
+  /// **'See which permissions are essential,\n and review the ones that aren’t.'**
+  String get onboardingDesc2;
+
+  /// No description provided for @onboardingTitle3.
+  ///
+  /// In en, this message translates to:
+  /// **'See your permission status in seconds.'**
+  String get onboardingTitle3;
+
+  /// No description provided for @onboardingDesc3.
+  ///
+  /// In en, this message translates to:
+  /// **'Privio shows important permissions and \n what needs your attention — all at a glance.'**
+  String get onboardingDesc3;
 
   /// No description provided for @skip.
   ///

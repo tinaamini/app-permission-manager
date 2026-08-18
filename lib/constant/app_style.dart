@@ -27,7 +27,7 @@ class AppTextStyle {
 
   static TextStyle onboardingTitle(BuildContext context) => TextStyle(
       fontFamily: _font(context),
-      fontSize: 24.sp,
+      fontSize: 20.sp,
       fontWeight: FontWeight.w600,
       color: AppColor.white);
 

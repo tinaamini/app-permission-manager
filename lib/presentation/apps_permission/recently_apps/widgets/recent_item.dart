@@ -78,16 +78,7 @@ class RecentItem extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    if (isTrusted)
-                      Padding(
-                        padding:  EdgeInsets.symmetric(horizontal: 20.w),
-                        child: const TrustedBadge(),
-                      )
-                    else if (isKept)
-                      Padding(
-                        padding:  EdgeInsets.symmetric(horizontal: 20.w),
-                        child: const KeptBadge(),
-                      ),
+
                   ],
                 ),
               ),
@@ -98,8 +89,22 @@ class RecentItem extends StatelessWidget {
               ),
             ],
           ),
+          SizedBox(height: AppSize.height * 0.02),
 
-          SizedBox(width: AppSize.width * 0.02),
+          Row(
+            children: [
+              if (isTrusted)
+
+                 Expanded(child: const TrustedBadge()),
+SizedBox(width: AppSize.width * 0.02,),
+              if (isKept)
+
+                 Expanded(child: const KeptBadge()),
+
+            ],
+          ),
+
+          SizedBox(height: AppSize.height * 0.02),
 
           Text(
             l10n.lastUsed(formData, formatDuration),

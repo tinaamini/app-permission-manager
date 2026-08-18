@@ -92,7 +92,7 @@ class _AppDetailScreenState extends State<AppDetailScreen>
               context,
               message: l10n.appAddedToKeep,
               accentColor: Colors.green,
-              icon: Icons.verified_rounded,
+              icon: Icons.favorite,
 
             );
           }
@@ -103,7 +103,7 @@ class _AppDetailScreenState extends State<AppDetailScreen>
               context,
               message: l10n.appRemovedFromKeep,
               accentColor: Colors.green,
-              icon: Icons.push_pin_outlined,
+              icon: Icons.favorite_border_sharp,
             );
           }
         },

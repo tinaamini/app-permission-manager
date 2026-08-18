@@ -1,3 +1,4 @@
+import 'package:Privio/constant/app_style.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/generated/app_localizations.dart';
 
@@ -11,38 +12,35 @@ class KeptBadge extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: screenWidth * 0.025,
-        vertical: screenHeight * 0.0037,
-      ),
+
       decoration: BoxDecoration(
         color: Colors.green.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(screenWidth * 0.03),
+        borderRadius: BorderRadius.circular(screenWidth * 0.01),
         border: Border.all(
           color: Colors.green,
           width: 0.8,
         ),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.push_pin,
-            size: screenWidth * 0.03,
-            color: Colors.green,
-          ),
-          SizedBox(width: screenWidth * 0.01),
-          Text(
-            l10n.kept,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.favorite,
+              size: screenWidth * 0.04,
               color: Colors.green,
-              fontSize: screenWidth * 0.025,
-              fontWeight: FontWeight.w600,
             ),
-          ),
-        ],
+            SizedBox(width: screenWidth * 0.01),
+            Text(
+              l10n.kept,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyle.lastScan(context).copyWith(color: Colors.green,
+              )
+            ),
+          ],
+        ),
       ),
     );
   }

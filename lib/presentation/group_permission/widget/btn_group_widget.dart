@@ -39,7 +39,7 @@ border: Border.all(width: context.isDark?0:1, color: AppColor.borderLight)
           clipBehavior: Clip.none,
           children: [
             Positioned(
-              top: AppSize.height * 0.014,
+              top: AppSize.height * 0.010,
               left: 0,
               right: 0,
               child: Center(

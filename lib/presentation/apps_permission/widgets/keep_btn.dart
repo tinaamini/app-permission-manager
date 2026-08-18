@@ -40,7 +40,7 @@ class KeepAppButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              isKept ? Icons.verified_rounded : Icons.push_pin_outlined,
+              isKept ? Icons.favorite : Icons.favorite_border_sharp,
               color: isKept ? Colors.green :  (context.isDark?Colors.white70:AppColor.CartDarkBorder),
               size: AppSize.width * 0.055,
             ),

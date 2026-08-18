@@ -173,7 +173,7 @@ object SecurityNotifications {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
         val notification = NotificationCompat.Builder(context, channel)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat)
             .setContentTitle(title)
             .setContentText(body)
             .setStyle(NotificationCompat.BigTextStyle().bigText(body))
@@ -220,7 +220,7 @@ class PermissionMonitorService : Service() {
 
         val fa = AppLanguage.isFa(this)
         val notification = NotificationCompat.Builder(this, "scan_reminders")
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat)
             .setContentTitle("Privio")
             .setContentText(
                 if (fa) "مانیتورینگ دسترسی‌های امنیتی فعال است"

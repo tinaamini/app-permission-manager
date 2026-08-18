@@ -55,7 +55,7 @@ class OnboardPage extends StatelessWidget {
                       Text(
                         data.title,
                         textAlign: TextAlign.center,
-                        maxLines: 2,
+                        maxLines: 3,
                         style: AppTextStyle.onboardingTitle(context).copyWith(
                           color: isDark ? AppColor.white : AppColor.black,
                         ),

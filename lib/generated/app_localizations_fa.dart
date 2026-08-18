@@ -155,6 +155,13 @@ class AppLocalizationsFa extends AppLocalizations {
   String get scanning => 'در حال اسکن';
 
   @override
+  String get onboardingTitle1 =>
+      'دسترسی های قدیمی،ارزش یک بررسی تازه را دارند.';
+
+  @override
+  String get onboardingDesc1 => 'شاید بعضی از آنها خطرناک باشند!';
+
+  @override
   String get onboardingTitle2 =>
       'همه ی برنامه ها به عکس ها و پیامک\n های شما نیاز ندارند!';
 
@@ -168,13 +175,6 @@ class AppLocalizationsFa extends AppLocalizations {
   @override
   String get onboardingDesc3 =>
       'ا Privio،دسترسی های مهم و موارد نیازمند توجه را\n در یک نگاه نشان میدهد.';
-
-  @override
-  String get onboardingTitle1 =>
-      'دسترسی های قدیمی،ارزش یک بررسی تازه را دارند.';
-
-  @override
-  String get onboardingDesc1 => 'شاید بعضی از آنها خطرناک باشند!';
 
   @override
   String get skip => 'رد کردن';

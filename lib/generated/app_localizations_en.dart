@@ -153,26 +153,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get scanning => 'Scanning';
 
   @override
+  String get onboardingTitle1 => 'Old permissions deserve \n a second look.';
+
+  @override
+  String get onboardingDesc1 => 'Some of them could be risky';
+
+  @override
   String get onboardingTitle2 =>
-      'Not all apps need access to your\n photos and messages!';
+      'Not every app needs access to your\n photos and text messages.';
 
   @override
   String get onboardingDesc2 =>
-      'Know the essential permissions and\n review the unnecessary ones.';
+      'See which permissions are essential,\n and review the ones that aren’t.';
 
   @override
-  String get onboardingTitle3 =>
-      'In a few seconds, your permission \n status becomes clear.';
+  String get onboardingTitle3 => 'See your permission status in seconds.';
 
   @override
   String get onboardingDesc3 =>
-      'With Privio, see important permissions \n and items needing attention at a glance.';
-
-  @override
-  String get onboardingTitle1 => 'Old permissions deserve \n a fresh review.';
-
-  @override
-  String get onboardingDesc1 => 'Maybe some of them are dangerous!';
+      'Privio shows important permissions and \n what needs your attention — all at a glance.';
 
   @override
   String get skip => 'Skip';
