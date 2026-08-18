@@ -28,7 +28,10 @@ class MainActivity : FlutterActivity() {
     private val SYSTEM_SETTINGS_CHANNEL = "system_settings"
 
     private val ioExecutor = Executors.newFixedThreadPool(4)
-
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SecurityNotifications.initialize(this)
@@ -64,22 +67,15 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
-//        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "notification_navigation")
-//            .setMethodCallHandler { call, result ->
-//                if (call.method == "getPendingPackage") {
-//                    result.success(intent?.getStringExtra("notification_package_name"))
-//                    intent?.removeExtra("notification_package_name")
-//                } else {
-//                    result.notImplemented()
-//                }
-//            }
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "notification_navigation")
             .setMethodCallHandler { call, result ->
                 when (call.method) {
                     "getPendingPackage" -> {
-                        result.success(intent?.getStringExtra("notification_package_name"))
+                        val pkg = intent?.getStringExtra("notification_package_name")
+//                        result.success(intent?.getStringExtra("notification_package_name"))
                         intent?.removeExtra("notification_package_name")
+                        result.success(pkg)
                     }
                     "setLanguage" -> {
                         val language = call.argument<String>("language") ?: "fa"

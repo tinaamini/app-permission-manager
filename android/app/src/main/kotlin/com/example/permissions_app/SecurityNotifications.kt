@@ -168,7 +168,7 @@ object SecurityNotifications {
             ?: return false
         val pendingIntent = PendingIntent.getActivity(
             context,
-            0,
+            id,
             launchIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
@@ -219,6 +219,21 @@ class PermissionMonitorService : Service() {
         SecurityNotifications.initialize(this)
 
         val fa = AppLanguage.isFa(this)
+
+        val launchIntent = packageManager
+            .getLaunchIntentForPackage(packageName)
+            ?.apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
+        val pendingIntent = launchIntent?.let {
+            PendingIntent.getActivity(
+                this,
+                73002,
+                it,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
+        }
+
         val notification = NotificationCompat.Builder(this, "scan_reminders")
             .setSmallIcon(R.drawable.ic_stat)
             .setContentTitle("Privio")
@@ -228,6 +243,7 @@ class PermissionMonitorService : Service() {
             )
             .setOngoing(true)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .setContentIntent(pendingIntent)
             .build()
         startForeground(73002, notification)
 

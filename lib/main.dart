@@ -153,8 +153,15 @@ class _AppBootstrap extends StatefulWidget {
   State<_AppBootstrap> createState() => _AppBootstrapState();
 }
 
-class _AppBootstrapState extends State<_AppBootstrap> {
+class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserver {
   bool _started = false;
+
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
 
   @override
   void didChangeDependencies() {
@@ -170,15 +177,32 @@ class _AppBootstrapState extends State<_AppBootstrap> {
     });
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state ==AppLifecycleState.resumed){
+      _loadAndOpenPendingApp();
+    }
+  }
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+
   Future<void> _loadAndOpenPendingApp() async {
     final cubit = context.read<AppPermissionCubit>();
     await cubit.loadApps();
     if (!mounted || cubit.state is! AppPermissionLoaded) return;
     final packageName = await const MethodChannel('notification_navigation')
         .invokeMethod<String>('getPendingPackage');
+    debugPrint('🔔 packageName from native: $packageName');
+
     if (!mounted || packageName == null) return;
     final apps = (cubit.state as AppPermissionLoaded).allApps;
     final matching = apps.where((item) => item.packageName == packageName);
+    debugPrint('🔔 matching count: ${matching.length}');
     if (matching.isNotEmpty) {
       widget.router.pushNamed(RouteName.appDetail, extra: matching.first);
     }
