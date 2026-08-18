@@ -24,6 +24,8 @@ import androidx.work.WorkerParameters
 import java.util.Locale
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import androidx.core.text.BidiFormatter
+import androidx.core.text.TextDirectionHeuristicsCompat
 
 // ===================== زبان اپ =====================
 object AppLanguage {
@@ -39,6 +41,9 @@ object AppLanguage {
     fun isFa(context: Context): Boolean = get(context) == "fa"
 }
 
+fun wrapAppName(name: String): String =
+    BidiFormatter.getInstance().unicodeWrap(name, TextDirectionHeuristicsCompat.LTR)
+fun rtlParagraph(text: String): String = "\u200F$text"
 // ===================== نوتیفیکیشن‌ها =====================
 object SecurityNotifications {
     private const val ALERTS_CHANNEL = "security_alerts"
@@ -71,13 +76,13 @@ object SecurityNotifications {
 
     fun highRiskApp(context: Context, appName: String, packageName: String? = null) {
         val fa = AppLanguage.isFa(context)
-        val safeName = if (fa) "\u200E$appName\u200F" else appName
+        val safeName = wrapAppName(appName)
         show(
             context,
             ALERTS_CHANNEL,
             appName.hashCode(),
             if (fa) "اپ پرریسک جدید نصب شد" else "New high-risk app installed",
-            if (fa) " دسترسی‌های حساسی دارد و بهتر است بررسی شود.$safeName"
+            if (fa) rtlParagraph("$safeName دسترسی‌های حساسی دارد و بهتر است بررسی شود.")
             else "$appName has sensitive permissions and should be reviewed.",
             packageName = packageName,
         )
@@ -95,7 +100,7 @@ object SecurityNotifications {
                 ALERTS_CHANNEL,
                 73000,
                 if (fa) "هشدارهای امنیتی فعال شد" else "Security alerts are active",
-                if (fa) "\u200EPrivio\u200F نصب اپ‌های پرریسک و تغییر دسترسی‌ها را بررسی می‌کند."
+                if (fa) "${wrapAppName("Privio")} نصب اپ‌های پرریسک و تغییر دسترسی‌ها را بررسی می‌کند."
                 else "Privio will monitor high-risk installs and permission changes.",
             )
         ) {
@@ -110,15 +115,17 @@ object SecurityNotifications {
         packageName: String? = null,
     ) {
         val fa = AppLanguage.isFa(context)
-        val safeName = if (fa) "\u200E$appName\u200F" else appName
+        val safeName = wrapAppName(appName)
         show(
             context,
             ALERTS_CHANNEL,
             appName.hashCode() xor 0x4f21,
             if (fa) "دسترسی‌های برنامه تغییر کرد" else "App permissions changed",
             if (fa)
-                if (addedCount > 0) " دسترسی جدید دریافت کرده است. $addedCount $safeName"
-                else "برخی دسترسی‌های $safeName تغییر کرده‌اند."
+                rtlParagraph(
+                    if (addedCount > 0) " $safeName  دسترسی جدید دریافت کرده است."
+                    else "برخی دسترسی‌های $safeName تغییر کرده‌اند."
+                )
             else
                 if (addedCount > 0) "$appName gained $addedCount new permission(s)."
                 else "Some permissions used by $appName have changed.",

@@ -138,24 +138,21 @@ class SvgPageOne extends StatelessWidget {
             ),
             Positioned(
               top: 0,
-              right: w * 0.015,
+              right: 0,
               child: Container(
-                width: w * 0.058,
-                height: w * 0.058,
+                width: w * 0.078,
+                height: w * 0.078,
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(w * 0.02),
+                  borderRadius: BorderRadius.circular(w * 0.08),
                 ),
                 child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(2),
-                    child: Text(
-                      integer,
-                      style: AppTextStyle.btnAppPermissionInt(context)
-                          .copyWith(color: color),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  child: Text(
+                    integer,
+                    style: AppTextStyle.btnAppPermissionInt(context)
+                        .copyWith(color: color),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),

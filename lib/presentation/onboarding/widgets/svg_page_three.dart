@@ -19,7 +19,7 @@ class SvgPageThree extends StatelessWidget {
         children: [
           SvgPicture.asset("assets/main/safe_alert.svg",height: 100.h,),
           SizedBox(height: 15.h,),
-          Container(width: 108.w,height: 35.h,
+          Container(width: 122.w,height: 38.h,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(61.r),
               border: Border.all(width: 2.w,color: isDark ?AppColor.green1:AppColor.green3),
@@ -27,7 +27,7 @@ class SvgPageThree extends StatelessWidget {
 
             ),
             child: Padding(
-              padding:  EdgeInsets.only(top: 4.h),
+              padding:  EdgeInsets.only(top: 6.h),
               child: Text(l10n.secureSystem,      textAlign: TextAlign.center,
                 maxLines: 2,
                 style: AppTextStyle.lastScan(context).copyWith(

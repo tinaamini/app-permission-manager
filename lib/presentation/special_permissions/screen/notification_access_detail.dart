@@ -6,7 +6,6 @@ import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/constant/risk_level.dart';
 import 'package:Privio/constant/specialPermissionType.dart';
-import 'package:Privio/core/servises/app_permission_service.dart';
 import 'package:Privio/core/servises/app_special_permiision_service.dart';
 import 'package:Privio/core/utils/special_permission_risk_resolver.dart';
 import 'package:Privio/generated/app_localizations.dart';

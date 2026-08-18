@@ -64,7 +64,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               return Stack(
                 alignment: Alignment.center,
                 children: [
-                  // ===== PAGE VIEW =====
                   PageView.builder(
                     controller: _controller,
                     itemCount: pages.length,
