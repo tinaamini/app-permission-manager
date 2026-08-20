@@ -6,6 +6,7 @@ import 'package:Privio/constant/permissionConst.dart';
 import 'package:Privio/constant/risk_level.dart';
 import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:Privio/core/models/app_permission_ui.dart';
+import 'package:Privio/core/servises/SafeDashboardPlatform.dart';
 import 'package:Privio/core/servises/app_permission_service.dart';
 import 'package:Privio/core/servises/app_special_permiision_service.dart';
 import 'package:Privio/core/servises/dashboard_permission_service.dart';

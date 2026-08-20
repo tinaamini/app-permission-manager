@@ -4,7 +4,7 @@ import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/constant/app_style.dart';
 import 'package:Privio/presentation/home/widgets/about_button.dart';
-import 'package:Privio/presentation/home/widgets/scan_initial_overlay.dart';
+import 'package:Privio/presentation/home/widgets/scanInitialOverlay.dart';
 import 'package:Privio/presentation/home/widgets/scan_loading_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

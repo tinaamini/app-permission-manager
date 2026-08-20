@@ -1,3 +1,4 @@
+import 'package:Privio/core/servises/SafeDashboardPlatform.dart';
 import 'package:flutter/services.dart';
 import 'package:Privio/core/models/app_permission_item.dart';
 import 'package:Privio/core/servises/dashboard_location_storage_hive.dart';

@@ -1,6 +1,7 @@
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/constant/app_style.dart';
 import 'package:Privio/core/extensions/context_extension.dart';
+import 'package:Privio/core/servises/SafeDashboardPlatform.dart';
 import 'package:flutter/material.dart';
 import 'package:Privio/core/models/app_permission_item.dart';
 import 'package:Privio/core/servises/dashboard_permission_service.dart';
