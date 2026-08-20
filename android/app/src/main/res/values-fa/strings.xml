@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="shortcut_scan_short">اسکن</string>
+    <string name="shortcut_scan_long">اجرای اسکن امنیتی</string>
+    <string name="shortcut_risk_short">اپ‌های پرریسک</string>
+    <string name="shortcut_risk_long">مشاهده اپ‌های پرریسک</string>
+    <string name="shortcut_permissions_short">دسترسی‌ها</string>
+    <string name="shortcut_permissions_long">مشاهده دسترسی‌های اپ‌ها</string>
+</resources>

@@ -77,6 +77,15 @@ class MainActivity : FlutterActivity() {
                         intent?.removeExtra("notification_package_name")
                         result.success(pkg)
                     }
+                    "getPendingShortcutRoute" -> {
+                        // مسیری که از App Shortcut (لانگ‌پرس روی آیکون اپ، مثل
+                        // اینستاگرام/تلگرام) با کلیک اومده، اگه اپ از اون طریق
+                        // باز شده باشه. بعد از خوندن حذفش می‌کنیم که با چرخش
+                        // صفحه یا rebuild دوباره navigate نکنه.
+                        val route = intent?.getStringExtra("shortcut_route")
+                        intent?.removeExtra("shortcut_route")
+                        result.success(route)
+                    }
                     "setLanguage" -> {
                         val language = call.argument<String>("language") ?: "fa"
                         val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
@@ -995,37 +1004,6 @@ class MainActivity : FlutterActivity() {
         return apps
     }
 
-//    private fun getDoNotDisturbApps(): List<Map<String, Any>> {
-//        val pm = packageManager
-//        val appOps = getSystemService(Context.APP_OPS_SERVICE) as android.app.AppOpsManager
-//        val installed = pm.getInstalledApplications(0)
-//        val apps = mutableListOf<Map<String, Any>>()
-//
-//        for (app in installed) {
-//            if ((app.flags and ApplicationInfo.FLAG_SYSTEM) != 0) continue
-//            try {
-//                val mode = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-//                    appOps.unsafeCheckOpNoThrow(
-//                        "android:access_notifications",
-//                        app.uid,
-//                        app.packageName
-//                    )
-//                } else {
-//                    appOps.checkOpNoThrow(
-//                        "android:access_notifications",
-//                        app.uid,
-//                        app.packageName
-//                    )
-//                }
-//                if (mode != android.app.AppOpsManager.MODE_ALLOWED) continue
-//                val appName = pm.getApplicationLabel(app).toString()
-//                val iconB64 = getAppIconBase64(app.packageName, 64)
-//                apps.add(mapOf("package" to app.packageName, "name" to appName, "icon" to iconB64))
-//            } catch (_: Exception) {}
-//        }
-//        return apps
-//    }
-
     private fun getNotificationAccessApps(): List<Map<String, Any>> {
         val enabledListeners = Settings.Secure.getString(
             contentResolver,
@@ -1082,16 +1060,6 @@ class MainActivity : FlutterActivity() {
         }
         return false
     }
-
-//    private fun hasAnyNonSystemOverlayPermission(): Boolean {
-//        val pm = applicationContext.packageManager
-//        val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA)
-//        for (app in packages) {
-//            if ((app.flags and ApplicationInfo.FLAG_SYSTEM) != 0) continue
-//            if (Settings.canDrawOverlays(this)) return true
-//        }
-//        return false
-//    }
 
     private fun hasAnyNonSystemOverlayPermission(): Boolean {
         val pm = applicationContext.packageManager

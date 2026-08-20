@@ -184,6 +184,7 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadAndOpenPendingApp();
+      _checkPendingShortcut();
       context.read<SpecialPermissionCubit>().loadStatus();
     });
   }
@@ -193,6 +194,7 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
     super.didChangeAppLifecycleState(state);
     if (state ==AppLifecycleState.resumed){
       _loadAndOpenPendingApp();
+      _checkPendingShortcut();
     }
   }
   @override
@@ -240,6 +242,17 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
     if (matching.isNotEmpty) {
       widget.router.pushNamed(RouteName.appDetail, extra: matching.first);
     }
+  }
+
+  // اگه اپ از طریق App Shortcut (لانگ‌پرس روی آیکون، مثل اینستاگرام/تلگرام)
+  // باز شده باشه، native توی intent extra یه route name گذاشته که اینجا
+  // می‌خونیمش و مستقیم به همون صفحه نویگیت می‌کنیم.
+  Future<void> _checkPendingShortcut() async {
+    final route = await const MethodChannel('notification_navigation')
+        .invokeMethod<String>('getPendingShortcutRoute');
+    debugPrint('🔗 shortcut route from native: $route');
+    if (route == null || !mounted) return;
+    widget.router.pushNamed(route);
   }
   @override
   @override

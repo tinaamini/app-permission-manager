@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:shortcutId="scan_now"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_scan_short"
+        android:shortcutLongLabel="@string/shortcut_scan_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.microdev.permissiondetector"
+            android:targetClass="com.microdev.permissiondetector.MainActivity">
+            <extra android:name="shortcut_route" android:value="dashboardPermission" />
+        </intent>
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="risk_apps"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_risk_short"
+        android:shortcutLongLabel="@string/shortcut_risk_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.microdev.permissiondetector"
+            android:targetClass="com.microdev.permissiondetector.MainActivity">
+            <extra android:name="shortcut_route" android:value="riskApps" />
+        </intent>
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="group_permission"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_permissions_short"
+        android:shortcutLongLabel="@string/shortcut_permissions_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.microdev.permissiondetector"
+            android:targetClass="com.microdev.permissiondetector.MainActivity">
+            <extra android:name="shortcut_route" android:value="groupPermission" />
+        </intent>
+    </shortcut>
+
+</shortcuts>

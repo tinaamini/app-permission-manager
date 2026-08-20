@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="shortcut_scan_short">Scan</string>
+    <string name="shortcut_scan_long">Run a security scan</string>
+    <string name="shortcut_risk_short">Risky apps</string>
+    <string name="shortcut_risk_long">View high-risk apps</string>
+    <string name="shortcut_permissions_short">Permissions</string>
+    <string name="shortcut_permissions_long">View app permissions</string>
+</resources>
