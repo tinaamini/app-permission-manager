@@ -25,49 +25,51 @@ class AppSnackBar {
         ),
         padding: EdgeInsets.zero,
         content: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppSize.width * 0.04,
-            vertical: AppSize.height * 0.017,
-          ),
-          decoration: BoxDecoration(
-            color: isSuccess
-                ? accentColor.withValues(alpha: 0.15)
-                : (context.isDark ? AppColor.CartDark : AppColor.btnLight),
-            borderRadius: BorderRadius.circular(AppSize.width * 0.04),
-            border: Border.all(
-              color: isSuccess
-                  ? accentColor
-                  : (context.isDark ? Colors.white12 : AppColor.borderLight),
-              width: 1.2,
+          color: Colors.white,
+
+
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSize.width * 0.04,
+              vertical: AppSize.height * 0.017,
             ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon,
+            decoration: BoxDecoration(
+              color: isSuccess
+                  ? accentColor.withAlpha(85)
+                  : (context.isDark ? AppColor.CartDark : AppColor.btnLight),
+              borderRadius: BorderRadius.circular(AppSize.width * 0.04),
+              border: Border.all(
                 color: isSuccess
                     ? accentColor
-                    : (context.isDark ? Colors.white70 : AppColor.CartDarkBorder),
-                size: AppSize.width * 0.055,
+                    : (context.isDark ? Colors.white12 : AppColor.borderLight),
+                width: 1.2,
               ),
-              SizedBox(width: AppSize.width * 0.02),
-              Flexible(
-                child: Text(
-                  message,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: isSuccess
-                        ? accentColor
-                        : (context.isDark ? Colors.white70 : AppColor.CartDarkBorder),
-                    fontSize: AppSize.width * 0.035,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.2,
+            ),
+
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  icon,
+                  color: accentColor,
+                  size: AppSize.width * 0.055,
+                ),
+                SizedBox(width: AppSize.width * 0.02),
+                Flexible(
+                  child: Text(
+                    message,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color:accentColor ,
+                      fontSize: AppSize.width * 0.035,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.2,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

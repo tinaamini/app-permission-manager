@@ -1,4 +1,4 @@
-package com.example.permissions_app
+package com.microdev.permissiondetector
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings

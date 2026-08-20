@@ -1,0 +1,17 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Battery cap -->
+  <path d="M14.75 5.25V4.25C14.75 3.69772 15.1977 3.25 15.75 3.25H21.25C21.8023 3.25 22.25 3.69772 22.25 4.25V5.25" stroke="#4AF296" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Battery body -->
+  <path d="M9.25 6.25H25.75C28.3734 6.25 30.5 8.37665 30.5 11V22.25" stroke="#4AF296" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M24.25 35.25H9.25C6.62665 35.25 4.5 33.1234 4.5 30.5V11C4.5 8.37665 6.62665 6.25 9.25 6.25" stroke="#4AF296" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Energy bolt -->
+  <path d="M18.046 11.5L13.476 19.58C13.2268 20.0204 13.545 20.5667 14.0512 20.5667H17.767L15.422 27.003C15.1451 27.763 16.1329 28.2899 16.59 27.6223L23.274 17.862C23.5773 17.4191 23.2602 16.8167 22.7234 16.8167H19.207L20.598 12.353C20.8117 11.6675 20.2995 10.9708 19.5815 10.9708H18.975C18.5917 10.9708 18.235 11.1719 18.046 11.5Z" stroke="#4AF296" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Shield -->
+  <path d="M28.5 20.75L35.5 23.45V28.37C35.5 32.272 32.967 35.736 29.249 36.918L28.5 37.156L27.751 36.918C24.033 35.736 21.5 32.272 21.5 28.37V23.45L28.5 20.75Z" stroke="#4AF296" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Shield check -->
+  <path d="M25.3 28.65L27.5 30.85L31.9 26.45" stroke="#4AF296" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

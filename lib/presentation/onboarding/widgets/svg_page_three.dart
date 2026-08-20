@@ -18,8 +18,8 @@ class SvgPageThree extends StatelessWidget {
       child:Column(
         children: [
           SvgPicture.asset("assets/main/safe_alert.svg",height: 100.h,),
-          SizedBox(height: 15.h,),
-          Container(width: 122.w,height: 38.h,
+          SizedBox(height: 18.h,),
+          Container(width: 122.w,height: 43.h,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(61.r),
               border: Border.all(width: 2.w,color: isDark ?AppColor.green1:AppColor.green3),
@@ -27,7 +27,7 @@ class SvgPageThree extends StatelessWidget {
 
             ),
             child: Padding(
-              padding:  EdgeInsets.only(top: 6.h),
+              padding:  EdgeInsets.only(top: 9.h),
               child: Text(l10n.secureSystem,      textAlign: TextAlign.center,
                 maxLines: 2,
                 style: AppTextStyle.lastScan(context).copyWith(
@@ -35,13 +35,13 @@ class SvgPageThree extends StatelessWidget {
                 ),),
             ),
           ),
-          SizedBox(height: 15.h,),
+          SizedBox(height: 20.h,),
           Text(l10n.theDeviceIsSecure, textAlign: TextAlign.center,
             maxLines: 2,
             style: AppTextStyle.nameApp(context).copyWith(
                 color: isDark ?AppColor.white:AppColor.black
             ),),
-          SizedBox(height: 5.h,),
+          SizedBox(height: 6.h,),
 
           Row(mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -64,8 +64,7 @@ class SvgPageThree extends StatelessWidget {
                 ),),
             ],
           ),
-          SizedBox(height: 20.h,),
-          
+          const Spacer(),
           Container(
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

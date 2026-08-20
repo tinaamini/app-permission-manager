@@ -30,4 +30,40 @@ class AppPermissionUi {
       riskLevel: riskLevel ?? this.riskLevel,
     );
   }
+
+
+  Map<String, dynamic> toJson() {
+    return {
+      'appName': appName,
+      'packageName': packageName,
+      'iconBase64': iconBase64,
+      'permissions': permissions,
+      'riskLevel': riskLevel.name,
+    };}
+    static AppPermissionUi fromJson(Map<String, dynamic> json) {
+      return AppPermissionUi(
+        appName: (json['appName'] ?? '').toString(),
+        packageName: (json['packageName'] ?? '').toString(),
+        iconBase64: (json['iconBase64'] ?? '').toString(),
+        permissions: ((json['permissions'] as List?) ?? const [])
+            .map((e) => e.toString())
+            .toList(),
+        riskLevel: _riskFromName(json['riskLevel']?.toString()),
+      );
+    }
+
+    static RiskLevel _riskFromName(String? name) {
+      switch (name) {
+        case 'lowRisk':
+          return RiskLevel.lowRisk;
+        case 'mediumRisk':
+          return RiskLevel.mediumRisk;
+        case 'highRisk':
+          return RiskLevel.highRisk;
+        case 'noRisk':
+        default:
+          return RiskLevel.noRisk;
+      }
+    }
+
 }

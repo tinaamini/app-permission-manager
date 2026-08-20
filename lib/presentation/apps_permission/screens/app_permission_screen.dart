@@ -230,8 +230,7 @@ class _AppPermissionScreenState extends State<AppPermissionScreen> {
                                     ),
                                   );
                                   if (result == true) {
-                                    await context
-                                        .pushNamed(RouteName.recentApps);
+                                    await context.pushNamed(RouteName.recentApps);
                                     _refreshRecentApps();
                                   }
                                 }

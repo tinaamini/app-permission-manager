@@ -6,14 +6,14 @@ import 'package:flutter/foundation.dart';
 
 import '../risk/risk_calculator.dart';
 import '../../core/servises/app_permission_service.dart';
+import '../../core/servises/app_permission_storage_hive.dart';
 import 'app_permission_state.dart';
+
 Map<String, List<AppPermissionUi>> processAppsInIsolate(
     Map<String, dynamic> input,
     ) {
-  final List<AppPermissionUi> apps =
-  input['apps'] as List<AppPermissionUi>;
-  final Set<String> trusted =
-  (input['trusted'] as List<String>).toSet();
+  final List<AppPermissionUi> apps = input['apps'] as List<AppPermissionUi>;
+  final Set<String> trusted = (input['trusted'] as List<String>).toSet();
 
   final List<AppPermissionUi> noRisk = [];
   final List<AppPermissionUi> lowRisk = [];
@@ -28,9 +28,7 @@ Map<String, List<AppPermissionUi>> processAppsInIsolate(
     );
 
     final finalRisk =
-    trusted.contains(app.packageName)
-        ? RiskLevel.noRisk
-        : risk;
+    trusted.contains(app.packageName) ? RiskLevel.noRisk : risk;
 
     final updated = app.copyWith(riskLevel: finalRisk);
 
@@ -58,10 +56,11 @@ Map<String, List<AppPermissionUi>> processAppsInIsolate(
   };
 }
 
-
 class AppPermissionCubit extends Cubit<AppPermissionState> {
   final AppPermissionPlatform _platform = AppPermissionPlatform();
   final Box _prefBox = Hive.box('app_preferences');
+
+  bool _isBackgroundRefreshing = false;
 
   AppPermissionCubit() : super(AppPermissionInitial());
 
@@ -69,14 +68,34 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
   Future<void> loadApps() async {
     if (state is AppPermissionLoading) return;
 
+    final cached = await AppPermissionStorageHive.loadApps();
+
+    if (cached != null && cached.isNotEmpty) {
+      _emitGrouped(cached);
+
+      _refreshInBackground();
+      return;
+    }
+
     emit(AppPermissionLoading());
-    await _loadAppsInternal(retriesLeft: 1);
+    await _fetchFromNativeAndSave(retriesLeft: 1);
   }
 
-  Future<void> _loadAppsInternal({required int retriesLeft}) async {
+  Future<void> refreshAll() async {
+    if (state is AppPermissionLoading) return;
+
+    if (state is AppPermissionLoaded) {
+      await _refreshInBackground(force: true);
+      return;
+    }
+
+    emit(AppPermissionLoading());
+    await _fetchFromNativeAndSave(retriesLeft: 1);
+  }
+
+  Future<void> _fetchFromNativeAndSave({required int retriesLeft}) async {
     try {
       final trusted = trustedApps;
-
       final apps = await _platform.getInstalledApps();
 
       final result = await compute(
@@ -87,28 +106,154 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
         },
       );
 
+      final noRisk = result['noRisk']!;
+      final lowRisk = result['lowRisk']!;
+      final mediumRisk = result['mediumRisk']!;
+      final highRisk = result['highRisk']!;
+
+      final all = [...highRisk, ...mediumRisk, ...lowRisk, ...noRisk];
+      await AppPermissionStorageHive.saveApps(all);
+
       emit(AppPermissionLoaded(
-        noRisk: result['noRisk']!,
-        lowRisk: result['lowRisk']!,
-        mediumRisk: result['mediumRisk']!,
-        highRisk: result['highRisk']!,
+        noRisk: noRisk,
+        lowRisk: lowRisk,
+        mediumRisk: mediumRisk,
+        highRisk: highRisk,
       ));
     } catch (e, st) {
-
+      debugPrint('AppPermissionCubit._fetchFromNativeAndSave: $e\n$st');
 
       if (retriesLeft > 0) {
         await Future.delayed(const Duration(milliseconds: 400));
-        return _loadAppsInternal(retriesLeft: retriesLeft - 1);
+        return _fetchFromNativeAndSave(retriesLeft: retriesLeft - 1);
       }
 
       emit(AppPermissionError(e.toString()));
-      emit(AppPermissionLoaded(
-        noRisk: const [],
-        lowRisk: const [],
-        mediumRisk: const [],
-        highRisk: const [],
-      ));
+      final cached = await AppPermissionStorageHive.loadApps();
+      if (cached != null && cached.isNotEmpty) {
+        _emitGrouped(cached);
+      } else {
+        emit(AppPermissionLoaded(
+          noRisk: const [],
+          lowRisk: const [],
+          mediumRisk: const [],
+          highRisk: const [],
+        ));
+      }
     }
+  }
+
+  Future<void> _refreshInBackground({bool force = false}) async {
+    if (_isBackgroundRefreshing && !force) return;
+    _isBackgroundRefreshing = true;
+
+    try {
+      final trusted = trustedApps;
+      final apps = await _platform.getInstalledApps();
+
+      final result = await compute(
+        processAppsInIsolate,
+        {
+          'apps': apps,
+          'trusted': trusted,
+        },
+      );
+
+      final noRisk = result['noRisk']!;
+      final lowRisk = result['lowRisk']!;
+      final mediumRisk = result['mediumRisk']!;
+      final highRisk = result['highRisk']!;
+      final freshAll = [...highRisk, ...mediumRisk, ...lowRisk, ...noRisk];
+
+      final cached = await AppPermissionStorageHive.loadApps();
+      final changed = force || _hasMeaningfulChange(cached, freshAll);
+
+      if (changed) {
+        await AppPermissionStorageHive.saveApps(freshAll);
+        if (!isClosed) {
+          emit(AppPermissionLoaded(
+            noRisk: noRisk,
+            lowRisk: lowRisk,
+            mediumRisk: mediumRisk,
+            highRisk: highRisk,
+          ));
+        }
+      }
+    } catch (e) {
+      debugPrint('AppPermissionCubit._refreshInBackground failed: $e');
+    } finally {
+      _isBackgroundRefreshing = false;
+    }
+  }
+
+  bool _hasMeaningfulChange(
+      List<AppPermissionUi>? cached,
+      List<AppPermissionUi> fresh,
+      ) {
+    if (cached == null) return true;
+    if (cached.length != fresh.length) return true;
+
+
+    final cacheMissingIcons = cached.any((a) => a.iconBase64.isEmpty);
+    final freshHasIcons = fresh.any((a) => a.iconBase64.isNotEmpty);
+    if (cacheMissingIcons && freshHasIcons) return true;
+
+
+    final cachedMap = {
+      for (final a in cached) a.packageName: a,
+    };
+
+    for (final a in fresh) {
+      final old = cachedMap[a.packageName];
+      if (old == null) return true;
+
+      final oldPerms = old.permissions.toSet();
+      final newPerms = a.permissions.toSet();
+      if (oldPerms.length != newPerms.length ||
+          !oldPerms.containsAll(newPerms)) {
+        return true;
+      }
+
+      if (old.riskLevel != a.riskLevel) return true;
+    }
+
+    final freshPkgs = fresh.map((a) => a.packageName).toSet();
+    for (final a in cached) {
+      if (!freshPkgs.contains(a.packageName)) return true;
+    }
+
+    return false;
+  }
+
+  void _emitGrouped(List<AppPermissionUi> apps) {
+    final noRisk = <AppPermissionUi>[];
+    final lowRisk = <AppPermissionUi>[];
+    final mediumRisk = <AppPermissionUi>[];
+    final highRisk = <AppPermissionUi>[];
+
+    for (final app in apps) {
+      switch (app.riskLevel) {
+        case RiskLevel.noRisk:
+          noRisk.add(app);
+          break;
+        case RiskLevel.lowRisk:
+          lowRisk.add(app);
+          break;
+        case RiskLevel.mediumRisk:
+          mediumRisk.add(app);
+          break;
+        case RiskLevel.highRisk:
+          highRisk.add(app);
+          break;
+      }
+    }
+
+    emit(AppPermissionLoaded(
+      noRisk: noRisk,
+      lowRisk: lowRisk,
+      mediumRisk: mediumRisk,
+      highRisk: highRisk,
+    ));
   }
 
   Future<void> refreshApp(String packageName) async {
@@ -135,16 +280,18 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
           : newRisk;
 
       final newApp = updatedApp.copyWith(riskLevel: finalRisk);
+
       List<AppPermissionUi> noRisk =
       current.noRisk.where((a) => a.packageName != packageName).toList();
       List<AppPermissionUi> lowRisk =
       current.lowRisk.where((a) => a.packageName != packageName).toList();
-      List<AppPermissionUi> mediumRisk =
-      current.mediumRisk.where((a) => a.packageName != packageName).toList();
+      List<AppPermissionUi> mediumRisk = current.mediumRisk
+          .where((a) => a.packageName != packageName)
+          .toList();
       List<AppPermissionUi> highRisk =
       current.highRisk.where((a) => a.packageName != packageName).toList();
 
-      switch (newRisk) {
+      switch (finalRisk) {
         case RiskLevel.noRisk:
           noRisk.add(newApp);
           break;
@@ -159,33 +306,26 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
           break;
       }
 
-      emit(AppPermissionLoaded(
+      final loaded = AppPermissionLoaded(
         noRisk: noRisk,
         lowRisk: lowRisk,
         mediumRisk: mediumRisk,
         highRisk: highRisk,
-      ));
+      );
+      emit(loaded);
+
+      await AppPermissionStorageHive.saveApps(loaded.allApps);
     } catch (e) {
-      // قبلاً بدون try-catch بود: اگه اپ پیدا نمی‌شد یا native خطا می‌داد،
-      // exception از کل متد بیرون می‌زد. الان فقط لاگ می‌شه و state قبلی
-      // (که همچنان معتبره) دست‌نخورده باقی می‌مونه.
       debugPrint('AppPermissionCubit.refreshApp failed: $e');
     }
   }
 
+
   List<String> _readKeepApps() {
     final raw = _prefBox.get('keep_apps');
-
     if (raw == null) return [];
-
-    if (raw is List) {
-      return raw.map((e) => e.toString()).toList();
-    }
-
-    if (raw is Set) {
-      return raw.map((e) => e.toString()).toList();
-    }
-
+    if (raw is List) return raw.map((e) => e.toString()).toList();
+    if (raw is Set) return raw.map((e) => e.toString()).toList();
     return [];
   }
 
@@ -195,7 +335,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
 
   void keepApp(String packageName) {
     final current = _readKeepApps();
-
     if (current.contains(packageName)) return;
 
     final updated = {...current}..add(packageName);
@@ -210,7 +349,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
 
   void unkeepApp(String packageName) {
     final current = _readKeepApps();
-
     if (!current.contains(packageName)) return;
 
     final updated = {...current}..remove(packageName);
@@ -218,7 +356,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
 
     if (state is AppPermissionLoaded) {
       final loaded = state as AppPermissionLoaded;
-
       emit(AppUnkeptSuccess(packageName));
       emit(loaded);
     }
@@ -228,7 +365,7 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     final raw = _prefBox.get(key);
     if (raw == null) return [];
     if (raw is List) return raw.map((e) => e.toString()).toList();
-    if (raw is Set) return raw.map((e) => e.toString()).toList(); // migrate
+    if (raw is Set) return raw.map((e) => e.toString()).toList();
     return [];
   }
 
@@ -240,14 +377,14 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     final trusted = _readList('trusted_apps');
     if (trusted.contains(packageName)) return;
 
-    final prev = state is AppPermissionLoaded ? state as AppPermissionLoaded : null;
+    final prev =
+    state is AppPermissionLoaded ? state as AppPermissionLoaded : null;
     if (prev != null) {
       emit(AppTrusting(packageName: packageName, previous: prev));
     }
 
     final updatedTrusted = {...trusted}..add(packageName);
     _prefBox.put('trusted_apps', updatedTrusted.toList());
-
 
     emit(AppTrustedSuccess(packageName));
 
@@ -257,11 +394,13 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
 
     loadApps();
   }
+
   void untrustApp(String packageName) {
     final trusted = _readList('trusted_apps');
     if (!trusted.contains(packageName)) return;
 
-    final prev = state is AppPermissionLoaded ? state as AppPermissionLoaded : null;
+    final prev =
+    state is AppPermissionLoaded ? state as AppPermissionLoaded : null;
     if (prev != null) {
       emit(AppTrusting(packageName: packageName, previous: prev));
     }
@@ -277,12 +416,7 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
 
     loadApps();
   }
+
   List<String> get keptApps => _readList('keep_apps');
   List<String> get trustedApps => _readList('trusted_apps');
-
-  Future<void> refreshAll() async {
-    await loadApps();
-  }
-
-
 }

@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.permissions_app"
+    namespace = "com.microdev.permissiondetector"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "28.2.13676358"
 
