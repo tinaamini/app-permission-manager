@@ -220,6 +220,7 @@ class PermissionMonitorService : Service() {
 
         val fa = AppLanguage.isFa(this)
 
+
         val launchIntent = packageManager
             .getLaunchIntentForPackage(packageName)
             ?.apply {

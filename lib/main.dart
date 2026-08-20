@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -197,14 +199,13 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
     if (!mounted || cubit.state is! AppPermissionLoaded) return;
     final packageName = await const MethodChannel('notification_navigation')
         .invokeMethod<String>('getPendingPackage');
-    debugPrint('🔔 packageName from native: $packageName');
-
     if (!mounted || packageName == null) return;
     final apps = (cubit.state as AppPermissionLoaded).allApps;
     final matching = apps.where((item) => item.packageName == packageName);
-    debugPrint('🔔 matching count: ${matching.length}');
     if (matching.isNotEmpty) {
       widget.router.pushNamed(RouteName.appDetail, extra: matching.first);
+      unawaited(cubit.refreshApp(packageName));
+
     }
   }
   @override
