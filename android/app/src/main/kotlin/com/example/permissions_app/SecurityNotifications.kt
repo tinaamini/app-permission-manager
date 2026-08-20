@@ -135,12 +135,13 @@ object SecurityNotifications {
 
     fun scanReminder(context: Context) {
         val fa = AppLanguage.isFa(context)
+        val appName = wrapAppName("Privio")
         show(
             context,
             REMINDERS_CHANNEL,
             73001,
             if (fa) "زمان بررسی امنیت اپ‌هاست" else "Time for a security check",
-            if (fa) " را باز کنید و یک اسکن جدید انجام دهید."
+            if (fa) "برنامه $appName را باز کنید و یک اسکن جدید انجام دهید."
             else "Open Privio and run a new app permission scan.",
         )
     }
@@ -219,7 +220,6 @@ class PermissionMonitorService : Service() {
         SecurityNotifications.initialize(this)
 
         val fa = AppLanguage.isFa(this)
-
 
         val launchIntent = packageManager
             .getLaunchIntentForPackage(packageName)

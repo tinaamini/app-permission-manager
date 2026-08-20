@@ -60,43 +60,30 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
   final AppPermissionPlatform _platform = AppPermissionPlatform();
   final Box _prefBox = Hive.box('app_preferences');
 
-  /// جلوگیری از چندبار اجرای همزمان refresh پس‌زمینه
   bool _isBackgroundRefreshing = false;
 
   AppPermissionCubit() : super(AppPermissionInitial());
 
-  // ---------------------------------------------------------------------------
-  // بارگذاری اصلی: کش‌اول + رفرش پس‌زمینه
-  // ---------------------------------------------------------------------------
 
-  /// اولین ورود → از native می‌خواند و در Hive ذخیره می‌کند (با لودینگ).
-  /// دفعات بعد → فوری از Hive نشان می‌دهد، بعد در پس‌زمینه چک می‌کند
-  /// و اگر تغییری بود دیتابیس و UI را آپدیت می‌کند (بدون لودینگ کامل).
   Future<void> loadApps() async {
     if (state is AppPermissionLoading) return;
 
-    // ۱) سعی کن از کش بخوانی
     final cached = await AppPermissionStorageHive.loadApps();
 
     if (cached != null && cached.isNotEmpty) {
-      // فوری UI را با داده کش پر کن → کاربر لودینگ نمی‌بیند
       _emitGrouped(cached);
 
-      // در پس‌زمینه از native بخوان و در صورت تغییر آپدیت کن
       _refreshInBackground();
       return;
     }
 
-    // ۲) کش خالی است (اولین بار) → لودینگ + خواندن از native
     emit(AppPermissionLoading());
     await _fetchFromNativeAndSave(retriesLeft: 1);
   }
 
-  /// رفرش اجباری (مثلاً دکمه refresh) — همیشه از native
   Future<void> refreshAll() async {
     if (state is AppPermissionLoading) return;
 
-    // اگر قبلاً داده داریم، لودینگ کامل نشان نده؛ فقط پس‌زمینه
     if (state is AppPermissionLoaded) {
       await _refreshInBackground(force: true);
       return;
@@ -106,9 +93,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     await _fetchFromNativeAndSave(retriesLeft: 1);
   }
 
-  // ---------------------------------------------------------------------------
-  // داخلی
-  // ---------------------------------------------------------------------------
 
   Future<void> _fetchFromNativeAndSave({required int retriesLeft}) async {
     try {
@@ -128,7 +112,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
       final mediumRisk = result['mediumRisk']!;
       final highRisk = result['highRisk']!;
 
-      // ذخیره در Hive
       final all = [...highRisk, ...mediumRisk, ...lowRisk, ...noRisk];
       await AppPermissionStorageHive.saveApps(all);
 
@@ -147,7 +130,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
       }
 
       emit(AppPermissionError(e.toString()));
-      // اگر کش قدیمی داشتیم همان را نگه می‌داریم؛ وگرنه لیست خالی
       final cached = await AppPermissionStorageHive.loadApps();
       if (cached != null && cached.isNotEmpty) {
         _emitGrouped(cached);
@@ -162,7 +144,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     }
   }
 
-  /// خواندن از native در پس‌زمینه و آپدیت کش/UI فقط در صورت تغییر
   Future<void> _refreshInBackground({bool force = false}) async {
     if (_isBackgroundRefreshing && !force) return;
     _isBackgroundRefreshing = true;
@@ -202,13 +183,11 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
       }
     } catch (e) {
       debugPrint('AppPermissionCubit._refreshInBackground failed: $e');
-      // خطا در پس‌زمینه → state قبلی دست‌نخورده می‌ماند
     } finally {
       _isBackgroundRefreshing = false;
     }
   }
 
-  /// مقایسه: اپ جدید/حذف، permission، risk، یا پر شدن آیکون بعد از cold start
   bool _hasMeaningfulChange(
     List<AppPermissionUi>? cached,
     List<AppPermissionUi> fresh,
@@ -216,7 +195,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     if (cached == null) return true;
     if (cached.length != fresh.length) return true;
 
-    // cold start از Hive بدون آیکون بود → باید با داده native (با آیکون) جایگزین شود
     final cacheMissingIcons = cached.any((a) => a.iconBase64.isEmpty);
     final freshHasIcons = fresh.any((a) => a.iconBase64.isNotEmpty);
     if (cacheMissingIcons && freshHasIcons) return true;
@@ -278,9 +256,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     ));
   }
 
-  // ---------------------------------------------------------------------------
-  // refresh تک‌اپ (بعد از برگشت از تنظیمات)
-  // ---------------------------------------------------------------------------
 
   Future<void> refreshApp(String packageName) async {
     if (state is! AppPermissionLoaded) return;
@@ -347,9 +322,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // keep / trust (مثل قبل)
-  // ---------------------------------------------------------------------------
 
   List<String> _readKeepApps() {
     final raw = _prefBox.get('keep_apps');
@@ -422,7 +394,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
       emit(prev);
     }
 
-    // بعد از trust باید risk دوباره حساب شود → رفرش از native + آپدیت کش
     loadApps();
   }
 

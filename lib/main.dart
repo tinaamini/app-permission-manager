@@ -193,19 +193,43 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
   }
 
 
+  // Future<void> _loadAndOpenPendingApp() async {
+  //   final cubit = context.read<AppPermissionCubit>();
+  //   await cubit.loadApps();
+  //   if (!mounted || cubit.state is! AppPermissionLoaded) return;
+  //   final packageName = await const MethodChannel('notification_navigation')
+  //       .invokeMethod<String>('getPendingPackage');
+  //   if (!mounted || packageName == null) return;
+  //   final apps = (cubit.state as AppPermissionLoaded).allApps;
+  //   final matching = apps.where((item) => item.packageName == packageName);
+  //   if (matching.isNotEmpty) {
+  //     widget.router.pushNamed(RouteName.appDetail, extra: matching.first);
+  //     unawaited(cubit.refreshApp(packageName));
+  //
+  //   }
+  // }
+
   Future<void> _loadAndOpenPendingApp() async {
-    final cubit = context.read<AppPermissionCubit>();
-    await cubit.loadApps();
-    if (!mounted || cubit.state is! AppPermissionLoaded) return;
     final packageName = await const MethodChannel('notification_navigation')
         .invokeMethod<String>('getPendingPackage');
-    if (!mounted || packageName == null) return;
+    debugPrint('🔔 packageName from native: $packageName');
+
+    final cubit = context.read<AppPermissionCubit>();
+
+    if (packageName != null) {
+      await cubit.refreshAll();
+    } else {
+      await cubit.loadApps();
+    }
+
+    if (!mounted || cubit.state is! AppPermissionLoaded) return;
+    if (packageName == null) return;
+
     final apps = (cubit.state as AppPermissionLoaded).allApps;
     final matching = apps.where((item) => item.packageName == packageName);
+    debugPrint('🔔 matching count: ${matching.length}');
     if (matching.isNotEmpty) {
       widget.router.pushNamed(RouteName.appDetail, extra: matching.first);
-      unawaited(cubit.refreshApp(packageName));
-
     }
   }
   @override
