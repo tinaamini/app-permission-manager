@@ -166,9 +166,17 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
   }
 
   @override
+  void didChangeLocales(List<Locale>? locales) {
+    super.didChangeLocales(locales);
+    if (locales != null && locales.isNotEmpty) {
+      context.read<LocaleCubit>().syncWithSystemLocale(locales.first);
+    }
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-     AppSize.init(context);
+    AppSize.init(context);
 
     if (_started) return;
     _started = true;

@@ -10,8 +10,16 @@ class LocaleCubit extends Cubit<Locale> {
 
   final Box _box;
 
-  LocaleCubit(this._box) : super(_resolveInitialLocale(_box)){
-    _notifyNative(state.languageCode);
+  LocaleCubit(this._box) : super(_resolveInitialLocale(_box)) {
+    // فقط وقتی کاربر قبلاً زبان را به‌صورت دستی انتخاب کرده (مقدار در
+    // storage ذخیره شده)، به سمت native سینک می‌کنیم. اگر کاربر هیچ‌وقت
+    // انتخابی نکرده، نباید چیزی به native فرستاده شود تا سمت native با
+    // fallback خودش (Locale.getDefault) همیشه زبان سیستم را دنبال کند و
+    // با تغییر زبان گوشی به‌روز بماند.
+    final saved = _box.get(storageKey);
+    if (saved is String && _supported.contains(saved)) {
+      _notifyNative(state.languageCode);
+    }
   }
 
   static Locale _resolveInitialLocale(Box box) {
@@ -33,6 +41,21 @@ class LocaleCubit extends Cubit<Locale> {
 
   static int initialLanguageIndex(Box box) {
     return _resolveInitialLocale(box).languageCode == 'en' ? 0 : 1;
+  }
+
+  bool get _hasExplicitChoice {
+    final saved = _box.get(storageKey);
+    return saved is String && _supported.contains(saved);
+  }
+
+  void syncWithSystemLocale(Locale systemLocale) {
+    if (_hasExplicitChoice) return;
+    final code = _supported.contains(systemLocale.languageCode)
+        ? systemLocale.languageCode
+        : 'fa';
+    if (state.languageCode != code) {
+      emit(Locale(code));
+    }
   }
 
   Future<void> toggle() async {
