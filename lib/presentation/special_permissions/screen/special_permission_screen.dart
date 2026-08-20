@@ -4,9 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:Privio/constant/app_color.dart';
 import 'package:Privio/constant/app_style.dart';
-import 'package:Privio/constant/risk_level.dart';
 import 'package:Privio/constant/specialPermissionType.dart';
-import 'package:Privio/core/servises/app_special_permiision_service.dart';
+import 'package:Privio/core/utils/special_permission_risk_resolver.dart';
 import 'package:Privio/generated/app_localizations.dart';
 import 'package:Privio/logic/special_permission/pecial_permission_state.dart';
 import 'package:Privio/logic/special_permission/special_permission_cubit.dart';
@@ -15,9 +14,7 @@ import 'package:Privio/presentation/special_permissions/widget/btn_special_permi
 import 'package:Privio/presentation/utils/app_size.dart';
 import 'package:Privio/presentation/utils/base_screen.dart';
 import 'package:Privio/presentation/utils/custome_dotsloader.dart';
-import 'package:Privio/presentation/utils/risk_color.dart';
 import 'package:Privio/routs/rout_name.dart';
-import 'package:Privio/core/utils/special_permission_risk_resolver.dart';
 
 class SpecialPermissionScreen extends StatefulWidget {
   const SpecialPermissionScreen({super.key});
@@ -33,6 +30,13 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    // اگر هنوز لود نشده، یک‌بار بکش
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final cubit = context.read<SpecialPermissionCubit>();
+      if (cubit.state.loading) {
+        cubit.loadStatus();
+      }
+    });
   }
 
   @override
@@ -44,7 +48,7 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      setState(() {});
+      context.read<SpecialPermissionCubit>().refresh();
     }
   }
 
@@ -89,126 +93,79 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: AppSize.height * 0.025),
-                        FutureBuilder<List<Map<String, dynamic>>>(
-                          future: AppSpecialPermissionPlatform()
-                              .getUsageAccessApps(),
-                          builder: (context, snapshot) {
-                            final apps = snapshot.data ?? [];
-                            final level =
-                                SpecialPermissionRiskResolver.fromCount(
-                              type: SpecialPermissionType.usageAccess,
-                              count: apps.length,
-                            );
-                            return BtnSpecialPermission(
-                              image: 'assets/special_permission/usage.png',
-                              title: l10n.usageAccessTitle,
-                              text: l10n.usageStatsPermission,
-                              riskLevel: level,
-                              enabled: apps.isNotEmpty,
-                              ontap: () => context.pushNamed(
-                                RouteName.specialPermissionDetail,
-                                extra: SpecialPermissionType.usageAccess,
-                              ),
-                            );
-                          },
+                        BtnSpecialPermission(
+                          image: 'assets/special_permission/usage.png',
+                          title: l10n.usageAccessTitle,
+                          text: l10n.usageStatsPermission,
+                          riskLevel: SpecialPermissionRiskResolver.fromCount(
+                            type: SpecialPermissionType.usageAccess,
+                            count: state.usageCount,
+                          ),
+                          enabled: state.usageCount > 0,
+                          ontap: () => context.pushNamed(
+                            RouteName.specialPermissionDetail,
+                            extra: SpecialPermissionType.usageAccess,
+                          ),
                         ),
                         SizedBox(height: AppSize.height * 0.025),
-                        FutureBuilder<List<Map<String, dynamic>>>(
-                          future: AppSpecialPermissionPlatform()
-                              .getNotificationAccessApps(),
-                          builder: (context, snapshot) {
-                            final apps = snapshot.data ?? [];
-                            final level =
-                                SpecialPermissionRiskResolver.fromCount(
-                              type: SpecialPermissionType.notificationAccess,
-                              count: apps.length,
-                            );
-                            return BtnSpecialPermission(
-                              image:
-                                  'assets/special_permission/notification.png',
-                              title: l10n.notificationAccessTitle,
-                              text: l10n.notificationAccessPermission,
-                              riskLevel: level,
-                              enabled: apps.isNotEmpty,
-                              ontap: () => context.pushNamed(
-                                RouteName.specialPermissionDetail,
-                                extra: SpecialPermissionType.notificationAccess,
-                              ),
-                            );
-                          },
+                        BtnSpecialPermission(
+                          image: 'assets/special_permission/notification.png',
+                          title: l10n.notificationAccessTitle,
+                          text: l10n.notificationAccessPermission,
+                          riskLevel: SpecialPermissionRiskResolver.fromCount(
+                            type: SpecialPermissionType.notificationAccess,
+                            count: state.notificationCount,
+                          ),
+                          enabled: state.notificationCount > 0,
+                          ontap: () => context.pushNamed(
+                            RouteName.specialPermissionDetail,
+                            extra: SpecialPermissionType.notificationAccess,
+                          ),
                         ),
                         SizedBox(height: AppSize.height * 0.025),
-                        FutureBuilder<List<Map<String, dynamic>>>(
-                          future:
-                              AppSpecialPermissionPlatform().getOverlayApps(),
-                          builder: (context, snapshot) {
-                            final apps = snapshot.data ?? [];
-                            final level =
-                                SpecialPermissionRiskResolver.fromCount(
-                              type: SpecialPermissionType.displayOverApps,
-                              count: apps.length,
-                            );
-                            return BtnSpecialPermission(
-                              image: 'assets/special_permission/display.png',
-                              title: l10n.displayOverApps,
-                              text: l10n.overlayPermission,
-                              riskLevel: level,
-                              enabled: apps.isNotEmpty,
-                              ontap: () => context.pushNamed(
-                                RouteName.specialPermissionDetail,
-                                extra: SpecialPermissionType.displayOverApps,
-                              ),
-                            );
-                          },
+                        BtnSpecialPermission(
+                          image: 'assets/special_permission/display.png',
+                          title: l10n.displayOverApps,
+                          text: l10n.overlayPermission,
+                          riskLevel: SpecialPermissionRiskResolver.fromCount(
+                            type: SpecialPermissionType.displayOverApps,
+                            count: state.overlayCount,
+                          ),
+                          enabled: state.overlayCount > 0,
+                          ontap: () => context.pushNamed(
+                            RouteName.specialPermissionDetail,
+                            extra: SpecialPermissionType.displayOverApps,
+                          ),
                         ),
                         SizedBox(height: AppSize.height * 0.025),
-                        // Battery
-                        FutureBuilder<List<Map<String, dynamic>>>(
-                          future: AppSpecialPermissionPlatform()
-                              .getBatteryOptimizationApps(),
-                          builder: (context, snapshot) {
-                            final apps = snapshot.data ?? [];
-                            return BtnSpecialPermission(
-                              image: 'assets/special_permission/Battery.png',
-                              title: l10n.unrestrictedBatteryTitle,
-                              text: l10n.unrestrictedBatteryDesc,
-                              riskLevel:
-                                  SpecialPermissionRiskResolver.fromCount(
-                                type: SpecialPermissionType.batteryOptimization,
-                                count: apps.length,
-                              ),
-                              enabled: apps.isNotEmpty,
-                              ontap: () => context.pushNamed(
-                                RouteName.specialPermissionDetail,
-                                extra:
-                                    SpecialPermissionType.batteryOptimization,
-                              ),
-                            );
-                          },
+                        BtnSpecialPermission(
+                          image: 'assets/special_permission/Battery.png',
+                          title: l10n.unrestrictedBatteryTitle,
+                          text: l10n.unrestrictedBatteryDesc,
+                          riskLevel: SpecialPermissionRiskResolver.fromCount(
+                            type: SpecialPermissionType.batteryOptimization,
+                            count: state.batteryCount,
+                          ),
+                          enabled: state.batteryCount > 0,
+                          ontap: () => context.pushNamed(
+                            RouteName.specialPermissionDetail,
+                            extra: SpecialPermissionType.batteryOptimization,
+                          ),
                         ),
                         SizedBox(height: AppSize.height * 0.025),
-
-                        FutureBuilder<List<Map<String, dynamic>>>(
-                          future: AppSpecialPermissionPlatform()
-                              .getDoNotDisturbApps(),
-                          builder: (context, snapshot) {
-                            final apps = snapshot.data ?? [];
-                            return BtnSpecialPermission(
-                              image: 'assets/special_permission/Disturb.png',
-                              title: l10n.doNotDisturb,
-                              text: l10n.doNotDisturbPermission,
-                              riskLevel:
-                                  SpecialPermissionRiskResolver.fromCount(
-                                type: SpecialPermissionType.doNotDisturb,
-                                count: apps.length,
-                              ),
-                              enabled: apps.isNotEmpty,
-                              ontap: () => context.pushNamed(
-                                RouteName.specialPermissionDetail,
-                                extra: SpecialPermissionType.doNotDisturb,
-                              ),
-                            );
-                          },
+                        BtnSpecialPermission(
+                          image: 'assets/special_permission/Disturb.png',
+                          title: l10n.doNotDisturb,
+                          text: l10n.doNotDisturbPermission,
+                          riskLevel: SpecialPermissionRiskResolver.fromCount(
+                            type: SpecialPermissionType.doNotDisturb,
+                            count: state.dndCount,
+                          ),
+                          enabled: state.dndCount > 0,
+                          ontap: () => context.pushNamed(
+                            RouteName.specialPermissionDetail,
+                            extra: SpecialPermissionType.doNotDisturb,
+                          ),
                         ),
                         SizedBox(height: AppSize.height * 0.025),
                         Container(
@@ -276,23 +233,5 @@ class _SpecialPermissionScreenState extends State<SpecialPermissionScreen>
         },
       ),
     );
-  }
-
-  RiskLevel _levelFromSpecialPermission({
-    required SpecialPermissionType type,
-    required bool enabled,
-  }) {
-    if (!enabled) return RiskLevel.noRisk;
-
-    switch (type) {
-      case SpecialPermissionType.notificationAccess:
-      case SpecialPermissionType.usageAccess:
-        return RiskLevel.highRisk;
-      case SpecialPermissionType.displayOverApps:
-      case SpecialPermissionType.batteryOptimization:
-        return RiskLevel.mediumRisk;
-      case SpecialPermissionType.doNotDisturb:
-        return RiskLevel.lowRisk;
-    }
   }
 }

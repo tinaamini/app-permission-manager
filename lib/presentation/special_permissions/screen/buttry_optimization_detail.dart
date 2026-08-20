@@ -6,6 +6,7 @@ import 'package:Privio/constant/risk_level.dart';
 import 'package:Privio/constant/specialPermissionType.dart';
 import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:Privio/core/servises/app_special_permiision_service.dart';
+import 'package:Privio/core/servises/special_permission_cache_service.dart';
 import 'package:Privio/core/utils/special_permission_risk_resolver.dart';
 import 'package:Privio/generated/app_localizations.dart';
 import 'package:Privio/presentation/special_permissions/widget/helper_widgets.dart';
@@ -25,13 +26,14 @@ class BatteryOptimizationDetail extends StatefulWidget {
 
 class _BatteryOptimizationDetailState extends State<BatteryOptimizationDetail>
     with WidgetsBindingObserver {
-
-  Key _refreshKey = UniqueKey();
+  List<Map<String, dynamic>>? _apps;
+  bool _loading = true;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _load();
   }
 
   @override
@@ -42,11 +44,27 @@ class _BatteryOptimizationDetailState extends State<BatteryOptimizationDetail>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      setState(() {
-        _refreshKey = UniqueKey();
-      });
-    }
+    if (state == AppLifecycleState.resumed) _refresh();
+  }
+
+  Future<void> _load() async {
+    final cached = await SpecialPermissionCacheService.loadApps(
+      SpecialPermissionType.batteryOptimization,
+    );
+    if (!mounted) return;
+    setState(() {
+      _apps = cached;
+      _loading = false;
+    });
+    _refresh();
+  }
+
+  Future<void> _refresh() async {
+    final fresh = await SpecialPermissionCacheService.refreshApps(
+      SpecialPermissionType.batteryOptimization,
+    );
+    if (!mounted) return;
+    setState(() => _apps = fresh);
   }
 
   @override
@@ -55,117 +73,105 @@ class _BatteryOptimizationDetailState extends State<BatteryOptimizationDetail>
 
     return Padding(
       padding: EdgeInsets.all(AppSize.width * 0.04),
-      child: FutureBuilder<List<Map<String, dynamic>>>(
-        key: _refreshKey,
-        future: AppSpecialPermissionPlatform().getBatteryOptimizationApps(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
+      child: _loading
+          ? const Center(
               child: CustomDotsLoader(
                 svgPath1: 'assets/utils/Property 1=1 (1).svg',
                 svgPath2: 'assets/utils/Property 1=2 (1).svg',
                 svgPath3: 'assets/utils/Property 1=3 (1).svg',
                 svgPath4: 'assets/utils/Property 1=4 (1).svg',
               ),
-            );
-          }
+            )
+          : _buildBody(l10n),
+    );
+  }
 
-          final apps = snapshot.data ?? [];
+  Widget _buildBody(AppLocalizations l10n) {
+    final apps = _apps ?? [];
 
-          final RiskLevel level = SpecialPermissionRiskResolver.fromCount(
-            type: SpecialPermissionType.batteryOptimization,
-            count: apps.length,
-          );
+    final RiskLevel level = SpecialPermissionRiskResolver.fromCount(
+      type: SpecialPermissionType.batteryOptimization,
+      count: apps.length,
+    );
 
-          return  apps.isEmpty
-              ? Center(
-            child: EmptyPageWidget(
-              text: l10n.noAppsWithBatteryOptimization,
-            ),
-          )
-              : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              sectionTitle(l10n.batteryOptimization, context),
-              paragraph(l10n.batteryOptimizationDesc, context),
-              SizedBox(height: AppSize.height * 0.02),
-              riskBadge(level: level, context),
-              SizedBox(height: AppSize.height * 0.03),
-              // actionButton(
-              //   context: context,
-              //   text: l10n.openBatteryOptimizationSettings,
-              //   onTap: () {
-              //     AppSpecialPermissionPlatform().openBatteryOptimizationSettings();
-              //   },
-              // ),
-              SizedBox(height: AppSize.height * 0.04),
-              sectionTitle(l10n.appsWithBatteryOptimization, context),
-              SizedBox(height: AppSize.height * 0.015),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w),
-                  child: ListView.separated(
-                    itemCount: apps.length,
-                    separatorBuilder: (_, __) => Divider(
-                      color: context.isDark
-                          ? Colors.white12
-                          : AppColor.textLight,
-                    ),
-                    itemBuilder: (context, index) {
-                      final app = apps[index];
-                      return ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: app['icon'] != null
-                            ? Image.memory(
+    if (apps.isEmpty) {
+      return Center(
+        child: EmptyPageWidget(text: l10n.noAppsWithBatteryOptimization),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        sectionTitle(l10n.batteryOptimization, context),
+        paragraph(l10n.batteryOptimizationDesc, context),
+        SizedBox(height: AppSize.height * 0.02),
+        riskBadge(level: level, context),
+        SizedBox(height: AppSize.height * 0.04),
+        sectionTitle(l10n.appsWithBatteryOptimization, context),
+        SizedBox(height: AppSize.height * 0.015),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            child: ListView.separated(
+              itemCount: apps.length,
+              separatorBuilder: (_, __) => Divider(
+                color:
+                    context.isDark ? Colors.white12 : AppColor.textLight,
+              ),
+              itemBuilder: (context, index) {
+                final app = apps[index];
+                return ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: app['icon'] != null &&
+                          (app['icon'] as String).isNotEmpty
+                      ? Image.memory(
                           base64Decode(app['icon']),
                           width: AppSize.width * 0.1,
                           height: AppSize.width * 0.1,
                         )
-                            : Icon(
+                      : Icon(
                           Icons.battery_full,
                           color: context.isDark
                               ? Colors.white54
                               : AppColor.textLight,
                         ),
-                        title: Padding(
-                          padding: EdgeInsets.only(top: 20.h),
-                          child: Text(
-                            app['name'] ?? '',
-                            style: AppTextStyle.appName(context),
-                          ),
-                        ),
-                        subtitle: Text(
-                          app['package'] ?? '',
-                          style: AppTextStyle.lastScan(context).copyWith(
-                            color: context.isDark
-                                ? Colors.white54
-                                : AppColor.textLight,
-                            fontSize: AppSize.width * 0.03,
-                          ),
-                        ),
-                        trailing: Padding(
-                          padding: EdgeInsets.only(top: 25.h),
-                          child: Icon(
-                            Icons.open_in_new,
-                            color: context.isDark
-                                ? Colors.white54
-                                : AppColor.textLight,
-                            size: 24,
-                          ),
-                        ),
-                        onTap: () {
-                          AppSpecialPermissionPlatform()
-                              .openAppBatteryOptimizationSettings(app['package']);
-                        },
-                      );
-                    },
+                  title: Padding(
+                    padding: EdgeInsets.only(top: 20.h),
+                    child: Text(
+                      app['name'] ?? '',
+                      style: AppTextStyle.appName(context),
+                    ),
                   ),
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+                  subtitle: Text(
+                    app['package'] ?? '',
+                    style: AppTextStyle.lastScan(context).copyWith(
+                      color: context.isDark
+                          ? Colors.white54
+                          : AppColor.textLight,
+                      fontSize: AppSize.width * 0.03,
+                    ),
+                  ),
+                  trailing: Padding(
+                    padding: EdgeInsets.only(top: 25.h),
+                    child: Icon(
+                      Icons.open_in_new,
+                      color: context.isDark
+                          ? Colors.white54
+                          : AppColor.textLight,
+                      size: 24,
+                    ),
+                  ),
+                  onTap: () {
+                    AppSpecialPermissionPlatform()
+                        .openAppBatteryOptimizationSettings(app['package']);
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
