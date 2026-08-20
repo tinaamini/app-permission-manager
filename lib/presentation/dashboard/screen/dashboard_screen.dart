@@ -57,11 +57,13 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      // کش را پاک نکن؛ فقط پس‌زمینه رفرش کن (بدون لودینگ)
       _loadAlerts(showLoader: false);
       _loadLastScan();
     }
   }
 
+  /// cache-first: اول کش، بعد native در پس‌زمینه
   Future<void> _loadAlerts({bool showLoader = true}) async {
     final cached = await DashboardPermissionService.loadCached();
 
@@ -73,6 +75,7 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
         _loadingAlerts = false;
       });
 
+      // پس‌زمینه: native + آپدیت UI اگر آمد
       DashboardPermissionService.refreshInBackground(
         onUpdated: (apps, access) {
           if (!mounted) return;
@@ -85,6 +88,7 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
       return;
     }
 
+    // اولین بار — لودینگ
     if (showLoader && mounted) {
       setState(() => _loadingAlerts = true);
     }
@@ -139,6 +143,7 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
       if (mounted) {
         context.read<ScanCubit>().loadLastScan();
         await context.read<AppPermissionCubit>().refreshAll();
+        // بعد از اسکن، alerts را هم پس‌زمینه رفرش کن
         _loadAlerts(showLoader: false);
       }
     } catch (_) {
@@ -174,17 +179,17 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
                     SizedBox(height: 16),
                     _loadingAlerts
                         ? const Center(
-                      child: CustomDotsLoader(
-                        svgPath1: 'assets/utils/Property 1=1 (1).svg',
-                        svgPath2: 'assets/utils/Property 1=2 (1).svg',
-                        svgPath3: 'assets/utils/Property 1=3 (1).svg',
-                        svgPath4: 'assets/utils/Property 1=4 (1).svg',
-                      ),
-                    )
+                            child: CustomDotsLoader(
+                              svgPath1: 'assets/utils/Property 1=1 (1).svg',
+                              svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                              svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                              svgPath4: 'assets/utils/Property 1=4 (1).svg',
+                            ),
+                          )
                         : SafeAlertSectionWidget(
-                      accessibilityOn: _accessibilityOn,
-                      apps: _appsForAlerts,
-                    ),
+                            accessibilityOn: _accessibilityOn,
+                            apps: _appsForAlerts,
+                          ),
                     SizedBox(height: 20),
                     SinceLastScanWidget(
                       diff: _scanDiff,

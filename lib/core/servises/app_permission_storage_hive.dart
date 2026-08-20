@@ -1,30 +1,36 @@
 import 'dart:convert';
-
-import 'package:Privio/core/models/app_permission_ui.dart';
 import 'package:hive/hive.dart';
+import 'package:Privio/core/models/app_permission_ui.dart';
 
+/// کش سبک App Permission:
+/// - روی دیسک فقط metadata (بدون آیکون base64)
+/// - در memory نسخه کامل (با آیکون) برای همان session
 class AppPermissionStorageHive {
+  static const String _boxName = 'app_permission_cache_v2';
+  static const String _keyCache = 'apps_meta_json';
+  static const String _keyTimestamp = 'apps_cache_timestamp_ms';
 
-  static const String _boxName='app_permission_cache_v2';
-  static const String _keyCache='apps_cache_json';
-  static const String _keyTimestamp='apps_cache_timestamp_ms';
+  /// کش memory برای همان session (با آیکون)
   static List<AppPermissionUi>? _memoryCache;
 
-
-  static Future<Box>_box()async{
+  static Future<Box> _box() async {
     if (Hive.isBoxOpen(_boxName)) return Hive.box(_boxName);
     return Hive.openBox(_boxName);
-
   }
 
+  /// ذخیره: memory = کامل، Hive = بدون آیکون
   static Future<void> saveApps(List<AppPermissionUi> apps) async {
+    _memoryCache = List<AppPermissionUi>.from(apps);
+
     final box = await _box();
-    final list = apps.map((a) => a.toJson()).toList();
-    final jsonStr = jsonEncode(list);
-    await box.put(_keyCache, jsonStr);
+    final meta = apps
+        .map((a) => a.copyWith(iconBase64: '').toJson())
+        .toList();
+    await box.put(_keyCache, jsonEncode(meta));
     await box.put(_keyTimestamp, DateTime.now().millisecondsSinceEpoch);
   }
 
+  /// ۱) memory  ۲) Hive (بدون آیکون)
   static Future<List<AppPermissionUi>?> loadApps() async {
     if (_memoryCache != null && _memoryCache!.isNotEmpty) {
       return List<AppPermissionUi>.from(_memoryCache!);
@@ -41,8 +47,9 @@ class AppPermissionStorageHive {
       final list = jsonDecode(jsonStr) as List<dynamic>;
       final apps = list
           .map((e) =>
-          AppPermissionUi.fromJson(Map<String, dynamic>.from(e as Map)))
+              AppPermissionUi.fromJson(Map<String, dynamic>.from(e as Map)))
           .toList();
+      // cold start: بدون آیکون؛ background بعداً پر می‌کند
       _memoryCache = apps;
       return apps;
     } catch (_) {
@@ -51,6 +58,7 @@ class AppPermissionStorageHive {
   }
 
   static List<AppPermissionUi>? get memoryCache => _memoryCache;
+
   static Future<int?> loadTimestampMs() async {
     final box = await _box();
     final v = box.get(_keyTimestamp);

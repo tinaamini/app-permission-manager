@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:Privio/core/models/app_permission_item.dart';
 
-
+/// کش سبک لیست اپ‌ها + وضعیت location برای Dashboard.
+/// دیسک: بدون آیکون | memory: کامل
 class DashboardLocationStorageHive {
   static const String _boxName = 'dashboard_location_cache_v1';
   static const String _keyApps = 'apps_meta_json';
@@ -34,11 +35,11 @@ class DashboardLocationStorageHive {
   }
 
   static Future<({List<AppPermissionItem> apps, bool accessibilityOn})?>
-  load() async {
+      load() async {
     if (_memoryApps != null && _memoryApps!.isNotEmpty) {
       return (
-      apps: List<AppPermissionItem>.from(_memoryApps!),
-      accessibilityOn: _memoryAccessibility ?? false,
+        apps: List<AppPermissionItem>.from(_memoryApps!),
+        accessibilityOn: _memoryAccessibility ?? false,
       );
     }
 
@@ -52,7 +53,7 @@ class DashboardLocationStorageHive {
       final list = jsonDecode(jsonStr) as List<dynamic>;
       final apps = list
           .map((e) =>
-          AppPermissionItem.fromJson(Map<String, dynamic>.from(e as Map)))
+              AppPermissionItem.fromJson(Map<String, dynamic>.from(e as Map)))
           .toList();
       final access = box.get(_keyAccessibility) == true;
       _memoryApps = apps;

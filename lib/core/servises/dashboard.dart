@@ -7,10 +7,11 @@ class DashboardPermissionService {
   DashboardPermissionService._();
 
   static const MethodChannel _installedAppsChannel =
-  MethodChannel('permission_channel');
+      MethodChannel('permission_channel');
 
   static bool _isBackgroundRefreshing = false;
 
+  /// فقط از native می‌خواند (بدون کش)
   static Future<List<AppPermissionItem>> fetchAppsWithLocationFromNative() async {
     final List<dynamic> raw = await _installedAppsChannel
         .invokeMethod('getInstalledAppsListWithLocation');
@@ -18,29 +19,32 @@ class DashboardPermissionService {
     return raw
         .map((e) => Map<String, dynamic>.from(e as Map))
         .map((m) => AppPermissionItem(
-      name: (m['name'] ?? '').toString(),
-      packageName: (m['package'] ?? '').toString(),
-      iconBase64: m['icon']?.toString(),
-      locationState: (m['locationState'] ?? 'denied').toString(),
-      locationPrecision: (m['locationPrecision'] ?? 'none').toString(),
-    ))
+              name: (m['name'] ?? '').toString(),
+              packageName: (m['package'] ?? '').toString(),
+              iconBase64: m['icon']?.toString(),
+              locationState: (m['locationState'] ?? 'denied').toString(),
+              locationPrecision: (m['locationPrecision'] ?? 'none').toString(),
+            ))
         .where((a) => a.packageName.isNotEmpty)
         .toList();
   }
 
+  /// سازگاری با کد قبلی — همیشه native
   static Future<List<AppPermissionItem>> loadAppsWithLocation({
     int concurrency = 6,
   }) {
     return fetchAppsWithLocationFromNative();
   }
 
+  /// خواندن کش (memory → Hive)
   static Future<({List<AppPermissionItem> apps, bool accessibilityOn})?>
-  loadCached() {
+      loadCached() {
     return DashboardLocationStorageHive.load();
   }
 
+  /// native + ذخیره در کش
   static Future<({List<AppPermissionItem> apps, bool accessibilityOn})>
-  fetchAndSave() async {
+      fetchAndSave() async {
     final access = await SafeDashboardPlatform.isAccessibilityEnabled();
     final apps = await fetchAppsWithLocationFromNative();
     await DashboardLocationStorageHive.save(
@@ -50,6 +54,7 @@ class DashboardPermissionService {
     return (apps: apps, accessibilityOn: access);
   }
 
+  /// رفرش پس‌زمینه؛ فقط در صورت تغییر callback صدا زده می‌شود
   static Future<void> refreshInBackground({
     void Function(List<AppPermissionItem> apps, bool accessibilityOn)? onUpdated,
   }) async {
@@ -65,5 +70,6 @@ class DashboardPermissionService {
     }
   }
 
+  /// پاک کردن کش memory/Hive (مثلاً بعد از اسکن کامل)
   static Future<void> clearCache() => DashboardLocationStorageHive.clear();
 }
