@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:Privio/core/models/app_permission_item.dart';
 import 'package:Privio/core/models/scan_model.dart';
 import 'package:Privio/core/servises/dashboard.dart';
-import 'package:Privio/core/servises/dashboard_permission_service.dart';
 import 'package:Privio/core/servises/scan_service.dart';
 import 'package:Privio/core/servises/scan_storage_hive.dart';
 import 'package:Privio/core/utils/scan_diff.dart';
@@ -58,23 +57,44 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      DashboardPermissionService.clearCache();
       _loadAlerts(showLoader: false);
       _loadLastScan();
     }
   }
 
   Future<void> _loadAlerts({bool showLoader = true}) async {
-    if (showLoader) setState(() => _loadingAlerts = true);
+    final cached = await DashboardPermissionService.loadCached();
 
-    try {
-      final access = await SafeDashboardPlatform.isAccessibilityEnabled();
-      final apps = await DashboardPermissionService.loadAppsWithLocation();
-
+    if (cached != null && cached.apps.isNotEmpty) {
       if (!mounted) return;
       setState(() {
-        _accessibilityOn = access;
-        _appsForAlerts = apps;
+        _accessibilityOn = cached.accessibilityOn;
+        _appsForAlerts = cached.apps;
+        _loadingAlerts = false;
+      });
+
+      DashboardPermissionService.refreshInBackground(
+        onUpdated: (apps, access) {
+          if (!mounted) return;
+          setState(() {
+            _accessibilityOn = access;
+            _appsForAlerts = apps;
+          });
+        },
+      );
+      return;
+    }
+
+    if (showLoader && mounted) {
+      setState(() => _loadingAlerts = true);
+    }
+
+    try {
+      final result = await DashboardPermissionService.fetchAndSave();
+      if (!mounted) return;
+      setState(() {
+        _accessibilityOn = result.accessibilityOn;
+        _appsForAlerts = result.apps;
         _loadingAlerts = false;
       });
     } catch (_) {
@@ -119,7 +139,9 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
       if (mounted) {
         context.read<ScanCubit>().loadLastScan();
         await context.read<AppPermissionCubit>().refreshAll();
-      }    } catch (_) {
+        _loadAlerts(showLoader: false);
+      }
+    } catch (_) {
       if (!mounted) return;
       setState(() => _scanning = false);
     }
@@ -152,17 +174,17 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
                     SizedBox(height: 16),
                     _loadingAlerts
                         ? const Center(
-                            child: CustomDotsLoader(
-                              svgPath1: 'assets/utils/Property 1=1 (1).svg',
-                              svgPath2: 'assets/utils/Property 1=2 (1).svg',
-                              svgPath3: 'assets/utils/Property 1=3 (1).svg',
-                              svgPath4: 'assets/utils/Property 1=4 (1).svg',
-                            ),
-                          )
+                      child: CustomDotsLoader(
+                        svgPath1: 'assets/utils/Property 1=1 (1).svg',
+                        svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                        svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                        svgPath4: 'assets/utils/Property 1=4 (1).svg',
+                      ),
+                    )
                         : SafeAlertSectionWidget(
-                            accessibilityOn: _accessibilityOn,
-                            apps: _appsForAlerts,
-                          ),
+                      accessibilityOn: _accessibilityOn,
+                      apps: _appsForAlerts,
+                    ),
                     SizedBox(height: 20),
                     SinceLastScanWidget(
                       diff: _scanDiff,
