@@ -1,3 +1,4 @@
+import 'package:Privio/core/models/scan_model.dart';
 import 'package:Privio/core/servises/scan_service.dart';
 import 'package:Privio/core/servises/scan_storage_hive.dart';
 import 'package:Privio/core/utils/scan_diff.dart';
@@ -15,8 +16,11 @@ class ScanCubit extends Cubit<ScanState> {
       return;
     }
 
+    final diff = await ScanStorageHive.loadLastDiff();
+
     emit(state.copyWith(
       lastScanTime: DateTime.fromMillisecondsSinceEpoch(last.timestampMs),
+      scanDiff: diff,
       status: ScanStatus.loaded,
     ));
   }
@@ -39,5 +43,14 @@ class ScanCubit extends Cubit<ScanState> {
     } catch (_) {
       emit(state.copyWith(status: ScanStatus.error));
     }
+  }
+
+
+  void markScanned({required DateTime time, ScanDiff? diff}) {
+    emit(state.copyWith(
+      lastScanTime: time,
+      scanDiff: diff,
+      status: ScanStatus.loaded,
+    ));
   }
 }

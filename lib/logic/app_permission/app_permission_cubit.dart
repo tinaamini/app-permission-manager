@@ -2,6 +2,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:Privio/constant/risk_level.dart';
 import 'package:Privio/core/models/app_permission_ui.dart';
+import 'package:Privio/core/models/scan_model.dart';
+import 'package:Privio/core/servises/scan_storage_hive.dart';
+import 'package:Privio/core/utils/scan_diff.dart';
+import 'package:Privio/logic/utils/scan/scan_cubit.dart';
 import 'package:flutter/foundation.dart';
 
 import '../risk/risk_calculator.dart';
@@ -10,8 +14,8 @@ import '../../core/servises/app_permission_storage_hive.dart';
 import 'app_permission_state.dart';
 
 Map<String, List<AppPermissionUi>> processAppsInIsolate(
-  Map<String, dynamic> input,
-) {
+    Map<String, dynamic> input,
+    ) {
   final List<AppPermissionUi> apps = input['apps'] as List<AppPermissionUi>;
   final Set<String> trusted = (input['trusted'] as List<String>).toSet();
 
@@ -28,7 +32,7 @@ Map<String, List<AppPermissionUi>> processAppsInIsolate(
     );
 
     final finalRisk =
-        trusted.contains(app.packageName) ? RiskLevel.noRisk : risk;
+    trusted.contains(app.packageName) ? RiskLevel.noRisk : risk;
 
     final updated = app.copyWith(riskLevel: finalRisk);
 
@@ -59,10 +63,50 @@ Map<String, List<AppPermissionUi>> processAppsInIsolate(
 class AppPermissionCubit extends Cubit<AppPermissionState> {
   final AppPermissionPlatform _platform = AppPermissionPlatform();
   final Box _prefBox = Hive.box('app_preferences');
+  final ScanCubit _scanCubit;
 
   bool _isBackgroundRefreshing = false;
 
-  AppPermissionCubit() : super(AppPermissionInitial());
+  AppPermissionCubit(this._scanCubit) : super(AppPermissionInitial());
+
+  /// هر بار که یه فچ واقعی و موفق از native انجام میشه (چه اولین بار،
+  /// چه رفرش پس‌زمینه)، همون داده رو به‌عنوان یه «اسکن» هم ثبت می‌کنیم:
+  /// snapshot رو می‌سازیم، diff رو نسبت به اسکن قبلی حساب می‌کنیم، تو
+  /// Hive ذخیره می‌کنیم و state مربوط به ScanCubit رو آپدیت می‌کنیم.
+  /// اینجوری دیگه نیازی نیست ScanService.takeSnapshot() جدا و دوباره
+  /// همون permission_channel رو صدا بزنه، و کاربری که هیچ‌وقت دستی دکمه‌ی
+  /// اسکن رو نزده هم دیگه پشت overlay «برو اسکن کن» گیر نمی‌مونه.
+  Future<void> _reportAsScan(List<AppPermissionUi> apps) async {
+    try {
+      final map = <String, AppPermSnapshot>{
+        for (final a in apps)
+          a.packageName: AppPermSnapshot(
+            packageName: a.packageName,
+            name: a.appName,
+            iconBase64: a.iconBase64,
+            grantedPerms: a.permissions.toSet(),
+          ),
+      };
+
+      final curr = ScanSnapshot(
+        timestampMs: DateTime.now().millisecondsSinceEpoch,
+        appsByPackage: map,
+      );
+
+      final prev = await ScanStorageHive.loadLastSnapshot();
+      final diff = prev == null ? null : diffSnapshots(prev, curr);
+
+      await ScanStorageHive.saveLastSnapshot(curr);
+      if (diff != null) await ScanStorageHive.saveLastDiff(diff);
+
+      _scanCubit.markScanned(
+        time: DateTime.fromMillisecondsSinceEpoch(curr.timestampMs),
+        diff: diff,
+      );
+    } catch (e) {
+      debugPrint('AppPermissionCubit._reportAsScan failed: $e');
+    }
+  }
 
 
   Future<void> loadApps() async {
@@ -114,6 +158,7 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
 
       final all = [...highRisk, ...mediumRisk, ...lowRisk, ...noRisk];
       await AppPermissionStorageHive.saveApps(all);
+      await _reportAsScan(all);
 
       emit(AppPermissionLoaded(
         noRisk: noRisk,
@@ -171,6 +216,7 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
 
       if (changed) {
         await AppPermissionStorageHive.saveApps(freshAll);
+        await _reportAsScan(freshAll);
         // فقط اگر هنوز در همین بخش هستیم state را آپدیت کن
         if (!isClosed) {
           emit(AppPermissionLoaded(
@@ -189,9 +235,9 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
   }
 
   bool _hasMeaningfulChange(
-    List<AppPermissionUi>? cached,
-    List<AppPermissionUi> fresh,
-  ) {
+      List<AppPermissionUi>? cached,
+      List<AppPermissionUi> fresh,
+      ) {
     if (cached == null) return true;
     if (cached.length != fresh.length) return true;
 
@@ -266,7 +312,7 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
       final freshApps = await _platform.getInstalledApps();
 
       final updatedApp = freshApps.firstWhere(
-        (a) => a.packageName == packageName,
+            (a) => a.packageName == packageName,
         orElse: () => throw Exception('App not found'),
       );
 
@@ -283,14 +329,14 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
       final newApp = updatedApp.copyWith(riskLevel: finalRisk);
 
       List<AppPermissionUi> noRisk =
-          current.noRisk.where((a) => a.packageName != packageName).toList();
+      current.noRisk.where((a) => a.packageName != packageName).toList();
       List<AppPermissionUi> lowRisk =
-          current.lowRisk.where((a) => a.packageName != packageName).toList();
+      current.lowRisk.where((a) => a.packageName != packageName).toList();
       List<AppPermissionUi> mediumRisk = current.mediumRisk
           .where((a) => a.packageName != packageName)
           .toList();
       List<AppPermissionUi> highRisk =
-          current.highRisk.where((a) => a.packageName != packageName).toList();
+      current.highRisk.where((a) => a.packageName != packageName).toList();
 
       switch (finalRisk) {
         case RiskLevel.noRisk:
@@ -380,7 +426,7 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     if (trusted.contains(packageName)) return;
 
     final prev =
-        state is AppPermissionLoaded ? state as AppPermissionLoaded : null;
+    state is AppPermissionLoaded ? state as AppPermissionLoaded : null;
     if (prev != null) {
       emit(AppTrusting(packageName: packageName, previous: prev));
     }
@@ -402,7 +448,7 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     if (!trusted.contains(packageName)) return;
 
     final prev =
-        state is AppPermissionLoaded ? state as AppPermissionLoaded : null;
+    state is AppPermissionLoaded ? state as AppPermissionLoaded : null;
     if (prev != null) {
       emit(AppTrusting(packageName: packageName, previous: prev));
     }

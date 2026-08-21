@@ -10,6 +10,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:Privio/constant/risk_level.dart';
 import 'package:Privio/routs/rout.dart';
 import 'package:Privio/generated/app_localizations.dart';
 import 'core/servises/app_special_permiision_service.dart';
@@ -80,11 +81,14 @@ class MainApp extends StatelessWidget {
             initialIndex: LocaleCubit.initialLanguageIndex(appSettingsBox),
           ),
         ),
-        BlocProvider<AppPermissionCubit>(
-          create: (_) => AppPermissionCubit(),
-        ),
         BlocProvider<SpecialPermissionCubit>(
           create: (_) => SpecialPermissionCubit(AppSpecialPermissionPlatform()),
+        ),
+        BlocProvider<ScanCubit>(
+          create: (_) => ScanCubit()..loadLastScan(),
+        ),
+        BlocProvider<AppPermissionCubit>(
+          create: (context) => AppPermissionCubit(context.read<ScanCubit>()),
         ),
         BlocProvider<LocaleCubit>(
           create: (_) => LocaleCubit(appSettingsBox),
@@ -92,9 +96,6 @@ class MainApp extends StatelessWidget {
         BlocProvider<ThemeCubit>(
           create: (_) => ThemeCubit(themeBox),
         ),
-        BlocProvider(
-          create: (_) => ScanCubit()..loadLastScan(),
-        )
       ],
       child: _AppBootstrap(router: router),
     );
@@ -204,22 +205,6 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
   }
 
 
-  // Future<void> _loadAndOpenPendingApp() async {
-  //   final cubit = context.read<AppPermissionCubit>();
-  //   await cubit.loadApps();
-  //   if (!mounted || cubit.state is! AppPermissionLoaded) return;
-  //   final packageName = await const MethodChannel('notification_navigation')
-  //       .invokeMethod<String>('getPendingPackage');
-  //   if (!mounted || packageName == null) return;
-  //   final apps = (cubit.state as AppPermissionLoaded).allApps;
-  //   final matching = apps.where((item) => item.packageName == packageName);
-  //   if (matching.isNotEmpty) {
-  //     widget.router.pushNamed(RouteName.appDetail, extra: matching.first);
-  //     unawaited(cubit.refreshApp(packageName));
-  //
-  //   }
-  // }
-
   Future<void> _loadAndOpenPendingApp() async {
     final packageName = await const MethodChannel('notification_navigation')
         .invokeMethod<String>('getPendingPackage');
@@ -252,7 +237,16 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
         .invokeMethod<String>('getPendingShortcutRoute');
     debugPrint('🔗 shortcut route from native: $route');
     if (route == null || !mounted) return;
-    widget.router.pushNamed(route);
+
+    // roهایی مثل riskApps یه extra اجباری (RiskLevel) می‌خوان؛ چون از
+    // شورت‌کات هیچ context ای برای انتخاب سطح ریسک نداریم، پیش‌فرض روی
+    // پرریسک‌ترین سطح می‌ذاریم که همون چیزیه که شورت‌کات "اپ‌های پرریسک"
+    // قراره نشون بده.
+    if (route == RouteName.riskApps) {
+      widget.router.pushNamed(route, extra: RiskLevel.highRisk);
+    } else {
+      widget.router.pushNamed(route);
+    }
   }
   @override
   @override

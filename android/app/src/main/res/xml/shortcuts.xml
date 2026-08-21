@@ -4,7 +4,7 @@
     <shortcut
         android:shortcutId="scan_now"
         android:enabled="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_shortcut_scan"
         android:shortcutShortLabel="@string/shortcut_scan_short"
         android:shortcutLongLabel="@string/shortcut_scan_long">
         <intent
@@ -18,7 +18,7 @@
     <shortcut
         android:shortcutId="risk_apps"
         android:enabled="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_shortcut_risk"
         android:shortcutShortLabel="@string/shortcut_risk_short"
         android:shortcutLongLabel="@string/shortcut_risk_long">
         <intent
@@ -32,7 +32,7 @@
     <shortcut
         android:shortcutId="group_permission"
         android:enabled="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_shortcut_permission"
         android:shortcutShortLabel="@string/shortcut_permissions_short"
         android:shortcutLongLabel="@string/shortcut_permissions_long">
         <intent

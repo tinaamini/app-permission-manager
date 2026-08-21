@@ -35,9 +35,7 @@
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme"/>
-            <!-- App Shortcuts: منوی میان‌بری که با لانگ‌پرس روی آیکون اپ باز میشه
-                 (مثل Camera/View activity توی اینستاگرام). تعریفشون توی
-                 res/xml/shortcuts.xml است. -->
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
