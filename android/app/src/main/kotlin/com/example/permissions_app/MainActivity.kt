@@ -638,11 +638,18 @@ class MainActivity : FlutterActivity() {
                 }
             }
     }
+    private fun resolveShortcutLanguage(): String {
+        val saved = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            .getString("app_language", null)
 
+        if (saved == "fa" || saved == "en") return saved
+
+        val systemLang = resources.configuration.locales[0].language
+        return if (systemLang == "en") "en" else "fa"
+    }
 
     private fun updateAppShortcuts() {
-        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        val lang = prefs.getString("app_language", "fa") ?: "fa"
+        val lang = resolveShortcutLanguage()
         val isFa = lang == "fa"
 
         val scanShort = if (isFa) "اسکن" else "Scan"
