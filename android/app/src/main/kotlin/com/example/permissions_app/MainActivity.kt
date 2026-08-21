@@ -17,6 +17,9 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.ByteArrayOutputStream
 import java.util.concurrent.Executors
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 
 class MainActivity : FlutterActivity() {
 
@@ -36,6 +39,8 @@ class MainActivity : FlutterActivity() {
         super.onCreate(savedInstanceState)
         SecurityNotifications.initialize(this)
         SecurityWorkScheduler.schedule(this)
+        SecurityWorkScheduler.schedule(this)
+        updateAppShortcuts()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) !=
             PackageManager.PERMISSION_GRANTED
@@ -78,10 +83,7 @@ class MainActivity : FlutterActivity() {
                         result.success(pkg)
                     }
                     "getPendingShortcutRoute" -> {
-                        // مسیری که از App Shortcut (لانگ‌پرس روی آیکون اپ، مثل
-                        // اینستاگرام/تلگرام) با کلیک اومده، اگه اپ از اون طریق
-                        // باز شده باشه. بعد از خوندن حذفش می‌کنیم که با چرخش
-                        // صفحه یا rebuild دوباره navigate نکنه.
+
                         val route = intent?.getStringExtra("shortcut_route")
                         intent?.removeExtra("shortcut_route")
                         result.success(route)
@@ -90,6 +92,8 @@ class MainActivity : FlutterActivity() {
                         val language = call.argument<String>("language") ?: "fa"
                         val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
                         prefs.edit().putString("app_language", language).apply()
+                        updateAppShortcuts()
+
                         result.success(null)
                     }
                     else -> result.notImplemented()
@@ -635,6 +639,47 @@ class MainActivity : FlutterActivity() {
             }
     }
 
+
+    private fun updateAppShortcuts() {
+        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val lang = prefs.getString("app_language", "fa") ?: "fa"
+        val isFa = lang == "fa"
+
+        val scanShort = if (isFa) "اسکن" else "Scan"
+        val scanLong = if (isFa) "اجرای اسکن امنیتی" else "Run a security scan"
+        val riskShort = if (isFa) "اپ‌های پرریسک" else "Risky apps"
+        val riskLong = if (isFa) "مشاهده اپ‌های پرریسک" else "View high-risk apps"
+        val permShort = if (isFa) "دسترسی‌ها" else "Permissions"
+        val permLong = if (isFa) "مشاهده دسترسی‌های اپ‌ها" else "View app permissions"
+
+        fun buildShortcut(
+            id: String,
+            route: String,
+            shortLabel: String,
+            longLabel: String,
+            iconRes: Int
+        ): ShortcutInfoCompat {
+            val intent = Intent(this, MainActivity::class.java).apply {
+                action = Intent.ACTION_VIEW
+                putExtra("shortcut_route", route)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            return ShortcutInfoCompat.Builder(this, id)
+                .setShortLabel(shortLabel)
+                .setLongLabel(longLabel)
+                .setIcon(IconCompat.createWithResource(this, iconRes))
+                .setIntent(intent)
+                .build()
+        }
+
+        val shortcuts = listOf(
+            buildShortcut("scan_now", "dashboardPermission", scanShort, scanLong, R.mipmap.ic_shortcut_scan),
+            buildShortcut("risk_apps", "riskApps", riskShort, riskLong, R.mipmap.ic_shortcut_risk),
+            buildShortcut("group_permission", "groupPermission", permShort, permLong, R.mipmap.ic_shortcut_permission)
+        )
+
+        ShortcutManagerCompat.setDynamicShortcuts(this, shortcuts)
+    }
     // ===================== Core helpers =====================
     private fun getOverlayApps(): List<Map<String, Any>> {
         val pm = packageManager

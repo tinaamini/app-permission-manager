@@ -11,11 +11,7 @@ class LocaleCubit extends Cubit<Locale> {
   final Box _box;
 
   LocaleCubit(this._box) : super(_resolveInitialLocale(_box)) {
-    // فقط وقتی کاربر قبلاً زبان را به‌صورت دستی انتخاب کرده (مقدار در
-    // storage ذخیره شده)، به سمت native سینک می‌کنیم. اگر کاربر هیچ‌وقت
-    // انتخابی نکرده، نباید چیزی به native فرستاده شود تا سمت native با
-    // fallback خودش (Locale.getDefault) همیشه زبان سیستم را دنبال کند و
-    // با تغییر زبان گوشی به‌روز بماند.
+
     final saved = _box.get(storageKey);
     if (saved is String && _supported.contains(saved)) {
       _notifyNative(state.languageCode);
