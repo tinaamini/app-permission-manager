@@ -39,7 +39,6 @@ class MainActivity : FlutterActivity() {
         super.onCreate(savedInstanceState)
         SecurityNotifications.initialize(this)
         SecurityWorkScheduler.schedule(this)
-        SecurityWorkScheduler.schedule(this)
         updateAppShortcuts()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) !=
