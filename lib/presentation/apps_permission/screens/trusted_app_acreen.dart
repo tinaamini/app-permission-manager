@@ -107,6 +107,31 @@ class _TrustedAppsScreenState extends State<TrustedAppsScreen> {
                             _confirmUntrust(context, app.packageName, l10n),
                       ),
                     ),
+
+                    Container(
+                      margin:
+                      EdgeInsets.only(bottom: screenHeight * (12 / 812)),
+                      padding: EdgeInsets.all(screenWidth * (12 / 812)),
+                      decoration: BoxDecoration(
+                        color: AppColor.blue1.withValues(alpha: 0.1),
+                        borderRadius:
+                        BorderRadius.circular(screenWidth * (24 / 812)),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset("assets/app_permission/danger.svg"),
+                          SizedBox(width: screenWidth * (12 / 812)),
+                          Expanded(
+                            child: Text(
+                              l10n.keepAppsWarning,
+                              style: AppTextStyle.greenWarning(context),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
                   ],
                 );
               },

@@ -299,7 +299,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'This app will no longer be marked safe and will be analyzed again for potential risks.';
 
   @override
-  String get reviewedList => 'REVIEWED KIST';
+  String get reviewedList => 'FAVORITES';
 
   @override
   String get appsWithOverlayPermission => 'Apps with Display Over Other Apps';
@@ -309,11 +309,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'No apps have display over other apps permission';
 
   @override
-  String get markedAsSafe => 'Marked as Safe';
+  String get markedAsSafe => 'Your Favorite Apps';
 
   @override
   String get reviewedListDesc =>
-      'These are apps you have manually reviewed. They will no longer trigger risk warnings unless their behavior changes significantly.';
+      'These are the apps you’ve added to your favorites.\n They’ll be easy to find and access whenever you need them.';
 
   @override
   String get removeFromKeep => 'Remove from Favorites';

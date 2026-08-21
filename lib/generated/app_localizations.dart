@@ -647,7 +647,7 @@ abstract class AppLocalizations {
   /// No description provided for @reviewedList.
   ///
   /// In en, this message translates to:
-  /// **'REVIEWED KIST'**
+  /// **'FAVORITES'**
   String get reviewedList;
 
   /// No description provided for @appsWithOverlayPermission.
@@ -665,13 +665,13 @@ abstract class AppLocalizations {
   /// No description provided for @markedAsSafe.
   ///
   /// In en, this message translates to:
-  /// **'Marked as Safe'**
+  /// **'Your Favorite Apps'**
   String get markedAsSafe;
 
   /// No description provided for @reviewedListDesc.
   ///
   /// In en, this message translates to:
-  /// **'These are apps you have manually reviewed. They will no longer trigger risk warnings unless their behavior changes significantly.'**
+  /// **'These are the apps you’ve added to your favorites.\n They’ll be easy to find and access whenever you need them.'**
   String get reviewedListDesc;
 
   /// No description provided for @removeFromKeep.

@@ -1,4 +1,4 @@
-import 'package:Privio/core/extensions/context_extension.dart';
+  import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -113,29 +113,6 @@ class _KeepAppsScreenState extends State<KeepAppsScreen> {
                       ),
                     ),
                     SizedBox(height: screenHeight * (12 / 812)),
-                    Container(
-                      margin:
-                          EdgeInsets.only(bottom: screenHeight * (12 / 812)),
-                      padding: EdgeInsets.all(screenWidth * (12 / 812)),
-                      decoration: BoxDecoration(
-                        color: AppColor.green1.withValues(alpha: 0.1),
-                        borderRadius:
-                            BorderRadius.circular(screenWidth * (24 / 812)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SvgPicture.asset("assets/app_permission/danger.svg"),
-                          SizedBox(width: screenWidth * (12 / 812)),
-                          Expanded(
-                            child: Text(
-                              l10n.keepAppsWarning,
-                              style: AppTextStyle.greenWarning(context),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
                 );
               },

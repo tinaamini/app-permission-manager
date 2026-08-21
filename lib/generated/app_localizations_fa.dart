@@ -302,7 +302,7 @@ class AppLocalizationsFa extends AppLocalizations {
       'این برنامه از لیست علاقه‌مندی‌ها حذف می‌شود و مجدداً از نظر خطرات احتمالی بررسی خواهد شد.';
 
   @override
-  String get reviewedList => 'لیست بررسی‌شده';
+  String get reviewedList => 'لیست علاقه‌مندی‌ها';
 
   @override
   String get appsWithOverlayPermission =>
@@ -313,11 +313,11 @@ class AppLocalizationsFa extends AppLocalizations {
       'هیچ اپی مجوز نمایش روی سایر برنامه‌ها را ندارد';
 
   @override
-  String get markedAsSafe => 'علامت‌گذاری شده به‌عنوان ایمن';
+  String get markedAsSafe => 'علامت‌گذاری شده به‌عنوان موردعلاقهٔ شما';
 
   @override
   String get reviewedListDesc =>
-      'این برنامه‌ها را به‌صورت دستی بررسی کرده‌اید و دیگر هشدار ریسک دریافت نخواهید کرد، مگر اینکه رفتارشان تغییر کند.';
+      'اینها برنامه‌هایی هستند که به علاقه‌مندی‌های خود اضافه کرده‌اید.\n هر زمان که نیاز داشته باشید، به‌راحتی پیدا و استفاده خواهند شد';
 
   @override
   String get removeFromKeep => 'حذف از لیست علاقه‌مندی‌ها';

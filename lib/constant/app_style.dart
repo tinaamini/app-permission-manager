@@ -74,7 +74,7 @@ class AppTextStyle {
       fontFamily: _font(context),
       fontSize: 12.sp,
       fontWeight: FontWeight.w500,
-      color: context.isDark?AppColor.green1:AppColor.green3);
+      color: context.isDark?AppColor.blue1:AppColor.blue2);
 
   static TextStyle blueFont(BuildContext context) => TextStyle(
       fontFamily: _font(context),
