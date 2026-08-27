@@ -10,6 +10,7 @@ import 'package:Privio/presentation/group_permission/widget/btn_group_widget.dar
 import 'package:Privio/presentation/utils/app_bar.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
 import 'package:Privio/presentation/utils/base_screen.dart';
+import 'package:Privio/presentation/utils/custome_dotsloader.dart';
 import 'package:Privio/routs/rout_name.dart';
 
 class GroupPermissionsScreen extends StatefulWidget {
@@ -75,6 +76,17 @@ class _GroupPermissionsScreenState extends State<GroupPermissionsScreen> {
               builder: (context, state) {
                 final allApps = _extractAllApps(state);
 
+                if (allApps == null) {
+                  return const Center(
+                    child: CustomDotsLoader(
+                      svgPath1: 'assets/utils/Property 1=1 (1).svg',
+                      svgPath2: 'assets/utils/Property 1=2 (1).svg',
+                      svgPath3: 'assets/utils/Property 1=3 (1).svg',
+                      svgPath4: 'assets/utils/Property 1=4 (1).svg',
+                    ),
+                  );
+                }
+
                 return GridView.builder(
                   padding: EdgeInsets.fromLTRB(
                     AppSize.width * 0.04,
@@ -92,12 +104,10 @@ class _GroupPermissionsScreenState extends State<GroupPermissionsScreen> {
                   itemBuilder: (context, index) {
                     final item = items[index];
 
-                    final count = allApps == null
-                        ? 0
-                        : _countAppsForGroup(
-                            allApps: allApps,
-                            groupType: item.type,
-                          );
+                    final count = _countAppsForGroup(
+                      allApps: allApps,
+                      groupType: item.type,
+                    );
 
                     return BtnGroupWidget(
                       image: item.image,

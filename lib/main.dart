@@ -158,6 +158,7 @@ class _AppBootstrap extends StatefulWidget {
 
 class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserver {
   bool _started = false;
+  bool _handlingPendingNavigation = false;
 
 
   @override
@@ -184,8 +185,7 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
     _started = true;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadAndOpenPendingApp();
-      _checkPendingShortcut();
+      _handlePendingNavigation();
       context.read<SpecialPermissionCubit>().loadStatus();
     });
   }
@@ -194,14 +194,27 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state ==AppLifecycleState.resumed){
-      _loadAndOpenPendingApp();
-      _checkPendingShortcut();
+      _handlePendingNavigation();
     }
   }
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  Future<void> _handlePendingNavigation() async {
+    if (_handlingPendingNavigation) return;
+    _handlingPendingNavigation = true;
+
+    try {
+      // Shortcut destinations depend on app/scan data. Wait for the initial
+      // load before navigating so a cold start cannot render zero counts.
+      await _loadAndOpenPendingApp();
+      await _checkPendingShortcut();
+    } finally {
+      _handlingPendingNavigation = false;
+    }
   }
 
 
@@ -229,19 +242,12 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
     }
   }
 
-  // اگه اپ از طریق App Shortcut (لانگ‌پرس روی آیکون، مثل اینستاگرام/تلگرام)
-  // باز شده باشه، native توی intent extra یه route name گذاشته که اینجا
-  // می‌خونیمش و مستقیم به همون صفحه نویگیت می‌کنیم.
   Future<void> _checkPendingShortcut() async {
     final route = await const MethodChannel('notification_navigation')
         .invokeMethod<String>('getPendingShortcutRoute');
     debugPrint('🔗 shortcut route from native: $route');
     if (route == null || !mounted) return;
 
-    // roهایی مثل riskApps یه extra اجباری (RiskLevel) می‌خوان؛ چون از
-    // شورت‌کات هیچ context ای برای انتخاب سطح ریسک نداریم، پیش‌فرض روی
-    // پرریسک‌ترین سطح می‌ذاریم که همون چیزیه که شورت‌کات "اپ‌های پرریسک"
-    // قراره نشون بده.
     if (route == RouteName.riskApps) {
       widget.router.pushNamed(route, extra: RiskLevel.highRisk);
     } else {

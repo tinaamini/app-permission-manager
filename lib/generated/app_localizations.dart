@@ -671,7 +671,7 @@ abstract class AppLocalizations {
   /// No description provided for @reviewedListDesc.
   ///
   /// In en, this message translates to:
-  /// **'These are the apps you’ve added to your favorites.\n They’ll be easy to find and access whenever you need them.'**
+  /// **'These are the apps you’ve added to your favorites.\nThey’ll be easy to find and access whenever you need them.'**
   String get reviewedListDesc;
 
   /// No description provided for @removeFromKeep.

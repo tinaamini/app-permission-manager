@@ -56,7 +56,7 @@ class RiskCircle extends StatelessWidget {
 
         boxShadow: [
           BoxShadow(
-            color:   hasDangerousPermissions? _color().withValues(alpha: 0.18):Colors.transparent,
+            color:   _color().withValues(alpha: 0.18),
             blurRadius: screenWidth * 0.06,
             spreadRadius: 1,
             offset: const Offset(0, 6),

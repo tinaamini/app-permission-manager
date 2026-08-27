@@ -313,7 +313,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reviewedListDesc =>
-      'These are the apps you’ve added to your favorites.\n They’ll be easy to find and access whenever you need them.';
+      'These are the apps you’ve added to your favorites.\nThey’ll be easy to find and access whenever you need them.';
 
   @override
   String get removeFromKeep => 'Remove from Favorites';

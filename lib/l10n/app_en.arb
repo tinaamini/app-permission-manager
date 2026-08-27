@@ -156,7 +156,7 @@
 "appsWithOverlayPermission" :"Apps with Display Over Other Apps",
 "noAppsWithOverlayPermission" : "No apps have display over other apps permission",
 "markedAsSafe": "Your Favorite Apps",
-"reviewedListDesc": "These are the apps you’ve added to your favorites.\n They’ll be easy to find and access whenever you need them.",
+"reviewedListDesc": "These are the apps you’ve added to your favorites.\nThey’ll be easy to find and access whenever you need them.",
 "removeFromKeep": "Remove from Favorites",
 "cancel": "Cancel",
 "remove": "Remove",

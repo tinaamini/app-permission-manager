@@ -14,10 +14,12 @@ class AppColor {
   static const green2 = Color.fromRGBO(220, 252, 231, 1);
   static const green3 = Color.fromRGBO(43, 207, 117, 1.0);
   static const green4 = Color.fromRGBO(111, 196, 130, 1.0);
+  static const green5 = Color.fromRGBO(200, 255, 212, 1.0);
 
   static const blue1 = Color.fromRGBO(99, 130, 207, 1);
   static const blue2 = Color.fromRGBO(176, 186, 213, 1);
   static const boxSh = Color.fromRGBO(98, 186, 243, 1);
+  static const boxSh2 = Color.fromRGBO(158, 214, 255, 1.0);
 
   static const red = Color.fromRGBO(234, 73, 75, 1);
   static const redOnboarding = Color.fromRGBO(243, 98, 98, 1);
