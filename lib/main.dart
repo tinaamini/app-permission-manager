@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:Privio/logic/utils/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -205,13 +203,20 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
 
   Future<void> _handlePendingNavigation() async {
     if (_handlingPendingNavigation) return;
+    if (context.read<OnboardingShowCubit>().state != OnboardingStatus.done) {
+      return;
+    }
     _handlingPendingNavigation = true;
 
     try {
-      // Shortcut destinations depend on app/scan data. Wait for the initial
-      // load before navigating so a cold start cannot render zero counts.
+      // Open launcher shortcuts immediately. Their destination screens show a
+      // loader while app data is populated in the background.
+      final openedShortcut = await _checkPendingShortcut();
+      if (openedShortcut) {
+        return;
+      }
+
       await _loadAndOpenPendingApp();
-      await _checkPendingShortcut();
     } finally {
       _handlingPendingNavigation = false;
     }
@@ -242,17 +247,24 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
     }
   }
 
-  Future<void> _checkPendingShortcut() async {
+  Future<bool> _checkPendingShortcut() async {
     final route = await const MethodChannel('notification_navigation')
         .invokeMethod<String>('getPendingShortcutRoute');
     debugPrint('🔗 shortcut route from native: $route');
-    if (route == null || !mounted) return;
+    if (route == null || !mounted) return false;
+
+    // Hydrate the shared state from Hive before opening the shortcut page.
+    // When cache exists, loadApps returns immediately after emitting it and
+    // continues refreshing native data in the background.
+    await context.read<AppPermissionCubit>().loadApps();
+    if (!mounted) return false;
 
     if (route == RouteName.riskApps) {
       widget.router.pushNamed(route, extra: RiskLevel.highRisk);
     } else {
       widget.router.pushNamed(route);
     }
+    return true;
   }
   @override
   @override

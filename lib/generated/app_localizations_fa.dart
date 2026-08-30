@@ -174,7 +174,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get onboardingDesc3 =>
-      'ا Privio،دسترسی های مهم و موارد نیازمند توجه را\n در یک نگاه نشان میدهد.';
+      'Privio  ،دسترسی های مهم و موارد نیازمند توجه را\n در یک نگاه نشان میدهد.';
 
   @override
   String get skip => 'رد کردن';

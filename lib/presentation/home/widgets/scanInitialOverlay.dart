@@ -1,6 +1,7 @@
 import 'package:Privio/constant/app_style.dart';
 import 'package:Privio/core/extensions/context_extension.dart';
 import 'package:Privio/generated/app_localizations.dart';
+import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
 import 'package:Privio/logic/utils/scan/scan_cubit.dart';
 import 'package:Privio/logic/utils/scan/scan_state.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,7 +22,7 @@ class ScanInitialOverlay extends StatelessWidget {
     return  BlocBuilder<ScanCubit, ScanState>(
         builder: (context, state) {
           return GestureDetector(
-            onTap:() => context.read<ScanCubit>().runScan() ,
+            onTap: () => context.read<AppPermissionCubit>().runInitialScan(),
             child: Center(
               child: Column(mainAxisAlignment: MainAxisAlignment.center,
                 children: [

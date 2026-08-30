@@ -69,6 +69,17 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
 
   AppPermissionCubit(this._scanCubit) : super(AppPermissionInitial());
 
+  Future<void> runInitialScan() async {
+    if (_scanCubit.state.isScanning) return;
+
+    _scanCubit.startScan();
+    await refreshAll();
+
+    // A successful fetch reports a snapshot and changes ScanCubit to loaded.
+    // Remaining in loading means the native fetch failed before that point.
+    _scanCubit.resetInitialScan();
+  }
+
   /// هر بار که یه فچ واقعی و موفق از native انجام میشه (چه اولین بار،
   /// چه رفرش پس‌زمینه)، همون داده رو به‌عنوان یه «اسکن» هم ثبت می‌کنیم:
   /// snapshot رو می‌سازیم، diff رو نسبت به اسکن قبلی حساب می‌کنیم، تو
@@ -178,13 +189,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
       final cached = await AppPermissionStorageHive.loadApps();
       if (cached != null && cached.isNotEmpty) {
         _emitGrouped(cached);
-      } else {
-        emit(AppPermissionLoaded(
-          noRisk: const [],
-          lowRisk: const [],
-          mediumRisk: const [],
-          highRisk: const [],
-        ));
       }
     }
   }

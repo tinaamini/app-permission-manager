@@ -1,4 +1,5 @@
 import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
+import 'package:Privio/logic/app_permission/app_permission_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -142,8 +143,14 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return BaseScreen(
-      child: Column(
+    return BlocListener<AppPermissionCubit, AppPermissionState>(
+      listener: (context, state) {
+        if (state is AppPermissionLoaded) {
+          _loadLastScan();
+        }
+      },
+      child: BaseScreen(
+        child: Column(
         children: [
           AppBarWidget(
             text: l10n.dashboardPermission,
@@ -192,6 +199,7 @@ class _DashboardPermissionScreenState extends State<DashboardPermissionScreen>
             ),
           ),
         ],
+        ),
       ),
     );
   }

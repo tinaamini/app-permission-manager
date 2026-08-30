@@ -1,7 +1,7 @@
 import 'package:Privio/core/models/scan_model.dart';
 import 'package:Privio/generated/app_localizations.dart';
 
-enum ScanStatus { initial, loading, loaded, error }
+enum ScanStatus { restoring, initial, loading, loaded, error }
 
 class ScanState {
   final DateTime? lastScanTime;

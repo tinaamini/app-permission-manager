@@ -6,7 +6,8 @@ import 'package:Privio/logic/utils/scan/scan_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScanCubit extends Cubit<ScanState> {
-  ScanCubit() : super(const ScanState()); // status = initial
+  ScanCubit()
+      : super(const ScanState(status: ScanStatus.restoring));
 
   Future<void> loadLastScan() async {
     final last = await ScanStorageHive.loadLastSnapshot();
@@ -45,6 +46,16 @@ class ScanCubit extends Cubit<ScanState> {
     }
   }
 
+
+  void startScan() {
+    if (state.isScanning) return;
+    emit(state.copyWith(status: ScanStatus.loading));
+  }
+
+  void resetInitialScan() {
+    if (!state.isScanning) return;
+    emit(state.copyWith(status: ScanStatus.initial));
+  }
 
   void markScanned({required DateTime time, ScanDiff? diff}) {
     emit(state.copyWith(

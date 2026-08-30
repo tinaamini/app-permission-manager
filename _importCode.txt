@@ -1,0 +1,30 @@
+چک کردن امضا APK:
+keytool -printcert -jarfile build\app\outputs\flutter-apk\app-release.apk
+
+
+دستور نصب Release APK:
+flutter install --use-application-binary build\app\outputs\flutter-apk\app-release.apk
+adb install -r build\app\outputs\flutter-apk\app-release.apk
+
+creat key.jks 
+keytool -genkey -v -keystore key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias my-key-alias
+bundle :
+java -jar bundlesigner-0.1.13.jar genbin --bundle app-release.aab --bin ./ --v2-signing-enabled true --v3-signing-enabled true --ks key.jks -v
+
+set icons:
+dart run flutter_launcher_icons
+
+set splash :
+dart run flutter_native_splash:create
+
+
+imlatur
+
+C:\>dir "C:\Users\Tina\.android\avd"
+C:\>rmdir /s /q "C:\Users\Tina\.android\avd\Pixel_2_API_24.avd"
+
+
+wifi debuging
+adb tcpip 5555
+
+adb connect 192.168.1.11:5555
