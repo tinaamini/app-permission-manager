@@ -29,11 +29,20 @@ class MainActivity : FlutterActivity() {
     private val SPECIAL_PERMISSION_CHANNEL = "app_permission_channel"
     private val DASHBOARD_CHANNEL = "permissions/safe_dashboard"
     private val SYSTEM_SETTINGS_CHANNEL = "system_settings"
+    private var navigationChannel: MethodChannel? = null
 
     private val ioExecutor = Executors.newFixedThreadPool(4)
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+
+        // A launcher shortcut can be tapped while this Activity is already in
+        // the foreground. In that case Flutter gets no lifecycle transition,
+        // so polling on `resumed` is not enough; deliver the new route now.
+        intent.getStringExtra("shortcut_route")?.let { route ->
+            intent.removeExtra("shortcut_route")
+            navigationChannel?.invokeMethod("shortcutRoute", route)
+        }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +81,11 @@ class MainActivity : FlutterActivity() {
         super.configureFlutterEngine(flutterEngine)
 
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "notification_navigation")
+        navigationChannel = MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            "notification_navigation",
+        )
+        navigationChannel!!
             .setMethodCallHandler { call, result ->
                 when (call.method) {
                     "getPendingPackage" -> {
@@ -668,7 +681,12 @@ class MainActivity : FlutterActivity() {
             val intent = Intent(this, MainActivity::class.java).apply {
                 action = Intent.ACTION_VIEW
                 putExtra("shortcut_route", route)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                // Reuse the running FlutterActivity. CLEAR_TASK used to tear
+                // down the active engine and could leave the replacement
+                // engine waiting on the native splash screen.
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_SINGLE_TOP
             }
             return ShortcutInfoCompat.Builder(this, id)
                 .setShortLabel(shortLabel)

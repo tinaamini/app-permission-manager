@@ -65,7 +65,7 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
   final Box _prefBox = Hive.box('app_preferences');
   final ScanCubit _scanCubit;
 
-  bool _isBackgroundRefreshing = false;
+  Future<void>? _activeFetch;
 
   AppPermissionCubit(this._scanCubit) : super(AppPermissionInitial());
 
@@ -121,23 +121,31 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
 
 
   Future<void> loadApps() async {
-    if (state is AppPermissionLoading) return;
+    if (state is AppPermissionLoading) {
+      await _activeFetch;
+      return;
+    }
 
     final cached = await AppPermissionStorageHive.loadApps();
 
-    if (cached != null && cached.isNotEmpty) {
-      _emitGrouped(cached);
+    if (_isUsableSnapshot(cached)) {
+      _emitGrouped(cached!);
 
       _refreshInBackground();
       return;
     }
 
     emit(AppPermissionLoading());
-    await _fetchFromNativeAndSave(retriesLeft: 1);
+    await _runSingleFlight(
+      () => _fetchFromNativeAndSave(retriesLeft: 1),
+    );
   }
 
   Future<void> refreshAll() async {
-    if (state is AppPermissionLoading) return;
+    if (state is AppPermissionLoading) {
+      await _activeFetch;
+      return;
+    }
 
     if (state is AppPermissionLoaded) {
       await _refreshInBackground(force: true);
@@ -145,7 +153,27 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     }
 
     emit(AppPermissionLoading());
-    await _fetchFromNativeAndSave(retriesLeft: 1);
+    await _runSingleFlight(
+      () => _fetchFromNativeAndSave(retriesLeft: 1),
+    );
+  }
+
+  Future<void> _runSingleFlight(Future<void> Function() operation) async {
+    final active = _activeFetch;
+    if (active != null) {
+      await active;
+      return;
+    }
+
+    final future = operation();
+    _activeFetch = future;
+    try {
+      await future;
+    } finally {
+      if (identical(_activeFetch, future)) {
+        _activeFetch = null;
+      }
+    }
   }
 
 
@@ -153,6 +181,8 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     try {
       final trusted = trustedApps;
       final apps = await _platform.getInstalledApps();
+      final cached = await AppPermissionStorageHive.loadApps();
+      _validateNativeSnapshot(apps);
 
       final result = await compute(
         processAppsInIsolate,
@@ -187,19 +217,22 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
 
       emit(AppPermissionError(e.toString()));
       final cached = await AppPermissionStorageHive.loadApps();
-      if (cached != null && cached.isNotEmpty) {
-        _emitGrouped(cached);
+      if (_isUsableSnapshot(cached)) {
+        _emitGrouped(cached!);
       }
     }
   }
 
   Future<void> _refreshInBackground({bool force = false}) async {
-    if (_isBackgroundRefreshing && !force) return;
-    _isBackgroundRefreshing = true;
+    await _runSingleFlight(() => _performBackgroundRefresh(force: force));
+  }
 
+  Future<void> _performBackgroundRefresh({required bool force}) async {
     try {
       final trusted = trustedApps;
       final apps = await _platform.getInstalledApps();
+      final cached = await AppPermissionStorageHive.loadApps();
+      _validateNativeSnapshot(apps);
 
       final result = await compute(
         processAppsInIsolate,
@@ -215,7 +248,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
       final highRisk = result['highRisk']!;
       final freshAll = [...highRisk, ...mediumRisk, ...lowRisk, ...noRisk];
 
-      final cached = await AppPermissionStorageHive.loadApps();
       final changed = force || _hasMeaningfulChange(cached, freshAll);
 
       if (changed) {
@@ -233,8 +265,6 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
       }
     } catch (e) {
       debugPrint('AppPermissionCubit._refreshInBackground failed: $e');
-    } finally {
-      _isBackgroundRefreshing = false;
     }
   }
 
@@ -275,25 +305,56 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     return false;
   }
 
+  void _validateNativeSnapshot(List<AppPermissionUi> fresh) {
+    if (fresh.isEmpty) {
+      throw StateError('Native app scan returned an empty list');
+    }
+
+    // On a few devices PackageManager can transiently return the installed
+    // apps while reporting no granted permissions for any of them. Accepting
+    // that partial snapshot would classify every app as safe and overwrite a
+    // healthy cache. Keep the last good snapshot and retry on the next scan.
+    final freshHasPermissions = fresh.any((app) => app.permissions.isNotEmpty);
+    if (!freshHasPermissions) {
+      throw StateError('Native app scan returned no permission data');
+    }
+  }
+
+  bool _isUsableSnapshot(List<AppPermissionUi>? apps) {
+    return apps != null &&
+        apps.isNotEmpty &&
+        apps.any((app) => app.permissions.isNotEmpty);
+  }
+
   void _emitGrouped(List<AppPermissionUi> apps) {
     final noRisk = <AppPermissionUi>[];
     final lowRisk = <AppPermissionUi>[];
     final mediumRisk = <AppPermissionUi>[];
     final highRisk = <AppPermissionUi>[];
 
+    final trusted = trustedApps.toSet();
     for (final app in apps) {
-      switch (app.riskLevel) {
+      final riskLevel = trusted.contains(app.packageName)
+          ? RiskLevel.noRisk
+          : RiskCalculator.calculate(
+              permissions: app.permissions,
+              packageName: app.packageName,
+              appName: app.appName,
+            );
+      final updated = app.copyWith(riskLevel: riskLevel);
+
+      switch (riskLevel) {
         case RiskLevel.noRisk:
-          noRisk.add(app);
+          noRisk.add(updated);
           break;
         case RiskLevel.lowRisk:
-          lowRisk.add(app);
+          lowRisk.add(updated);
           break;
         case RiskLevel.mediumRisk:
-          mediumRisk.add(app);
+          mediumRisk.add(updated);
           break;
         case RiskLevel.highRisk:
-          highRisk.add(app);
+          highRisk.add(updated);
           break;
       }
     }
@@ -308,6 +369,10 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
 
 
   Future<void> refreshApp(String packageName) async {
+    await _runSingleFlight(() => _refreshAppInternal(packageName));
+  }
+
+  Future<void> _refreshAppInternal(String packageName) async {
     if (state is! AppPermissionLoaded) return;
 
     final current = state as AppPermissionLoaded;

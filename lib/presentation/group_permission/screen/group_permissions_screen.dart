@@ -8,6 +8,7 @@ import 'package:Privio/logic/app_permission/app_permission_cubit.dart';
 import 'package:Privio/logic/app_permission/app_permission_state.dart';
 import 'package:Privio/presentation/group_permission/widget/btn_group_widget.dart';
 import 'package:Privio/presentation/utils/app_bar.dart';
+import 'package:Privio/presentation/utils/app_permission_load_failure.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
 import 'package:Privio/presentation/utils/base_screen.dart';
 import 'package:Privio/presentation/utils/custome_dotsloader.dart';
@@ -74,6 +75,12 @@ class _GroupPermissionsScreenState extends State<GroupPermissionsScreen> {
           Expanded(
             child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
               builder: (context, state) {
+                if (state is AppPermissionError) {
+                  return AppPermissionLoadFailure(
+                    onRetry: () =>
+                        context.read<AppPermissionCubit>().loadApps(),
+                  );
+                }
                 final allApps = _extractAllApps(state);
 
                 if (allApps == null) {

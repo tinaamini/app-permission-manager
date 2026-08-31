@@ -8,6 +8,7 @@ import 'package:Privio/logic/app_permission/app_permission_state.dart';
 import 'package:Privio/presentation/apps_permission/widgets/app_item_widget.dart';
 import 'package:Privio/presentation/apps_permission/widgets/app_search_bar.dart';
 import 'package:Privio/presentation/utils/app_bar.dart';
+import 'package:Privio/presentation/utils/app_permission_load_failure.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
 import 'package:Privio/presentation/utils/base_screen.dart';
 import 'package:Privio/presentation/utils/empty_page_widget.dart';
@@ -54,6 +55,12 @@ class _RiskAppListScreenState extends State<RiskAppListScreen> {
           Expanded(
             child: BlocBuilder<AppPermissionCubit, AppPermissionState>(
               builder: (context, state) {
+                if (state is AppPermissionError) {
+                  return AppPermissionLoadFailure(
+                    onRetry: () =>
+                        context.read<AppPermissionCubit>().loadApps(),
+                  );
+                }
                 if (state is! AppPermissionLoaded) {
                   return const Center(
                       child: CustomDotsLoader(

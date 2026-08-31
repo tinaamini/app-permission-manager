@@ -28,8 +28,6 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
   ]);
 
-  await _precacheSvgs();
-
   await Hive.initFlutter();
   await Hive.openBox('app_preferences');
   final appSettingsBox = await Hive.openBox('app_settings');
@@ -51,6 +49,12 @@ Future<void> main() async {
       appSettingsBox: appSettingsBox,
     ),
   );
+
+  // Do not keep the native splash visible while parsing all SVG assets.
+  // Cache them only after the first Flutter frame has been rendered.
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    _precacheSvgs();
+  });
 }
 
 class MainApp extends StatelessWidget {
@@ -154,7 +158,9 @@ class _AppBootstrap extends StatefulWidget {
   State<_AppBootstrap> createState() => _AppBootstrapState();
 }
 
-class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserver {
+class _AppBootstrapState extends State<_AppBootstrap>
+    with WidgetsBindingObserver {
+  static const _navigationChannel = MethodChannel('notification_navigation');
   bool _started = false;
   bool _handlingPendingNavigation = false;
 
@@ -163,6 +169,14 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _navigationChannel.setMethodCallHandler(_handleNativeNavigation);
+  }
+
+  Future<dynamic> _handleNativeNavigation(MethodCall call) async {
+    if (call.method != 'shortcutRoute') return null;
+    final route = call.arguments as String?;
+    if (route != null) await _openShortcutRoute(route);
+    return null;
   }
 
   @override
@@ -191,12 +205,14 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state ==AppLifecycleState.resumed){
+    if (state == AppLifecycleState.resumed) {
       _handlePendingNavigation();
     }
   }
+
   @override
   void dispose() {
+    _navigationChannel.setMethodCallHandler(null);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -248,25 +264,35 @@ class _AppBootstrapState extends State<_AppBootstrap>  with WidgetsBindingObserv
   }
 
   Future<bool> _checkPendingShortcut() async {
-    final route = await const MethodChannel('notification_navigation')
-        .invokeMethod<String>('getPendingShortcutRoute');
+    final route = await _navigationChannel.invokeMethod<String>(
+      'getPendingShortcutRoute',
+    );
     debugPrint('🔗 shortcut route from native: $route');
     if (route == null || !mounted) return false;
+
+    await _openShortcutRoute(route);
+    return true;
+  }
+
+  Future<void> _openShortcutRoute(String route) async {
+    if (!mounted ||
+        context.read<OnboardingShowCubit>().state != OnboardingStatus.done) {
+      return;
+    }
 
     // Hydrate the shared state from Hive before opening the shortcut page.
     // When cache exists, loadApps returns immediately after emitting it and
     // continues refreshing native data in the background.
     await context.read<AppPermissionCubit>().loadApps();
-    if (!mounted) return false;
+    if (!mounted) return;
 
     if (route == RouteName.riskApps) {
       widget.router.pushNamed(route, extra: RiskLevel.highRisk);
     } else {
       widget.router.pushNamed(route);
     }
-    return true;
   }
-  @override
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(

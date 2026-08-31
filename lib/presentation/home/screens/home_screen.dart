@@ -20,6 +20,7 @@ import 'package:Privio/logic/risk/device_risk_resolver.dart';
 import 'package:Privio/presentation/home/widgets/btn_home_widget.dart';
 import 'package:Privio/presentation/home/widgets/device_status_card.dart';
 import 'package:Privio/presentation/utils/app_size.dart';
+import 'package:Privio/presentation/utils/app_permission_load_failure.dart';
 import 'package:Privio/presentation/utils/base_screen.dart';
 import 'package:Privio/presentation/utils/btn_language_util.dart';
 import 'package:Privio/presentation/utils/custome_dotsloader.dart';
@@ -89,6 +90,13 @@ class HomeScreen extends StatelessWidget {
                         SizedBox(height: AppSize.height * 0.05),
                         BlocBuilder<AppPermissionCubit, AppPermissionState>(
                           builder: (context, state) {
+                            if (state is AppPermissionError) {
+                              return AppPermissionLoadFailure(
+                                onRetry: () => context
+                                    .read<AppPermissionCubit>()
+                                    .loadApps(),
+                              );
+                            }
                             if (state is! AppPermissionLoaded) {
                               return Container(
                                 width: double.infinity,
