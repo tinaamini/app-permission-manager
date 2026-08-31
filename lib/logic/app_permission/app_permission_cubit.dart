@@ -121,21 +121,31 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
 
 
   Future<void> loadApps() async {
+    debugPrint(
+      '[SHORTCUT_TRACE] cubit:loadApps start state=${state.runtimeType} '
+      'activeFetch=${_activeFetch != null}',
+    );
     if (state is AppPermissionLoading) {
       await _activeFetch;
       return;
     }
 
     final cached = await AppPermissionStorageHive.loadApps();
+    debugPrint(
+      '[SHORTCUT_TRACE] cubit:cache loaded count=${cached?.length ?? 0} '
+      'usable=${_isUsableSnapshot(cached)}',
+    );
 
     if (_isUsableSnapshot(cached)) {
       _emitGrouped(cached!);
+      debugPrint('[SHORTCUT_TRACE] cubit:emitted cache, refreshing background');
 
       _refreshInBackground();
       return;
     }
 
     emit(AppPermissionLoading());
+    debugPrint('[SHORTCUT_TRACE] cubit:no usable cache, fetching native');
     await _runSingleFlight(
       () => _fetchFromNativeAndSave(retriesLeft: 1),
     );
@@ -161,6 +171,7 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
   Future<void> _runSingleFlight(Future<void> Function() operation) async {
     final active = _activeFetch;
     if (active != null) {
+      debugPrint('[SHORTCUT_TRACE] cubit:singleFlight waiting active fetch');
       await active;
       return;
     }
@@ -181,6 +192,10 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     try {
       final trusted = trustedApps;
       final apps = await _platform.getInstalledApps();
+      debugPrint(
+        '[SHORTCUT_TRACE] cubit:native initial result count=${apps.length} '
+        'withPermissions=${apps.where((a) => a.permissions.isNotEmpty).length}',
+      );
       final cached = await AppPermissionStorageHive.loadApps();
       _validateNativeSnapshot(apps);
 
@@ -207,7 +222,13 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
         mediumRisk: mediumRisk,
         highRisk: highRisk,
       ));
+      debugPrint(
+        '[SHORTCUT_TRACE] cubit:initial emitted '
+        'high=${highRisk.length} medium=${mediumRisk.length} '
+        'low=${lowRisk.length} safe=${noRisk.length}',
+      );
     } catch (e, st) {
+      debugPrint('[SHORTCUT_TRACE] cubit:initial failed error=$e');
       debugPrint('AppPermissionCubit._fetchFromNativeAndSave: $e\n$st');
 
       if (retriesLeft > 0) {
@@ -231,6 +252,10 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
     try {
       final trusted = trustedApps;
       final apps = await _platform.getInstalledApps();
+      debugPrint(
+        '[SHORTCUT_TRACE] cubit:native background result count=${apps.length} '
+        'withPermissions=${apps.where((a) => a.permissions.isNotEmpty).length}',
+      );
       final cached = await AppPermissionStorageHive.loadApps();
       _validateNativeSnapshot(apps);
 
@@ -249,6 +274,11 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
       final freshAll = [...highRisk, ...mediumRisk, ...lowRisk, ...noRisk];
 
       final changed = force || _hasMeaningfulChange(cached, freshAll);
+      debugPrint(
+        '[SHORTCUT_TRACE] cubit:background grouped changed=$changed force=$force '
+        'high=${highRisk.length} medium=${mediumRisk.length} '
+        'low=${lowRisk.length} safe=${noRisk.length}',
+      );
 
       if (changed) {
         await AppPermissionStorageHive.saveApps(freshAll);
@@ -261,6 +291,7 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
             mediumRisk: mediumRisk,
             highRisk: highRisk,
           ));
+          debugPrint('[SHORTCUT_TRACE] cubit:background emitted loaded state');
         }
       }
     } catch (e) {

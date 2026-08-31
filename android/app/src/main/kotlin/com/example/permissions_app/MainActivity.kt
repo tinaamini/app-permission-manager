@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Base64
+import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -22,6 +23,7 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 
 class MainActivity : FlutterActivity() {
+    private val shortcutTraceTag = "SHORTCUT_TRACE"
 
     private val CHANNEL = "permission_channel"
     private val CHANNEL2 = "recent_apps"
@@ -30,22 +32,40 @@ class MainActivity : FlutterActivity() {
     private val DASHBOARD_CHANNEL = "permissions/safe_dashboard"
     private val SYSTEM_SETTINGS_CHANNEL = "system_settings"
     private var navigationChannel: MethodChannel? = null
+    private var pendingShortcutRoute: String? = null
 
     private val ioExecutor = Executors.newFixedThreadPool(4)
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        Log.i(
+            shortcutTraceTag,
+            "native:onNewIntent action=${intent.action} data=${intent.data} " +
+                "extra=${intent.getStringExtra("shortcut_route")}",
+        )
 
         // A launcher shortcut can be tapped while this Activity is already in
         // the foreground. In that case Flutter gets no lifecycle transition,
         // so polling on `resumed` is not enough; deliver the new route now.
-        intent.getStringExtra("shortcut_route")?.let { route ->
-            intent.removeExtra("shortcut_route")
-            navigationChannel?.invokeMethod("shortcutRoute", route)
+        extractShortcutRoute(intent)?.let { route ->
+            Log.i(shortcutTraceTag, "native:onNewIntent extractedRoute=$route")
+            clearShortcutRoute(intent)
+            pendingShortcutRoute = route
+            val channel = navigationChannel
+            if (channel != null) {
+                pendingShortcutRoute = null
+                channel.invokeMethod("shortcutRoute", route)
+            }
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i(
+            shortcutTraceTag,
+            "native:onCreate action=${intent?.action} data=${intent?.data} " +
+                "extra=${intent?.getStringExtra("shortcut_route")} " +
+                "extracted=${extractShortcutRoute(intent)}",
+        )
         SecurityNotifications.initialize(this)
         SecurityWorkScheduler.schedule(this)
         updateAppShortcuts()
@@ -95,9 +115,15 @@ class MainActivity : FlutterActivity() {
                         result.success(pkg)
                     }
                     "getPendingShortcutRoute" -> {
-
-                        val route = intent?.getStringExtra("shortcut_route")
-                        intent?.removeExtra("shortcut_route")
+                        val intentRoute = extractShortcutRoute(intent)
+                        val route = pendingShortcutRoute ?: intentRoute
+                        Log.i(
+                            shortcutTraceTag,
+                            "native:getPendingShortcutRoute pending=$pendingShortcutRoute " +
+                                "intentRoute=$intentRoute result=$route",
+                        )
+                        pendingShortcutRoute = null
+                        clearShortcutRoute(intent)
                         result.success(route)
                     }
                     "setLanguage" -> {
@@ -660,6 +686,32 @@ class MainActivity : FlutterActivity() {
         return if (systemLang == "en") "en" else "fa"
     }
 
+    private fun extractShortcutRoute(source: Intent?): String? {
+        source ?: return null
+        source.getStringExtra("shortcut_route")?.let { return it }
+
+        if (source.data?.scheme == "privio" && source.data?.host == "shortcut") {
+            source.data?.getQueryParameter("route")?.let { return it }
+            source.data?.lastPathSegment?.let { return it }
+        }
+
+        val prefix = "$packageName.shortcut."
+        return source.action
+            ?.takeIf { it.startsWith(prefix) }
+            ?.removePrefix(prefix)
+    }
+
+    private fun clearShortcutRoute(source: Intent?) {
+        source ?: return
+        source.removeExtra("shortcut_route")
+        if (source.data?.scheme == "privio") {
+            source.data = null
+        }
+        if (source.action?.startsWith("$packageName.shortcut.") == true) {
+            source.action = Intent.ACTION_MAIN
+        }
+    }
+
     private fun updateAppShortcuts() {
         val lang = resolveShortcutLanguage()
         val isFa = lang == "fa"
@@ -679,7 +731,8 @@ class MainActivity : FlutterActivity() {
             iconRes: Int
         ): ShortcutInfoCompat {
             val intent = Intent(this, MainActivity::class.java).apply {
-                action = Intent.ACTION_VIEW
+                action = "$packageName.shortcut.$route"
+                data = Uri.parse("privio://shortcut?route=$route")
                 putExtra("shortcut_route", route)
                 // Reuse the running FlutterActivity. CLEAR_TASK used to tear
                 // down the active engine and could leave the replacement
@@ -703,6 +756,13 @@ class MainActivity : FlutterActivity() {
         )
 
         ShortcutManagerCompat.setDynamicShortcuts(this, shortcuts)
+        // setDynamicShortcuts replaces the dynamic list, while an OEM launcher
+        // may still display a pinned copy created from an older intent.
+        ShortcutManagerCompat.updateShortcuts(this, shortcuts)
+        Log.i(
+            shortcutTraceTag,
+            "native:published shortcuts=${shortcuts.joinToString { it.id }}",
+        )
     }
     // ===================== Core helpers =====================
     private fun getOverlayApps(): List<Map<String, Any>> {

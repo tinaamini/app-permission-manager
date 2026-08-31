@@ -168,11 +168,16 @@ class _AppBootstrapState extends State<_AppBootstrap>
   @override
   void initState() {
     super.initState();
+    debugPrint('[SHORTCUT_TRACE] dart:bootstrap initState');
     WidgetsBinding.instance.addObserver(this);
     _navigationChannel.setMethodCallHandler(_handleNativeNavigation);
   }
 
   Future<dynamic> _handleNativeNavigation(MethodCall call) async {
+    debugPrint(
+      '[SHORTCUT_TRACE] dart:nativeCallback method=${call.method} '
+      'arguments=${call.arguments}',
+    );
     if (call.method != 'shortcutRoute') return null;
     final route = call.arguments as String?;
     if (route != null) await _openShortcutRoute(route);
@@ -205,6 +210,7 @@ class _AppBootstrapState extends State<_AppBootstrap>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
+    debugPrint('[SHORTCUT_TRACE] dart:lifecycle state=$state');
     if (state == AppLifecycleState.resumed) {
       _handlePendingNavigation();
     }
@@ -218,6 +224,11 @@ class _AppBootstrapState extends State<_AppBootstrap>
   }
 
   Future<void> _handlePendingNavigation() async {
+    debugPrint(
+      '[SHORTCUT_TRACE] dart:handlePending start '
+      'handling=$_handlingPendingNavigation '
+      'onboarding=${context.read<OnboardingShowCubit>().state}',
+    );
     if (_handlingPendingNavigation) return;
     if (context.read<OnboardingShowCubit>().state != OnboardingStatus.done) {
       return;
@@ -228,6 +239,9 @@ class _AppBootstrapState extends State<_AppBootstrap>
       // Open launcher shortcuts immediately. Their destination screens show a
       // loader while app data is populated in the background.
       final openedShortcut = await _checkPendingShortcut();
+      debugPrint(
+        '[SHORTCUT_TRACE] dart:handlePending shortcutOpened=$openedShortcut',
+      );
       if (openedShortcut) {
         return;
       }
@@ -264,10 +278,12 @@ class _AppBootstrapState extends State<_AppBootstrap>
   }
 
   Future<bool> _checkPendingShortcut() async {
+    debugPrint('[SHORTCUT_TRACE] dart:checkPendingShortcut invoke native');
     final route = await _navigationChannel.invokeMethod<String>(
       'getPendingShortcutRoute',
     );
     debugPrint('🔗 shortcut route from native: $route');
+    debugPrint('[SHORTCUT_TRACE] dart:checkPendingShortcut route=$route');
     if (route == null || !mounted) return false;
 
     await _openShortcutRoute(route);
@@ -275,6 +291,10 @@ class _AppBootstrapState extends State<_AppBootstrap>
   }
 
   Future<void> _openShortcutRoute(String route) async {
+    debugPrint(
+      '[SHORTCUT_TRACE] dart:openShortcutRoute start route=$route '
+      'mounted=$mounted state=${context.read<AppPermissionCubit>().state.runtimeType}',
+    );
     if (!mounted ||
         context.read<OnboardingShowCubit>().state != OnboardingStatus.done) {
       return;
@@ -284,11 +304,17 @@ class _AppBootstrapState extends State<_AppBootstrap>
     // When cache exists, loadApps returns immediately after emitting it and
     // continues refreshing native data in the background.
     await context.read<AppPermissionCubit>().loadApps();
+    debugPrint(
+      '[SHORTCUT_TRACE] dart:openShortcutRoute loadFinished '
+      'state=${context.read<AppPermissionCubit>().state.runtimeType}',
+    );
     if (!mounted) return;
 
     if (route == RouteName.riskApps) {
+      debugPrint('[SHORTCUT_TRACE] dart:navigate riskApps extra=highRisk');
       widget.router.pushNamed(route, extra: RiskLevel.highRisk);
     } else {
+      debugPrint('[SHORTCUT_TRACE] dart:navigate route=$route');
       widget.router.pushNamed(route);
     }
   }

@@ -96,7 +96,16 @@ GoRouter createRouter(OnboardingShowCubit onboardingShowCubit) {
           name: RouteName.riskApps,
           path: '/riskApps',
           pageBuilder: (context, state) {
-            final riskLevel = state.extra as RiskLevel;
+            debugPrint(
+              '[SHORTCUT_TRACE] router:build riskApps '
+              'extra=${state.extra} uri=${state.uri}',
+            );
+            // Launcher/deep-link restoration may rebuild this route without
+            // preserving GoRouter's in-memory `extra`. The shortcut always
+            // means high-risk apps, so use that as the safe default.
+            final riskLevel = state.extra is RiskLevel
+                ? state.extra as RiskLevel
+                : RiskLevel.highRisk;
             return CupertinoPage(
               key: state.pageKey,
               child: RiskAppListScreen(riskLevel: riskLevel),
