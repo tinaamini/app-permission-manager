@@ -82,14 +82,10 @@ class SpecialPermissionStorageHive {
         .toList();
 
     // دیسک بدون آیکون
-    final meta = apps.map((e) {
-      final m = Map<String, dynamic>.from(e);
-      m.remove('icon');
-      return m;
-    }).toList();
-
     final box = await _box();
-    await box.put(_appsKey(type), jsonEncode(meta));
+    // Persist the small native thumbnails so reopening a detail page does not
+    // need another complete PackageManager scan.
+    await box.put(_appsKey(type), jsonEncode(apps));
   }
 
   static Future<List<Map<String, dynamic>>?> loadApps(

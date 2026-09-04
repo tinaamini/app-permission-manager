@@ -8,7 +8,8 @@
         android:shortcutShortLabel="@string/shortcut_scan_short"
         android:shortcutLongLabel="@string/shortcut_scan_long">
         <intent
-            android:action="android.intent.action.VIEW"
+            android:action="com.microdev.permissiondetector.shortcut.dashboardPermission"
+            android:data="privio://shortcut?route=dashboardPermission"
             android:targetPackage="com.microdev.permissiondetector"
             android:targetClass="com.microdev.permissiondetector.MainActivity">
             <extra android:name="shortcut_route" android:value="dashboardPermission" />
@@ -22,7 +23,8 @@
         android:shortcutShortLabel="@string/shortcut_risk_short"
         android:shortcutLongLabel="@string/shortcut_risk_long">
         <intent
-            android:action="android.intent.action.VIEW"
+            android:action="com.microdev.permissiondetector.shortcut.riskApps"
+            android:data="privio://shortcut?route=riskApps"
             android:targetPackage="com.microdev.permissiondetector"
             android:targetClass="com.microdev.permissiondetector.MainActivity">
             <extra android:name="shortcut_route" android:value="riskApps" />
@@ -36,7 +38,8 @@
         android:shortcutShortLabel="@string/shortcut_permissions_short"
         android:shortcutLongLabel="@string/shortcut_permissions_long">
         <intent
-            android:action="android.intent.action.VIEW"
+            android:action="com.microdev.permissiondetector.shortcut.groupPermission"
+            android:data="privio://shortcut?route=groupPermission"
             android:targetPackage="com.microdev.permissiondetector"
             android:targetClass="com.microdev.permissiondetector.MainActivity">
             <extra android:name="shortcut_route" android:value="groupPermission" />

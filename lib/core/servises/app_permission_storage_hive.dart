@@ -23,10 +23,13 @@ class AppPermissionStorageHive {
     _memoryCache = List<AppPermissionUi>.from(apps);
 
     final box = await _box();
-    final meta = apps
-        .map((a) => a.copyWith(iconBase64: '').toJson())
-        .toList();
-    await box.put(_keyCache, jsonEncode(meta));
+    // Keep the already resized icons in the cache. Re-querying
+    // PackageManager for every icon on each cold start is noticeably slower
+    // on some OEM devices and made shortcut navigation appear stuck.
+    await box.put(
+      _keyCache,
+      jsonEncode(apps.map((app) => app.toJson()).toList()),
+    );
     await box.put(_keyTimestamp, DateTime.now().millisecondsSinceEpoch);
   }
 

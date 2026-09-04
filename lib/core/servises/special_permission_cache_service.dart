@@ -40,6 +40,17 @@ class SpecialPermissionCacheService {
     if (!forceNative) {
       final cached = await SpecialPermissionStorageHive.loadApps(type);
       if (cached != null) {
+        // The disk cache stores metadata only. Hydrate icons before returning
+        // it on a cold start; otherwise this screen has no state update when
+        // the background refresh finishes and keeps showing placeholders.
+        final hasIcons = cached.any(
+          (app) => (app['icon']?.toString() ?? '').isNotEmpty,
+        );
+        if (!hasIcons && cached.isNotEmpty) {
+          final fresh = await fetchAppsNative(type);
+          await SpecialPermissionStorageHive.saveApps(type, fresh);
+          return fresh;
+        }
         // پس‌زمینه رفرش
         _refreshAppsInBackground(type);
         return cached;

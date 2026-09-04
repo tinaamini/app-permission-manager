@@ -354,7 +354,11 @@ class AppPermissionCubit extends Cubit<AppPermissionState> {
   bool _isUsableSnapshot(List<AppPermissionUi>? apps) {
     return apps != null &&
         apps.isNotEmpty &&
-        apps.any((app) => app.permissions.isNotEmpty);
+        apps.any((app) => app.permissions.isNotEmpty) &&
+        // Icons are omitted from the disk cache. A page opened from a launcher
+        // shortcut must wait for native hydration instead of showing an
+        // entire list of placeholders on a cold start.
+        apps.any((app) => app.iconBase64.isNotEmpty);
   }
 
   void _emitGrouped(List<AppPermissionUi> apps) {

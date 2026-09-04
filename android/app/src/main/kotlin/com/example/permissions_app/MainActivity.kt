@@ -713,6 +713,14 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun updateAppShortcuts() {
+        // Shortcuts are declared in res/xml/shortcuts.xml so they are
+        // available before the first Activity launch and on OEM launchers
+        // that do not reliably retain dynamic shortcuts. Remove shortcuts
+        // published by older app versions; the manifest entries remain.
+        ShortcutManagerCompat.removeAllDynamicShortcuts(this)
+        Log.i(shortcutTraceTag, "native:using manifest shortcuts")
+        return
+
         val lang = resolveShortcutLanguage()
         val isFa = lang == "fa"
 
