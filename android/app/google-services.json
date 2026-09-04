@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "555223306035",
+    "project_id": "privio-924a9",
+    "storage_bucket": "privio-924a9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555223306035:android:d405a77b81c4e9b61af846",
+        "android_client_info": {
+          "package_name": "com.microdev.permissiondetector"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm20x0QAEC424sL9Atd9Gps8NGfTq56fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,10 @@
+import 'dart:async' show unawaited;
+import 'dart:ui' show PlatformDispatcher;
+
 import 'package:Privio/logic/utils/theme/theme_cubit.dart';
+import 'package:appmetrica_plugin/appmetrica_plugin.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,9 +27,45 @@ import 'logic/onboarding/show_onboarding/show_onboarding_cubit.dart';
 import 'logic/special_permission/special_permission_cubit.dart';
 import 'logic/utils/scan/scan_cubit.dart';
 import 'routs/rout_name.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  FlutterError.onError = (details) {
+    unawaited(
+      AppMetrica.reportUnhandledException(
+        AppMetricaErrorDescription.fromFlutterErrorDetails(details),
+      ).then((_) => AppMetrica.sendEventsBuffer()),
+    );
+    FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    unawaited(
+      AppMetrica.reportUnhandledException(
+        AppMetricaErrorDescription.fromObjectAndStackTrace(error, stack),
+      ).then((_) => AppMetrica.sendEventsBuffer()),
+    );
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+
+  await AppMetrica.activate(
+    AppMetricaConfig(
+      'f8f786cd-e235-4576-bfbc-bc53532f4a1a',
+      crashReporting: true,
+      // Flutter errors are sent manually above so Firebase and AppMetrica
+      // receive the same error without replacing or blocking each other.
+      flutterCrashReporting: false,
+      logs: true,
+    ),
+  );
+  await AppMetrica.reportEvent('app_started');
+
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
@@ -103,6 +145,7 @@ class MainApp extends StatelessWidget {
     );
   }
 }
+
 Future<void> _precacheSvgs() async {
   const paths = [
     'assets/utils/pageLight1.svg',
@@ -134,7 +177,6 @@ Future<void> _precacheSvgs() async {
     "assets/app_permission/tick-square.svg",
     "assets/app_permission/danger.svg",
     "assets/app_permission/shield-tick.svg",
-
   ];
 
   for (final path in paths) {
@@ -142,7 +184,7 @@ Future<void> _precacheSvgs() async {
       final loader = SvgAssetLoader(path);
       await svg.cache.putIfAbsent(
         loader.cacheKey(null),
-            () => loader.loadBytes(null),
+        () => loader.loadBytes(null),
       );
     } catch (e) {
       debugPrint('SVG cache failed: $path → $e');
@@ -164,23 +206,65 @@ class _AppBootstrapState extends State<_AppBootstrap>
   bool _started = false;
   bool _handlingPendingNavigation = false;
 
+  void _traceShortcut(String message) {
+    final trace = '[SHORTCUT_TRACE] $message';
+    debugPrint(trace);
+    unawaited(FirebaseCrashlytics.instance.log(trace));
+  }
+
+  Future<void> _recordShortcutError(
+    Object error,
+    StackTrace stackTrace, {
+    required String step,
+    String? route,
+  }) async {
+    final onboarding = mounted
+        ? context.read<OnboardingShowCubit>().state.toString()
+        : 'unmounted';
+    await FirebaseCrashlytics.instance.setCustomKey('shortcut_step', step);
+    await FirebaseCrashlytics.instance.setCustomKey(
+      'shortcut_route',
+      route ?? 'unknown',
+    );
+    await FirebaseCrashlytics.instance.setCustomKey(
+      'shortcut_onboarding',
+      onboarding,
+    );
+    await FirebaseCrashlytics.instance.recordError(
+      error,
+      stackTrace,
+      reason: 'Launcher shortcut failed at $step',
+      fatal: false,
+    );
+  }
 
   @override
   void initState() {
     super.initState();
-    debugPrint('[SHORTCUT_TRACE] dart:bootstrap initState');
+    _traceShortcut('dart:bootstrap initState');
     WidgetsBinding.instance.addObserver(this);
     _navigationChannel.setMethodCallHandler(_handleNativeNavigation);
   }
 
   Future<dynamic> _handleNativeNavigation(MethodCall call) async {
-    debugPrint(
-      '[SHORTCUT_TRACE] dart:nativeCallback method=${call.method} '
+    _traceShortcut(
+      'dart:nativeCallback method=${call.method} '
       'arguments=${call.arguments}',
     );
     if (call.method != 'shortcutRoute') return null;
     final route = call.arguments as String?;
-    if (route != null) await _openShortcutRoute(route);
+    if (route != null) {
+      try {
+        await _openShortcutRoute(route);
+      } catch (error, stackTrace) {
+        await _recordShortcutError(
+          error,
+          stackTrace,
+          step: 'native_callback',
+          route: route,
+        );
+      }
+    }
     return null;
   }
 
@@ -210,7 +294,7 @@ class _AppBootstrapState extends State<_AppBootstrap>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    debugPrint('[SHORTCUT_TRACE] dart:lifecycle state=$state');
+    _traceShortcut('dart:lifecycle state=$state');
     if (state == AppLifecycleState.resumed) {
       _handlePendingNavigation();
     }
@@ -224,8 +308,8 @@ class _AppBootstrapState extends State<_AppBootstrap>
   }
 
   Future<void> _handlePendingNavigation() async {
-    debugPrint(
-      '[SHORTCUT_TRACE] dart:handlePending start '
+    _traceShortcut(
+      'dart:handlePending start '
       'handling=$_handlingPendingNavigation '
       'onboarding=${context.read<OnboardingShowCubit>().state}',
     );
@@ -236,22 +320,23 @@ class _AppBootstrapState extends State<_AppBootstrap>
     _handlingPendingNavigation = true;
 
     try {
-      // Open launcher shortcuts immediately. Their destination screens show a
-      // loader while app data is populated in the background.
       final openedShortcut = await _checkPendingShortcut();
-      debugPrint(
-        '[SHORTCUT_TRACE] dart:handlePending shortcutOpened=$openedShortcut',
-      );
+      _traceShortcut('dart:handlePending shortcutOpened=$openedShortcut');
       if (openedShortcut) {
         return;
       }
 
       await _loadAndOpenPendingApp();
+    } catch (error, stackTrace) {
+      await _recordShortcutError(
+        error,
+        stackTrace,
+        step: 'handle_pending_navigation',
+      );
     } finally {
       _handlingPendingNavigation = false;
     }
   }
-
 
   Future<void> _loadAndOpenPendingApp() async {
     final packageName = await const MethodChannel('notification_navigation')
@@ -278,12 +363,12 @@ class _AppBootstrapState extends State<_AppBootstrap>
   }
 
   Future<bool> _checkPendingShortcut() async {
-    debugPrint('[SHORTCUT_TRACE] dart:checkPendingShortcut invoke native');
+    _traceShortcut('dart:checkPendingShortcut invoke native');
     final route = await _navigationChannel.invokeMethod<String>(
       'getPendingShortcutRoute',
     );
     debugPrint('🔗 shortcut route from native: $route');
-    debugPrint('[SHORTCUT_TRACE] dart:checkPendingShortcut route=$route');
+    _traceShortcut('dart:checkPendingShortcut route=$route');
     if (route == null || !mounted) return false;
 
     await _openShortcutRoute(route);
@@ -291,8 +376,8 @@ class _AppBootstrapState extends State<_AppBootstrap>
   }
 
   Future<void> _openShortcutRoute(String route) async {
-    debugPrint(
-      '[SHORTCUT_TRACE] dart:openShortcutRoute start route=$route '
+    _traceShortcut(
+      'dart:openShortcutRoute start route=$route '
       'mounted=$mounted state=${context.read<AppPermissionCubit>().state.runtimeType}',
     );
     if (!mounted ||
@@ -304,17 +389,17 @@ class _AppBootstrapState extends State<_AppBootstrap>
     // When cache exists, loadApps returns immediately after emitting it and
     // continues refreshing native data in the background.
     await context.read<AppPermissionCubit>().loadApps();
-    debugPrint(
-      '[SHORTCUT_TRACE] dart:openShortcutRoute loadFinished '
+    _traceShortcut(
+      'dart:openShortcutRoute loadFinished '
       'state=${context.read<AppPermissionCubit>().state.runtimeType}',
     );
     if (!mounted) return;
 
     if (route == RouteName.riskApps) {
-      debugPrint('[SHORTCUT_TRACE] dart:navigate riskApps extra=highRisk');
+      _traceShortcut('dart:navigate riskApps extra=highRisk');
       widget.router.pushNamed(route, extra: RiskLevel.highRisk);
     } else {
-      debugPrint('[SHORTCUT_TRACE] dart:navigate route=$route');
+      _traceShortcut('dart:navigate route=$route');
       widget.router.pushNamed(route);
     }
   }
@@ -347,5 +432,4 @@ class _AppBootstrapState extends State<_AppBootstrap>
       },
     );
   }
-
 }
